@@ -1,0 +1,15 @@
+Check warnings for given location
+
+
+Context - User is on the landing page and has successfully searched for a location.
+
+Primary Flow - 
+1. User selects to view weather warnings.
+2. System displays weather warnings.
+
+Alternate Flow -
+** There are no weather warnings
+2a. System notifies the user of the absence of weather warnings.
+
+** Unexpected data gathering error
+2b. Alert the user that the weather information was not obtainable.

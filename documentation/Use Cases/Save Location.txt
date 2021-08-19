@@ -1,0 +1,13 @@
+Save locations for future weather checking
+
+
+Context - User is on the landing page and has successfully entered a location.
+
+Primary Flow - 
+1. User selects to save location.
+2. System saves location.
+
+Alternate Flow -
+** Location is already saved.
+a1. User selects to unsave location.
+a2. System removes saved location.

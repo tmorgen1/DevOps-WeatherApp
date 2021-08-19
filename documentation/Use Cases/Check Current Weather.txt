@@ -1,0 +1,16 @@
+Check current weather for given location
+
+
+Context - User is on the landing page.
+
+Primary Flow - 
+1. System displays saved locations.
+2. User enters a location or selects a saved location.
+3. System displays current weather information for the location.
+
+Alternate Flow -
+** Location not found
+3a. Alert the user that the location was not found.
+
+** Unexpected data gathering error
+3b. Alert the user that the weather information was not obtainable.
