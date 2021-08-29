@@ -1,4 +1,4 @@
-package edu.westga.weatherapp;
+package edu.westga.weatherapp_service;
 
 import static org.junit.Assert.assertTrue;
 
