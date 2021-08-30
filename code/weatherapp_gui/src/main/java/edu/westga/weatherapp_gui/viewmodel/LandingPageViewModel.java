@@ -3,6 +3,7 @@ package edu.westga.weatherapp_gui.viewmodel;
 import java.rmi.Naming;
 import org.json.JSONObject;
 import edu.westga.weatherapp_shared.WeatherDataRetriever;
+import edu.westga.weatherapp_shared.WeatherIconRetriever;
 
 /**
  * Defines the landing page view model class and contains all functionality for the landing page view
@@ -10,6 +11,7 @@ import edu.westga.weatherapp_shared.WeatherDataRetriever;
 public class LandingPageViewModel {
     
     private WeatherDataRetriever weatherDataRetriever;
+    private WeatherIconRetriever weatherIconRetriever;
     private JSONObject currentWeatherData;
 
     /**
@@ -18,6 +20,7 @@ public class LandingPageViewModel {
     public LandingPageViewModel() {
         try {
             this.weatherDataRetriever = (WeatherDataRetriever) Naming.lookup("rmi://localhost:5000/current-weather");
+            this.weatherIconRetriever = (WeatherIconRetriever) Naming.lookup("rmi://localhost:5000/weather-icons");
         } catch (Exception exception) {
             System.err.println(exception.getMessage());
         }
@@ -64,5 +67,26 @@ public class LandingPageViewModel {
 
         Object descriptionObject = this.currentWeatherData.getJSONArray("weather").getJSONObject(0).get("main");
         return String.valueOf(descriptionObject);
+    }
+
+    /**
+     * Gets the current weather icon url from the current weather data
+     * 
+     * @return String - Current weather icon url
+     */
+    public String getCurrentWeatherIcon() {
+        if (this.currentWeatherData == null) {
+            throw new IllegalArgumentException("No current weather data detected.");
+        }
+
+        Object icon = this.currentWeatherData.getJSONArray("weather").getJSONObject(0).get("icon");
+        String iconString = String.valueOf(icon);
+        try {
+            return this.weatherIconRetriever.GetWeatherIconUrlByIconId(iconString);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+        
+        return null;
     }
 }

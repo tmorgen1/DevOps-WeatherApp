@@ -3,6 +3,7 @@ package edu.westga.weatherapp_gui.view;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -54,6 +55,7 @@ public class LandingPage {
         }
         this.updateCurrentTemperature();
         this.updateCurrentWeatherDescription();
+        this.updateCurrentWeatherIcon();
     }
 
     private Boolean checkWeatherData(Boolean result) {
@@ -75,6 +77,13 @@ public class LandingPage {
     private void updateCurrentWeatherDescription() {
         String description = this.viewModel.getCurrentWeatherDescription();
         this.weatherDescriptionLabel.setText(description);
+    }
+
+    private void updateCurrentWeatherIcon() {
+        String iconURL = this.viewModel.getCurrentWeatherIcon();
+        System.out.println(iconURL);
+        Image iconImage = new Image(iconURL);
+        this.weatherIconImageView.setImage(iconImage);
     }
 
 }
