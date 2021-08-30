@@ -16,9 +16,9 @@ import edu.westga.weatherapp_shared.WeatherDataRetriever;
 public class OpenWeatherCurrentDataRetriever extends UnicastRemoteObject implements WeatherDataRetriever {
 
     /**
-     *OpenWeather API Base call.
+     * OpenWeather API Base call.
      */
-    private static final String CURRENT_WEATHER_API_CALL_BASE = "https://pro.openweathermap.org/data/2.5/weather?appid=";
+    private static final String OPEN_WEATHER_API_CALL_BASE = "https://pro.openweathermap.org/data/2.5/weather?appid=";
 
     /**
      * OpenWeather API key for developer use.
@@ -113,7 +113,7 @@ public class OpenWeatherCurrentDataRetriever extends UnicastRemoteObject impleme
         }
         
         try {
-            return new URL(OpenWeatherCurrentDataRetriever.CURRENT_WEATHER_API_CALL_BASE + OpenWeatherCurrentDataRetriever.API_KEY + unitTypeAppendString + apiCallCommand);
+            return new URL(OpenWeatherCurrentDataRetriever.OPEN_WEATHER_API_CALL_BASE + OpenWeatherCurrentDataRetriever.API_KEY + unitTypeAppendString + apiCallCommand);
         } catch (MalformedURLException exception) {
             // TODO: Handle exception
             System.err.println(exception.getMessage());
