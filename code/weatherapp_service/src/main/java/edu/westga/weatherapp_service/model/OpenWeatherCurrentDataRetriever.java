@@ -6,8 +6,8 @@ import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Scanner;
-import org.json.JSONObject;
 import edu.westga.weatherapp_service.enums.MeasurementUnits;
+import edu.westga.weatherapp_shared.WeatherDataRetriever;
 
 /**
  * This weather data retriever uses the OpenWeather API to obtain weather data.  Also extends the UnicastRemoteObject
@@ -52,30 +52,30 @@ public class OpenWeatherCurrentDataRetriever extends UnicastRemoteObject impleme
     }
 
     @Override
-    public JSONObject GetDataByCity(String cityName) throws RemoteException {
+    public String GetDataByCity(String cityName) throws RemoteException {
         URL apiCall = this.getAPICallURL("&q=" + cityName);
         return this.GetData(apiCall); 
     }
 
     @Override
-    public JSONObject GetDataByCityAndStateCode(String cityName, String stateCode) throws RemoteException {
+    public String GetDataByCityAndStateCode(String cityName, String stateCode) throws RemoteException {
         URL apiCall = this.getAPICallURL("&q=" + cityName + "," + stateCode);
         return this.GetData(apiCall); 
     }
 
     @Override
-    public JSONObject GetDataByCityAndStateCodeAndCountryCode(String cityName, String stateCode, String countryCode) throws RemoteException {
+    public String GetDataByCityAndStateCodeAndCountryCode(String cityName, String stateCode, String countryCode) throws RemoteException {
         URL apiCall = this.getAPICallURL("&q=" + cityName + "," + stateCode + "," + countryCode);
         return this.GetData(apiCall);
     }
 
     /**
-     * Retrieves the http page content from the api call and translates it to a JSONObject.
+     * Retrieves the http page content from the api call and translates it to a String.
      * 
      * @param apiCall - URL for the api call
-     * @return a JSONObject containing the weather data
+     * @return a String containing the weather data
      */
-    private JSONObject GetData(URL apiCall) {
+    private String GetData(URL apiCall) {
         try {
             StringBuffer jsonBuffer = new StringBuffer();
             try (Scanner scanner = new Scanner(apiCall.openStream())) {
@@ -84,9 +84,9 @@ public class OpenWeatherCurrentDataRetriever extends UnicastRemoteObject impleme
                 }
             }
             
-            JSONObject jsonObject = new JSONObject(jsonBuffer.toString());
+            //JSONObject jsonObject = new JSONObject(jsonBuffer.toString());
             
-            return jsonObject;
+            return jsonBuffer.toString();
         } catch (IOException exception) {
             // TODO: Handle exception
             System.err.println(exception.getMessage());
