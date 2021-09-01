@@ -2,6 +2,7 @@ package edu.westga.weatherapp_service;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
 import edu.westga.weatherapp_service.model.OpenWeatherCurrentDataRetriever;
 import edu.westga.weatherapp_service.model.OpenWeatherIconRetriever;
 import edu.westga.weatherapp_shared.WeatherDataRetriever;
@@ -13,6 +14,11 @@ import edu.westga.weatherapp_shared.WeatherIconRetriever;
 public class App 
 {
     /**
+     * RMI Registry Port.
+     */
+    private static final int RMI_PORT = 5000;
+
+    /**
      * Entry point of the program.
      * 
      * @param args
@@ -20,6 +26,8 @@ public class App
      */
     public static void main( String[] args ) throws RemoteException
     {
+        LocateRegistry.createRegistry(App.RMI_PORT);
+        
         try {
             WeatherDataRetriever currentWeatherSkeleton = new OpenWeatherCurrentDataRetriever();
             Naming.rebind("rmi://localhost:5000/current-weather", currentWeatherSkeleton);
