@@ -3,9 +3,11 @@ package edu.westga.weatherapp_service;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+
+import edu.westga.weatherapp_service.model.APIDataRetriever;
 import edu.westga.weatherapp_service.model.OpenWeatherCurrentDataRetriever;
 import edu.westga.weatherapp_service.model.OpenWeatherIconRetriever;
-import edu.westga.weatherapp_shared.WeatherDataRetriever;
+import edu.westga.weatherapp_shared.CurrentWeatherDataRetriever;
 import edu.westga.weatherapp_shared.WeatherIconRetriever;
 
 /**
@@ -29,7 +31,7 @@ public class App
         LocateRegistry.createRegistry(App.RMI_PORT);
         
         try {
-            WeatherDataRetriever currentWeatherSkeleton = new OpenWeatherCurrentDataRetriever();
+            CurrentWeatherDataRetriever currentWeatherSkeleton = new OpenWeatherCurrentDataRetriever(new APIDataRetriever());
             Naming.rebind("rmi://localhost:5000/current-weather", currentWeatherSkeleton);
 
             WeatherIconRetriever weatherIconSkeleton = new OpenWeatherIconRetriever();

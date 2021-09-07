@@ -2,7 +2,7 @@ package edu.westga.weatherapp_gui.viewmodel;
 
 import java.rmi.Naming;
 import org.json.JSONObject;
-import edu.westga.weatherapp_shared.WeatherDataRetriever;
+import edu.westga.weatherapp_shared.CurrentWeatherDataRetriever;
 import edu.westga.weatherapp_shared.WeatherIconRetriever;
 
 /**
@@ -10,7 +10,7 @@ import edu.westga.weatherapp_shared.WeatherIconRetriever;
  */
 public class LandingPageViewModel {
     
-    private WeatherDataRetriever weatherDataRetriever;
+    private CurrentWeatherDataRetriever weatherDataRetriever;
     private WeatherIconRetriever weatherIconRetriever;
     private JSONObject currentWeatherData;
 
@@ -19,7 +19,7 @@ public class LandingPageViewModel {
      */
     public LandingPageViewModel() {
         try {
-            this.weatherDataRetriever = (WeatherDataRetriever) Naming.lookup("rmi://localhost:5000/current-weather");
+            this.weatherDataRetriever = (CurrentWeatherDataRetriever) Naming.lookup("rmi://localhost:5000/current-weather");
             this.weatherIconRetriever = (WeatherIconRetriever) Naming.lookup("rmi://localhost:5000/weather-icons");
         } catch (Exception exception) {
             System.err.println("Error looking up java rmi binding");
