@@ -4,11 +4,11 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
- * Weather Data Retriever interface.  Extends the remote class to allow for
+ * Current Weather Data Retriever interface.  Extends the remote class to allow for
  * Remote Method Invocation.  Objects that implement this interface should be able to
  * obtain current weather data given location details.
  */
-public interface WeatherDataRetriever extends Remote {
+public interface CurrentWeatherDataRetriever extends Remote {
     
     /**
      * Obtains the current weather data for a location given the city name.
