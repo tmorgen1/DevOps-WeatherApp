@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane fx:id="dailyForecastPagePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0" prefWidth="401.0" style="-fx-background-color: #2A2E37;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.weatherapp_gui.view.DailyForecastPage">
+   <children>
+      <Label layoutX="118.0" layoutY="14.0" text="Daily Forecast" textFill="WHITE">
+         <font>
+            <Font name="Segoe UI Bold" size="25.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="backArrowImageView" fitHeight="32.0" fitWidth="47.0" layoutX="14.0" layoutY="14.0" onMouseClicked="#onBackArrowClicked" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../icons/back-icon.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+   </children>
+</Pane>

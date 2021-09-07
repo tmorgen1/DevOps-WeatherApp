@@ -1,28 +1,47 @@
 package edu.westga.weatherapp_gui.viewmodel;
 
 import java.rmi.Naming;
+import java.rmi.RemoteException;
+
 import org.json.JSONObject;
 import edu.westga.weatherapp_shared.CurrentWeatherDataRetriever;
 import edu.westga.weatherapp_shared.WeatherIconRetriever;
 
 /**
- * Defines the landing page view model class and contains all functionality for the landing page view
+ * Defines the landing page view model class and contains all functionality for
+ * the landing page view
  */
 public class LandingPageViewModel {
-    
+
+    /**
+     * The current weather data retriever
+     */
     private CurrentWeatherDataRetriever weatherDataRetriever;
+
+    /**
+     * The weather icon retriever
+     */
     private WeatherIconRetriever weatherIconRetriever;
+
+    /**
+     * The retrieved current weather data
+     */
     private JSONObject currentWeatherData;
 
     /**
      * Creates an instance of the landing page view model
      */
-    public LandingPageViewModel() {
-        try {
-            this.weatherDataRetriever = (CurrentWeatherDataRetriever) Naming.lookup("rmi://localhost:5000/current-weather");
-            this.weatherIconRetriever = (WeatherIconRetriever) Naming.lookup("rmi://localhost:5000/weather-icons");
-        } catch (Exception exception) {
-            System.err.println("Error looking up java rmi binding");
+    public LandingPageViewModel(CurrentWeatherDataRetriever weatherDataRetriver, WeatherIconRetriever iconRetriever) {
+        if (weatherDataRetriver != null && iconRetriever != null) {
+            this.weatherDataRetriever = weatherDataRetriver;
+            this.weatherIconRetriever = iconRetriever;
+        } else {
+            try {
+                this.weatherDataRetriever = (CurrentWeatherDataRetriever) Naming.lookup("rmi://localhost:5000/current-weather");
+                this.weatherIconRetriever = (WeatherIconRetriever) Naming.lookup("rmi://localhost:5000/weather-icons");
+            } catch (Exception exception) {
+                System.err.println("Error looking up java rmi binding");
+            }
         }
     }
 
@@ -33,22 +52,49 @@ public class LandingPageViewModel {
      * @return True if successful, false otherwise
      */
     public boolean getWeatherDataByCity(String city) {
+        if (city == null) {
+            throw new IllegalArgumentException("City cannot be null");
+        }
+
         try {
             this.currentWeatherData = new JSONObject(this.weatherDataRetriever.GetDataByCity(city));
             return true;
-        } catch (Exception exception) {
+        } catch (RemoteException exception) {
             return false;
         }
     }
 
     /**
-     * Gets the current weather temperature from the current weather data
+     * Gets the current weather icon url from the current weather data. Must
+     * retrieve weather data before calling
+     * 
+     * @return String - Current weather icon url
+     */
+    public String getCurrentWeatherIcon() {
+        if (this.currentWeatherData == null) {
+            throw new IllegalArgumentException("No current weather data");
+        }
+
+        try {
+            Object icon = this.currentWeatherData.getJSONArray("weather").getJSONObject(0).get("icon");
+            String iconString = String.valueOf(icon);
+
+            return this.weatherIconRetriever.GetWeatherIconUrlByIconId(iconString);
+        } catch (RemoteException exception) {
+            System.err.println("Remote Exception: Error retrieving weather icon url by icon id");
+            return null;
+        }
+    }
+
+    /**
+     * Gets the current weather temperature from the current weather data. Must
+     * retrieve weather data before calling
      * 
      * @return String - Current temperature
      */
     public String getCurrentTemperature() {
         if (this.currentWeatherData == null) {
-            throw new IllegalArgumentException("No current weather data detected.");
+            throw new IllegalArgumentException("No current weather data");
         }
 
         Long temperature = Math.round(this.currentWeatherData.getJSONObject("main").getDouble("temp"));
@@ -56,13 +102,14 @@ public class LandingPageViewModel {
     }
 
     /**
-     * Gets the current weather wind speed from the current weather data
+     * Gets the current weather wind speed from the current weather data. Must
+     * retrieve weather data before calling
      * 
      * @return String - Current wind speed
      */
     public String getCurrentWindSpeed() {
         if (this.currentWeatherData == null) {
-            throw new IllegalArgumentException("No current weather data detected.");
+            throw new IllegalArgumentException("No current weather data");
         }
 
         Long windSpeed = Math.round(this.currentWeatherData.getJSONObject("wind").getDouble("speed"));
@@ -70,13 +117,14 @@ public class LandingPageViewModel {
     }
 
     /**
-     * Gets the current weather humidity from the current weather data
+     * Gets the current weather humidity from the current weather data. Must
+     * retrieve weather data before calling
      * 
      * @return String - Current humidity
      */
     public String getCurrentHumidity() {
         if (this.currentWeatherData == null) {
-            throw new IllegalArgumentException("No current weather data detected.");
+            throw new IllegalArgumentException("No current weather data");
         }
 
         Long humidity = Math.round(this.currentWeatherData.getJSONObject("main").getDouble("humidity"));
@@ -84,36 +132,17 @@ public class LandingPageViewModel {
     }
 
     /**
-     * Gets the current weather description from the current weather data
+     * Gets the current weather description from the current weather data. Must
+     * retrieve weather data before calling
      * 
      * @return String - Current weather description
      */
     public String getCurrentWeatherDescription() {
         if (this.currentWeatherData == null) {
-            throw new IllegalArgumentException("No current weather data detected.");
+            throw new IllegalArgumentException("No current weather data");
         }
 
         Object descriptionObject = this.currentWeatherData.getJSONArray("weather").getJSONObject(0).get("main");
         return String.valueOf(descriptionObject);
-    }
-
-    /**
-     * Gets the current weather icon url from the current weather data
-     * 
-     * @return String - Current weather icon url
-     */
-    public String getCurrentWeatherIcon() {
-        if (this.currentWeatherData == null) {
-            throw new IllegalArgumentException("No current weather data detected.");
-        }
-
-        Object icon = this.currentWeatherData.getJSONArray("weather").getJSONObject(0).get("icon");
-        String iconString = String.valueOf(icon);
-        try {
-            return this.weatherIconRetriever.GetWeatherIconUrlByIconId(iconString);
-        } catch (Exception exception) {
-            System.err.println("Error retrieving weather icon url by icon id");
-            return null;
-        }
     }
 }

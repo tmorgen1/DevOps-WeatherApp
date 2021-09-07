@@ -13,8 +13,11 @@ import javafx.stage.Stage;
  */
 public class App extends Application
 {
-    private static final String WINDOW_TITLE = "Weather App";
-	private static final String GUI_RESOURCE = "/edu/westga/weatherapp_gui/view/LandingPage.fxml";
+    public static final String LANDING_PAGE_TITLE = "Weather App - Home";
+	public static final String LANDING_PAGE_VIEW = "/edu/westga/weatherapp_gui/view/LandingPage.fxml";
+
+	public static final String DAILY_FORECAST_PAGE_TITLE = "Weather App - Daily Forecast";
+	public static final String DAILY_FORECAST_VIEW = "/edu/westga/weatherapp_gui/view/DailyForecastPage.fxml";
 
 	/**
 	 * JavaFX entry point.
@@ -26,9 +29,9 @@ public class App extends Application
 	 */
 	@Override
 	public void start(Stage primaryStage) throws IOException {
-		Parent parent = FXMLLoader.load(getClass().getResource(App.GUI_RESOURCE));
+		Parent parent = FXMLLoader.load(getClass().getResource(App.LANDING_PAGE_VIEW));
 		Scene scene = new Scene(parent);
-		primaryStage.setTitle(WINDOW_TITLE);
+		primaryStage.setTitle(LANDING_PAGE_TITLE);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
