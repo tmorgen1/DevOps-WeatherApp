@@ -22,7 +22,7 @@ public class LandingPageViewModel {
             this.weatherDataRetriever = (WeatherDataRetriever) Naming.lookup("rmi://localhost:5000/current-weather");
             this.weatherIconRetriever = (WeatherIconRetriever) Naming.lookup("rmi://localhost:5000/weather-icons");
         } catch (Exception exception) {
-            System.err.println(exception.getMessage());
+            System.err.println("Error looking up java rmi binding");
         }
     }
 
@@ -56,6 +56,34 @@ public class LandingPageViewModel {
     }
 
     /**
+     * Gets the current weather wind speed from the current weather data
+     * 
+     * @return String - Current wind speed
+     */
+    public String getCurrentWindSpeed() {
+        if (this.currentWeatherData == null) {
+            throw new IllegalArgumentException("No current weather data detected.");
+        }
+
+        Long windSpeed = Math.round(this.currentWeatherData.getJSONObject("wind").getDouble("speed"));
+        return String.valueOf(windSpeed);
+    }
+
+    /**
+     * Gets the current weather humidity from the current weather data
+     * 
+     * @return String - Current humidity
+     */
+    public String getCurrentHumidity() {
+        if (this.currentWeatherData == null) {
+            throw new IllegalArgumentException("No current weather data detected.");
+        }
+
+        Long humidity = Math.round(this.currentWeatherData.getJSONObject("main").getDouble("humidity"));
+        return String.valueOf(humidity);
+    }
+
+    /**
      * Gets the current weather description from the current weather data
      * 
      * @return String - Current weather description
@@ -83,10 +111,9 @@ public class LandingPageViewModel {
         String iconString = String.valueOf(icon);
         try {
             return this.weatherIconRetriever.GetWeatherIconUrlByIconId(iconString);
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
+        } catch (Exception exception) {
+            System.err.println("Error retrieving weather icon url by icon id");
+            return null;
         }
-        
-        return null;
     }
 }
