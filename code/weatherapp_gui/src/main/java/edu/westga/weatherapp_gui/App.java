@@ -19,6 +19,8 @@ public class App extends Application
 	public static final String DAILY_FORECAST_PAGE_TITLE = "Weather App - Daily Forecast";
 	public static final String DAILY_FORECAST_VIEW = "/edu/westga/weatherapp_gui/view/DailyForecastPage.fxml";
 
+	public static final String DAY_FORECAST_PANE_VIEW = "/edu/westga/weatherapp_gui/view/DayForecastPane.fxml";
+
 	/**
 	 * JavaFX entry point.
 	 *

@@ -6,8 +6,10 @@ import java.rmi.registry.LocateRegistry;
 
 import edu.westga.weatherapp_service.model.APIDataRetriever;
 import edu.westga.weatherapp_service.model.OpenWeatherCurrentDataRetriever;
+import edu.westga.weatherapp_service.model.OpenWeatherDailyDataRetriever;
 import edu.westga.weatherapp_service.model.OpenWeatherIconRetriever;
 import edu.westga.weatherapp_shared.CurrentWeatherDataRetriever;
+import edu.westga.weatherapp_shared.DailyWeatherDataRetriever;
 import edu.westga.weatherapp_shared.WeatherIconRetriever;
 
 /**
@@ -36,6 +38,9 @@ public class App
 
             WeatherIconRetriever weatherIconSkeleton = new OpenWeatherIconRetriever();
             Naming.rebind("rmi://localhost:5000/weather-icons", weatherIconSkeleton);
+
+            DailyWeatherDataRetriever dailyWeatherSkeleton = new OpenWeatherDailyDataRetriever(new APIDataRetriever());
+            Naming.rebind("rmi://localhost:5000/daily-weather", dailyWeatherSkeleton);
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }

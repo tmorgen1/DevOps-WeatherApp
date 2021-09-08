@@ -2,9 +2,12 @@
 
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <Pane fx:id="dailyForecastPagePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0" prefWidth="401.0" style="-fx-background-color: #2A2E37;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.weatherapp_gui.view.DailyForecastPage">
@@ -22,5 +25,16 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </ImageView>
+      <ScrollPane fx:id="scrollPane" focusTraversable="false" hbarPolicy="NEVER" layoutY="59.0" prefHeight="518.0" prefWidth="401.0" visible="false">
+         <content>
+            <VBox fx:id="dailyForecastVBox" prefHeight="516.0" prefWidth="399.0" style="-fx-background-color: #cccccc;" />
+         </content>
+      </ScrollPane>
+      <ProgressIndicator fx:id="progressIndicator" layoutX="175.0" layoutY="236.0" />
+      <Label fx:id="progressLabel" layoutX="127.0" layoutY="304.0" text="Fetching Data" textFill="WHITE">
+         <font>
+            <Font name="Segoe UI" size="24.0" />
+         </font>
+      </Label>
    </children>
 </Pane>
