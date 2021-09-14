@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.net.URL;
 import org.junit.jupiter.api.Test;
-import edu.westga.weatherapp_service.enums.MeasurementUnits;
+import edu.westga.weatherapp_shared.enums.MeasurementUnits;
 import edu.westga.weatherapp_service.model.APIDataRetriever;
 
 public class APIDataRetrieverTests {

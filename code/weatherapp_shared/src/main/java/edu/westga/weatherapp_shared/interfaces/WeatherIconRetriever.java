@@ -1,4 +1,4 @@
-package edu.westga.weatherapp_shared;
+package edu.westga.weatherapp_shared.interfaces;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

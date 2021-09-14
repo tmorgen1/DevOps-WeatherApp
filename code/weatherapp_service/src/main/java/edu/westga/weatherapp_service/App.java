@@ -8,9 +8,9 @@ import edu.westga.weatherapp_service.model.APIDataRetriever;
 import edu.westga.weatherapp_service.model.OpenWeatherCurrentDataRetriever;
 import edu.westga.weatherapp_service.model.OpenWeatherDailyDataRetriever;
 import edu.westga.weatherapp_service.model.OpenWeatherIconRetriever;
-import edu.westga.weatherapp_shared.CurrentWeatherDataRetriever;
-import edu.westga.weatherapp_shared.DailyWeatherDataRetriever;
-import edu.westga.weatherapp_shared.WeatherIconRetriever;
+import edu.westga.weatherapp_shared.interfaces.CurrentWeatherDataRetriever;
+import edu.westga.weatherapp_shared.interfaces.DailyWeatherDataRetriever;
+import edu.westga.weatherapp_shared.interfaces.WeatherIconRetriever;
 
 /**
  * Main class for the service provider for Group 6 DevOps Weather App.
