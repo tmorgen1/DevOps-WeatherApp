@@ -5,8 +5,8 @@ import java.rmi.RemoteException;
 
 import org.json.JSONObject;
 
-import edu.westga.weatherapp_shared.DailyWeatherDataRetriever;
-import edu.westga.weatherapp_shared.WeatherIconRetriever;
+import edu.westga.weatherapp_shared.interfaces.DailyWeatherDataRetriever;
+import edu.westga.weatherapp_shared.interfaces.WeatherIconRetriever;
 
 /**
  * Defines the daily forecast page view model class and contains all

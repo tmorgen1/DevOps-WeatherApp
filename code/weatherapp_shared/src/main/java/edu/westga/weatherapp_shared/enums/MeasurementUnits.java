@@ -1,4 +1,4 @@
-package edu.westga.weatherapp_service.enums;
+package edu.westga.weatherapp_shared.enums;
 
 /**
  * Represents unit of measurement systems.

@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
-import edu.westga.weatherapp_service.enums.MeasurementUnits;
-import edu.westga.weatherapp_service.interfaces.DataRetriever;
+import edu.westga.weatherapp_shared.enums.MeasurementUnits;
+import edu.westga.weatherapp_shared.interfaces.DataRetriever;
 
 public class APIDataRetriever implements DataRetriever {
 

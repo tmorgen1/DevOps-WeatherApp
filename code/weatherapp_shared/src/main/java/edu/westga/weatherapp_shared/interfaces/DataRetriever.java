@@ -1,6 +1,6 @@
-package edu.westga.weatherapp_service.interfaces;
+package edu.westga.weatherapp_shared.interfaces;
 import java.net.URL;
-import edu.westga.weatherapp_service.enums.MeasurementUnits;
+import edu.westga.weatherapp_shared.enums.MeasurementUnits;
 
 public interface DataRetriever {
 

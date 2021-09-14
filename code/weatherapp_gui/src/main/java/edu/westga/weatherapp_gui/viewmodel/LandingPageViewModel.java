@@ -4,11 +4,9 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 
 import org.json.JSONObject;
-
 import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
-import edu.westga.weatherapp_shared.CurrentWeatherDataRetriever;
-import edu.westga.weatherapp_shared.WeatherIconRetriever;
-
+import edu.westga.weatherapp_shared.interfaces.CurrentWeatherDataRetriever;
+import edu.westga.weatherapp_shared.interfaces.WeatherIconRetriever;
 /**
  * Defines the landing page view model class and contains all functionality for
  * the landing page view

@@ -14,8 +14,8 @@ import edu.westga.weatherapp_gui.mocks.MockDataRetriever;
 import edu.westga.weatherapp_gui.viewmodel.DailyForecastPageViewModel;
 import edu.westga.weatherapp_service.model.OpenWeatherDailyDataRetriever;
 import edu.westga.weatherapp_service.model.OpenWeatherIconRetriever;
-import edu.westga.weatherapp_shared.DailyWeatherDataRetriever;
-import edu.westga.weatherapp_shared.WeatherIconRetriever;
+import edu.westga.weatherapp_shared.interfaces.DailyWeatherDataRetriever;
+import edu.westga.weatherapp_shared.interfaces.WeatherIconRetriever;
 
 public class DailyForecastPageViewModelTests {
 

@@ -2,7 +2,7 @@ package edu.westga.weatherapp_service.model;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import edu.westga.weatherapp_shared.WeatherIconRetriever;
+import edu.westga.weatherapp_shared.interfaces.WeatherIconRetriever;
 
 /**
  * This weather icon retriever uses the OpenWeather API to obtain weather icons.  Also extends the UnicastRemoteObject
