@@ -6,38 +6,28 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<fx:root type="javafx.scene.layout.Pane" maxHeight="73.0" maxWidth="399.0" minHeight="73.0" minWidth="399.0" prefHeight="73.0" prefWidth="399.0" style="-fx-background-color: #1C2128; -fx-border-color: #000000;" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
-      <Label fx:id="dayOfWeekLabel" alignment="CENTER_RIGHT" layoutY="15.0" prefHeight="27.0" prefWidth="384.0" text="Sunday" textFill="WHITE">
+<fx:root maxHeight="73.0" maxWidth="399.0" minHeight="73.0" minWidth="399.0" prefHeight="73.0" prefWidth="399.0" style="-fx-background-color: #1C2128; -fx-border-color: #000000;" type="javafx.scene.layout.Pane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+      <Label fx:id="dayOfWeekLabel" alignment="CENTER_RIGHT" layoutX="-6.0" layoutY="12.0" prefHeight="27.0" prefWidth="384.0" text="Sunday" textFill="WHITE">
          <font>
             <Font name="Segoe UI" size="18.0" />
          </font>
       </Label>
-      <Label fx:id="dateLabel" alignment="CENTER_RIGHT" layoutY="37.0" prefHeight="27.0" prefWidth="384.0" text="September 7" textFill="WHITE">
+      <Label fx:id="dateLabel" alignment="CENTER_RIGHT" layoutX="-6.0" layoutY="34.0" prefHeight="27.0" prefWidth="384.0" text="September 31" textFill="WHITE">
          <font>
             <Font name="Segoe UI" size="18.0" />
          </font>
       </Label>
-      <Label fx:id="dayTemperatureLabel" layoutX="76.0" layoutY="7.0" text="100°C" textFill="WHITE">
+      <Label fx:id="maxTemperatureLabel" layoutX="73.0" layoutY="11.0" text="100°C" textFill="WHITE">
          <font>
             <Font name="Segoe UI Bold" size="27.0" />
          </font>
       </Label>
-      <Label fx:id="weatherDescriptionLabel" alignment="CENTER" layoutX="29.0" layoutY="39.0" prefHeight="23.0" prefWidth="202.0" text="Cloudy" textFill="WHITE">
-         <font>
-            <Font name="Segoe UI" size="18.0" />
-         </font>
-      </Label>
-      <Label fx:id="minTemperatureLabel" layoutX="156.0" layoutY="25.0" text="67°F" textFill="WHITE">
+      <Label fx:id="minTemperatureLabel" layoutX="73.0" layoutY="41.0" text="97°F" textFill="WHITE">
          <font>
             <Font name="Segoe UI" size="14.0" />
          </font>
       </Label>
-      <Label fx:id="maxTemperatureLabel" layoutX="156.0" layoutY="6.0" text="97°F" textFill="WHITE">
-         <font>
-            <Font name="Segoe UI" size="14.0" />
-         </font>
-      </Label>
-      <ImageView fitHeight="91.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="weatherIconImageView" fitHeight="91.0" fitWidth="73.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="https://openweathermap.org/img/wn/10d@4x.png" />
          </image>

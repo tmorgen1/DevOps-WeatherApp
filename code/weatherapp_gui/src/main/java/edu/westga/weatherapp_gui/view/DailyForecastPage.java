@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import edu.westga.weatherapp_gui.App;
+import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
+import edu.westga.weatherapp_gui.model.DateTimeConverter;
 import edu.westga.weatherapp_gui.view.utils.WindowGenerator;
+import edu.westga.weatherapp_gui.viewmodel.DailyForecastPageViewModel;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.concurrent.Worker.State;
@@ -23,6 +26,13 @@ import javafx.scene.control.ScrollPane;
  * Defines the daily forecast page view.
  */
 public class DailyForecastPage {
+
+    public static final int DAYS = 16;
+
+    /**
+     * The daily forecast page view model
+     */
+    private DailyForecastPageViewModel viewModel;
 
     /**
      * The array list of day forecast panes
@@ -70,17 +80,29 @@ public class DailyForecastPage {
      */
     @FXML
     void initialize() {
-        this.loadDayForecastInformation();
+        this.viewModel = new DailyForecastPageViewModel(null, null);
+        this.viewModel.GetWeatherDataByCity(CurrentWeatherInformation.getCityName(), DAYS);
+        this.loadDayForecastComponents(DAYS);
     }
 
-    public void loadDayForecastInformation() {
+    /**
+     * Loads the DayForecastPane components based on the number of days inputed.
+     * 
+     * @param days - the number of days for the forecast
+     */
+    private void loadDayForecastComponents(int days) {
         Task<ArrayList<DayForecastPane>> task = new Task<ArrayList<DayForecastPane>>() {
 
             @Override
             public ArrayList<DayForecastPane> call() throws Exception {
                 ArrayList<DayForecastPane> panes = new ArrayList<DayForecastPane>();
-                for (int i = 0; i < 16; i++) {
-                    DayForecastPane pane = new DayForecastPane();
+                for (int index = 0; index < days; index++) {
+                    String dayOfWeek = DailyForecastPage.this.getDayOfWeek(index);
+                    String dayIconUrl = DailyForecastPage.this.getDayIconUrl(index);
+                    String date = DailyForecastPage.this.getDayDate(index);
+                    String maxTemp = DailyForecastPage.this.getDayMaxTemperature(index);
+                    String minTemp = DailyForecastPage.this.getDayMinTemperature(index);
+                    DayForecastPane pane = new DayForecastPane(dayOfWeek, date, maxTemp, minTemp, dayIconUrl);
                     panes.add(pane);
                 }
                 return panes;
@@ -92,13 +114,71 @@ public class DailyForecastPage {
     }
 
     /**
+     * Gets the day of the week name for the specified day index
+     * 
+     * @param dayIndex - the day index
+     * @return the day of the week
+     */
+    private String getDayOfWeek(int dayIndex) {
+        Long timezone = DailyForecastPage.this.viewModel.GetTimezone();
+        Long utcDateTime = DailyForecastPage.this.viewModel.GetDayUtcDateTime(dayIndex);
+        return DateTimeConverter.ConvertUtcToDayOfWeek(utcDateTime, timezone);
+    }
+
+    /**
+     * Gets the day icon url for the specified day index
+     * 
+     * @param dayIndex - the day index
+     * @return the icon url
+     */
+    private String getDayIconUrl(int dayIndex) {
+        return this.viewModel.GetDayWeatherIcon(dayIndex);
+    }
+
+    /**
+     * Gets the day date for the specified day index
+     * 
+     * @param dayIndex - the day index
+     * @return the date
+     */
+    private String getDayDate(int dayIndex) {
+        Long timezone = this.viewModel.GetTimezone();
+        Long utcDateTime = this.viewModel.GetDayUtcDateTime(dayIndex);
+        return DateTimeConverter.ConvertUtcToShortDate(utcDateTime, timezone);
+    }
+
+    /**
+     * Gets the max temperature for the specified day index
+     * 
+     * @param dayIndex - the day index
+     * @return the max temp
+     */
+    private String getDayMaxTemperature(int dayIndex) {
+        String maxTemperature = this.viewModel.GetDayMaxTemperature(dayIndex);
+        String temperatureSuffix = "°F";
+        return maxTemperature + temperatureSuffix;
+    }
+
+    /**
+     * Gets the min temperature for the specified day index
+     * 
+     * @param dayIndex - the day index
+     * @return the min temp
+     */
+    private String getDayMinTemperature(int dayIndex) {
+        String minTemperature = this.viewModel.GetDayMinTemperature(dayIndex);
+        String temperatureSuffix = "°F";
+        return minTemperature + temperatureSuffix;
+    }
+
+    /**
      * Event handler for the back arrow image view. Handles the on click mouse
      * event. Switches to the landing page scene
      * 
      * @param event - the clicked mouse event
      */
     @FXML
-    void onBackArrowClicked(MouseEvent event) {
+    private void onBackArrowClicked(MouseEvent event) {
         try {
             Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             WindowGenerator.changeScene(currentStage, App.LANDING_PAGE_VIEW, App.LANDING_PAGE_TITLE);
@@ -119,9 +199,6 @@ public class DailyForecastPage {
      * Shows the scroll pane that contains the daily forecast info
      */
     private void showDailyForecastInformation() {
-        // TODO: only show n number of panes when selectbox implemented for number of
-        // days
-
         this.scrollPane.setVisible(true);
     }
 

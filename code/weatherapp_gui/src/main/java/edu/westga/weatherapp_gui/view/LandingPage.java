@@ -3,6 +3,7 @@ package edu.westga.weatherapp_gui.view;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -20,7 +21,10 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXSnackbar;
 import com.jfoenix.controls.JFXSnackbar.SnackbarEvent;
 
+import org.json.JSONObject;
+
 import edu.westga.weatherapp_gui.App;
+import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
 import edu.westga.weatherapp_gui.view.utils.WindowGenerator;
 import edu.westga.weatherapp_gui.viewmodel.LandingPageViewModel;
 
@@ -107,11 +111,28 @@ public class LandingPage {
     private Label noWeatherInformationLabel;
 
     /**
+     * The fahrenheit check menu item
+     */
+    @FXML
+    private CheckMenuItem fahrenheitCheckMenuItem;
+
+    @FXML
+    private CheckMenuItem celsiusCheckMenuItem;
+
+    @FXML
+    private CheckMenuItem kelvinCheckMenuItem;
+
+    /**
      * Initializes after all FXML fields are loaded
      */
     @FXML
     void initialize() {
         this.viewModel = new LandingPageViewModel(null, null);
+        if (CurrentWeatherInformation.getCityName() != null && CurrentWeatherInformation.getWeatherData() != null) {
+            this.viewModel.SetCurrentWeatherData(CurrentWeatherInformation.getWeatherData());
+            this.locationSearchTextField.setText(CurrentWeatherInformation.getCityName());
+            this.updateAllWeatherInformation();
+        }
     }
 
     /**
@@ -127,20 +148,42 @@ public class LandingPage {
             return;
         }
 
-        String city = this.locationSearchTextField.getText();
-        Boolean result = this.viewModel.getWeatherDataByCity(city);
-        if (!this.checkWeatherData(result)) {
-            return;
+        try {
+            String city = this.locationSearchTextField.getText();
+            JSONObject result = this.viewModel.getWeatherDataByCity(city);
+            if (!this.checkWeatherData(result)) {
+                return;
+            }
+    
+            CurrentWeatherInformation.setCityName(city);
+            this.updateAllWeatherInformation();
+        } catch (IllegalArgumentException e) {
+            this.displayNoLocationSnackbar("No Location Found");
         }
+    }
 
-        this.updateCurrentTemperature();
-        this.updateCurrentWeatherDescription();
-        this.updateCurrentWeatherIcon();
-        this.updateCurrentWindSpeed();
-        this.updateCurrentHumidity();
+    @FXML
+    void onCelsiusSelected(ActionEvent event) {
+        this.setAllCheckMenuItemsFalse();
+        this.celsiusCheckMenuItem.setSelected(true);
+    }
 
-        this.showWeatherInformation();
-        this.hideNoWeatherInformation();
+    @FXML
+    void onFahrenheitSelected(ActionEvent event) {
+        this.setAllCheckMenuItemsFalse();
+        this.fahrenheitCheckMenuItem.setSelected(true);
+    }
+
+    @FXML
+    void onKelvinSelected(ActionEvent event) {
+        this.setAllCheckMenuItemsFalse();
+        this.kelvinCheckMenuItem.setSelected(true);
+    }
+
+    private void setAllCheckMenuItemsFalse() {
+        this.fahrenheitCheckMenuItem.setSelected(false);
+        this.celsiusCheckMenuItem.setSelected(false);
+        this.kelvinCheckMenuItem.setSelected(false);
     }
 
     /**
@@ -155,7 +198,7 @@ public class LandingPage {
             Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             WindowGenerator.changeScene(currentStage, App.DAILY_FORECAST_VIEW, App.DAILY_FORECAST_PAGE_TITLE);
         } catch (IOException exception) {
-            System.err.println("IO Exception: Error switching scenes");
+            this.displayNoLocationSnackbar("Please Enter a Location First");
         }
     }
 
@@ -170,6 +213,17 @@ public class LandingPage {
         // TODO: add navigation to weather warnings page
     }
 
+    private void updateAllWeatherInformation() {
+        this.updateCurrentTemperature();
+        this.updateCurrentWeatherDescription();
+        this.updateCurrentWeatherIcon();
+        this.updateCurrentWindSpeed();
+        this.updateCurrentHumidity();
+
+        this.showWeatherInformation();
+        this.hideNoWeatherInformation();
+    }
+
     /**
      * Checks if the given weather data is valid. Displays the no weather
      * information message and hides current weather data.
@@ -177,23 +231,25 @@ public class LandingPage {
      * @param result - the retrieved weather data result
      * @return the retrieved weather data result
      */
-    private Boolean checkWeatherData(Boolean result) {
-        if (!result) {
+    private Boolean checkWeatherData(JSONObject result) {
+        if (result == null) {
             this.hideWeatherInformation();
             this.showNoWeatherInformation();
-            this.displayNoLocationSnackbar();
+            this.displayNoLocationSnackbar("No Location Found");
+
+            return false;
         }
 
-        return result;
+        return true;
     }
 
     /**
      * Displays the no location found snackbar.
      */
-    private void displayNoLocationSnackbar() {
+    private void displayNoLocationSnackbar(String errorMessage) {
         JFXSnackbar snackbar = new JFXSnackbar(this.landingPagePane);
         StackPane pane = new StackPane();
-        Label label = new Label("No Location Found");
+        Label label = new Label(errorMessage);
         pane.setMinSize(this.landingPagePane.getWidth(), 50);
         pane.getChildren().add(label);
         StackPane.setAlignment(label, Pos.CENTER);

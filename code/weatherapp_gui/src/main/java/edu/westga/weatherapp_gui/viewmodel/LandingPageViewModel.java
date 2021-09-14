@@ -4,6 +4,8 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 
 import org.json.JSONObject;
+
+import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
 import edu.westga.weatherapp_shared.CurrentWeatherDataRetriever;
 import edu.westga.weatherapp_shared.WeatherIconRetriever;
 
@@ -29,7 +31,8 @@ public class LandingPageViewModel {
     private JSONObject currentWeatherData;
 
     /**
-     * Creates an instance of the landing page view model
+     * Creates an instance of the landing page view model. Binds to java rmi if no
+     * data retrievers specified.
      */
     public LandingPageViewModel(CurrentWeatherDataRetriever weatherDataRetriver, WeatherIconRetriever iconRetriever) {
         if (weatherDataRetriver != null && iconRetriever != null) {
@@ -37,7 +40,8 @@ public class LandingPageViewModel {
             this.weatherIconRetriever = iconRetriever;
         } else {
             try {
-                this.weatherDataRetriever = (CurrentWeatherDataRetriever) Naming.lookup("rmi://localhost:5000/current-weather");
+                this.weatherDataRetriever = (CurrentWeatherDataRetriever) Naming
+                        .lookup("rmi://localhost:5000/current-weather");
                 this.weatherIconRetriever = (WeatherIconRetriever) Naming.lookup("rmi://localhost:5000/weather-icons");
             } catch (Exception exception) {
                 System.err.println("Error looking up java rmi binding");
@@ -49,18 +53,22 @@ public class LandingPageViewModel {
      * Gets the current weather data from the weather data retriever by city name
      * 
      * @param city - the name of the city
-     * @return True if successful, false otherwise
+     * @return the current weather data json object
      */
-    public boolean getWeatherDataByCity(String city) {
+    public JSONObject getWeatherDataByCity(String city) {
         if (city == null) {
             throw new IllegalArgumentException("City cannot be null");
+        }
+        if (city.isEmpty()) {
+            throw new IllegalArgumentException("City cannot be empty");
         }
 
         try {
             this.currentWeatherData = new JSONObject(this.weatherDataRetriever.GetDataByCity(city));
-            return true;
-        } catch (RemoteException exception) {
-            return false;
+            CurrentWeatherInformation.setWeatherData(this.currentWeatherData);
+            return this.currentWeatherData;
+        } catch (Exception exception) {
+            return null;
         }
     }
 
@@ -144,5 +152,17 @@ public class LandingPageViewModel {
 
         Object descriptionObject = this.currentWeatherData.getJSONArray("weather").getJSONObject(0).get("main");
         return String.valueOf(descriptionObject);
+    }
+
+    /**
+     * Updates the current weather data
+     * 
+     * @param weatherData - the new weather data
+     */
+    public void SetCurrentWeatherData(JSONObject weatherData) {
+        if (weatherData == null) {
+            throw new IllegalArgumentException("Weather data cannot be null");
+        }
+        this.currentWeatherData = weatherData;
     }
 }

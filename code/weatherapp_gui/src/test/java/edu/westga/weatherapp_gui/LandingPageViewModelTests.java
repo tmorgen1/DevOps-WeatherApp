@@ -1,13 +1,13 @@
 package edu.westga.weatherapp_gui;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.rmi.RemoteException;
 
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import edu.westga.weatherapp_gui.mocks.MockDataRetriever;
@@ -20,9 +20,49 @@ import edu.westga.weatherapp_shared.WeatherIconRetriever;
 public class LandingPageViewModelTests {
 
     @Test
+    public void constructorValid() {
+        try {
+            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(
+                    new MockDataRetriever());
+            WeatherIconRetriever iconRetriever = new OpenWeatherIconRetriever();
+            LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever);
+            assertNotNull(viewModel);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            fail("Remote Exception while testing");
+        }
+    }
+
+    @Test
+    public void constructorWithWeatherDataRetrieverNull() {
+        try {
+            WeatherIconRetriever iconRetriever = new OpenWeatherIconRetriever();
+            LandingPageViewModel viewModel = new LandingPageViewModel(null, iconRetriever);
+            assertNotNull(viewModel);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            fail("Remote Exception while testing");
+        }
+    }
+
+    @Test
+    public void constructorWithIconRetrieverNull() {
+        try {
+            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(
+                    new MockDataRetriever());
+            LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, null);
+            assertNotNull(viewModel);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            fail("Remote Exception while testing");
+        }
+    }
+
+    @Test
     public void getWeatherDataByCityThrowsExceptionWithNullCity() {
         try {
-            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
+            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(
+                    new MockDataRetriever());
             WeatherIconRetriever iconRetriever = new OpenWeatherIconRetriever();
             LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever);
             assertThrows(IllegalArgumentException.class, () -> {
@@ -37,11 +77,13 @@ public class LandingPageViewModelTests {
     @Test
     public void getWeatherDataByCityWithEmptyCity() {
         try {
-            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
+            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(
+                    new MockDataRetriever());
             WeatherIconRetriever iconRetriever = new OpenWeatherIconRetriever();
             LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever);
-            Boolean result = viewModel.getWeatherDataByCity("");
-            assertFalse(result);
+            assertThrows(IllegalArgumentException.class, () -> {
+                viewModel.getWeatherDataByCity("");
+            });
         } catch (RemoteException e) {
             e.printStackTrace();
             fail("Remote Exception while testing");
@@ -51,11 +93,12 @@ public class LandingPageViewModelTests {
     @Test
     public void getWeatherDataByCityWithValidCity() {
         try {
-            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
+            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(
+                    new MockDataRetriever());
             WeatherIconRetriever iconRetriever = new OpenWeatherIconRetriever();
             LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever);
-            Boolean result = viewModel.getWeatherDataByCity("test");
-            assertTrue(result);
+            JSONObject result = viewModel.getWeatherDataByCity("test");
+            assertEquals(5, result.getJSONObject("wind").getDouble("speed"));
         } catch (RemoteException e) {
             e.printStackTrace();
             fail("Remote Exception while testing");
@@ -65,7 +108,8 @@ public class LandingPageViewModelTests {
     @Test
     public void getCurrentTemperatureThrowsExceptionWithNoWeatherData() {
         try {
-            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
+            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(
+                    new MockDataRetriever());
             WeatherIconRetriever iconRetriever = new OpenWeatherIconRetriever();
             LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever);
             assertThrows(IllegalArgumentException.class, () -> {
@@ -80,7 +124,8 @@ public class LandingPageViewModelTests {
     @Test
     public void getCurrentTemperatureValid() {
         try {
-            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
+            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(
+                    new MockDataRetriever());
             WeatherIconRetriever iconRetriever = new OpenWeatherIconRetriever();
             LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever);
             viewModel.getWeatherDataByCity("test");
@@ -95,7 +140,8 @@ public class LandingPageViewModelTests {
     @Test
     public void getCurrentHumidityThrowsExceptionNoWeatherData() {
         try {
-            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
+            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(
+                    new MockDataRetriever());
             WeatherIconRetriever iconRetriever = new OpenWeatherIconRetriever();
             LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever);
             assertThrows(IllegalArgumentException.class, () -> {
@@ -110,7 +156,8 @@ public class LandingPageViewModelTests {
     @Test
     public void getCurrentHumidityValid() {
         try {
-            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
+            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(
+                    new MockDataRetriever());
             WeatherIconRetriever iconRetriever = new OpenWeatherIconRetriever();
             LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever);
             viewModel.getWeatherDataByCity("test");
@@ -125,7 +172,8 @@ public class LandingPageViewModelTests {
     @Test
     public void getCurrentWeatherDescriptionThrowsExceptionNoWeatherData() {
         try {
-            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
+            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(
+                    new MockDataRetriever());
             WeatherIconRetriever iconRetriever = new OpenWeatherIconRetriever();
             LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever);
             assertThrows(IllegalArgumentException.class, () -> {
@@ -136,11 +184,12 @@ public class LandingPageViewModelTests {
             fail("Remote Exception while testing");
         }
     }
-    
+
     @Test
     public void getCurrentWeatherDescriptionValid() {
         try {
-            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
+            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(
+                    new MockDataRetriever());
             WeatherIconRetriever iconRetriever = new OpenWeatherIconRetriever();
             LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever);
             viewModel.getWeatherDataByCity("test");
@@ -155,7 +204,8 @@ public class LandingPageViewModelTests {
     @Test
     public void getCurrentWindSpeedThrowsExceptionNoWeatherData() {
         try {
-            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
+            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(
+                    new MockDataRetriever());
             WeatherIconRetriever iconRetriever = new OpenWeatherIconRetriever();
             LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever);
             assertThrows(IllegalArgumentException.class, () -> {
@@ -170,7 +220,8 @@ public class LandingPageViewModelTests {
     @Test
     public void getCurrentWindSpeedValid() {
         try {
-            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
+            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(
+                    new MockDataRetriever());
             WeatherIconRetriever iconRetriever = new OpenWeatherIconRetriever();
             LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever);
             viewModel.getWeatherDataByCity("test");
@@ -185,7 +236,8 @@ public class LandingPageViewModelTests {
     @Test
     public void getCurrentWeatherIconThrowsExceptionNoWeatherData() {
         try {
-            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
+            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(
+                    new MockDataRetriever());
             WeatherIconRetriever iconRetriever = new OpenWeatherIconRetriever();
             LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever);
             assertThrows(IllegalArgumentException.class, () -> {
@@ -200,12 +252,45 @@ public class LandingPageViewModelTests {
     @Test
     public void getCurrentWeatherIconValid() {
         try {
-            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
+            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(
+                    new MockDataRetriever());
             WeatherIconRetriever iconRetriever = new OpenWeatherIconRetriever();
             LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever);
             viewModel.getWeatherDataByCity("test");
             String result = viewModel.getCurrentWeatherIcon();
             assertEquals("http://openweathermap.org/img/wn/test@4x.png", result);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            fail("Remote Exception while testing");
+        }
+    }
+
+    @Test
+    public void setCurrentWeatherDataThrowsExceptionWithNullData() {
+        try {
+            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(
+                    new MockDataRetriever());
+            WeatherIconRetriever iconRetriever = new OpenWeatherIconRetriever();
+            LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever);
+            assertThrows(IllegalArgumentException.class, () -> {
+                viewModel.SetCurrentWeatherData(null);
+            });
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            fail("Remote Exception while testing");
+        }
+    }
+
+    @Test
+    public void setCurrentWeatherDataValid() {
+        try {
+            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetriever(
+                    new MockDataRetriever());
+            WeatherIconRetriever iconRetriever = new OpenWeatherIconRetriever();
+            LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever);
+            JSONObject testObject = new JSONObject().put("test", 1);
+            viewModel.SetCurrentWeatherData(testObject);
+            assertNotNull(viewModel);
         } catch (RemoteException e) {
             e.printStackTrace();
             fail("Remote Exception while testing");
