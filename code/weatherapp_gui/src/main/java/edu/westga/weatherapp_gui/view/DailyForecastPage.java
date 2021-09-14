@@ -8,9 +8,11 @@ import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
 import edu.westga.weatherapp_gui.model.DateTimeConverter;
 import edu.westga.weatherapp_gui.view.utils.WindowGenerator;
 import edu.westga.weatherapp_gui.viewmodel.DailyForecastPageViewModel;
+import edu.westga.weatherapp_shared.enums.MeasurementUnits;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.concurrent.Worker.State;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -18,6 +20,7 @@ import javafx.stage.Stage;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.Node;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.ScrollPane;
@@ -75,14 +78,79 @@ public class DailyForecastPage {
     @FXML
     private ScrollPane scrollPane;
 
+    @FXML
+    private CheckMenuItem fahrenheitCheckMenuItem;
+
+    @FXML
+    private CheckMenuItem celsiusCheckMenuItem;
+
+    @FXML
+    private CheckMenuItem kelvinCheckMenuItem;
+
+    private String TemperatureSuffix = " °F";
+
     /**
      * Initializes after all FXML fields are loaded
      */
     @FXML
     void initialize() {
+        this.dayForecastPanes = new ArrayList<DayForecastPane>();
+        this.setMeasurementSettings();
         this.viewModel = new DailyForecastPageViewModel(null, null);
-        this.viewModel.GetWeatherDataByCity(CurrentWeatherInformation.getCityName(), DAYS);
         this.loadDayForecastComponents(DAYS);
+    }
+
+    @FXML
+    void onCelsiusSelected(ActionEvent event) {
+        this.TemperatureSuffix = " °C";
+        this.setAllCheckMenuItemsFalse();
+        this.celsiusCheckMenuItem.setSelected(true);
+        CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Metric);
+        this.updateDataIfSearchedCity();
+    }
+
+    @FXML
+    void onFahrenheitSelected(ActionEvent event) {
+        this.TemperatureSuffix = " °F";
+        this.setAllCheckMenuItemsFalse();
+        this.fahrenheitCheckMenuItem.setSelected(true);
+        CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Imperial);
+        this.updateDataIfSearchedCity();
+    }
+
+    @FXML
+    void onKelvinSelected(ActionEvent event) {
+        this.TemperatureSuffix = " K";
+        this.setAllCheckMenuItemsFalse();
+        this.kelvinCheckMenuItem.setSelected(true);
+        CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Kelvin);
+        this.updateDataIfSearchedCity();
+    }
+
+    private void updateDataIfSearchedCity() {
+        this.hideDailyForecastInformation();
+        this.showLoadingIndication();
+        this.loadDayForecastComponents(DAYS);
+    }
+
+    private void setAllCheckMenuItemsFalse() {
+        this.fahrenheitCheckMenuItem.setSelected(false);
+        this.celsiusCheckMenuItem.setSelected(false);
+        this.kelvinCheckMenuItem.setSelected(false);
+    }
+
+    private void setMeasurementSettings() {
+        this.setAllCheckMenuItemsFalse();
+        if (CurrentWeatherInformation.getMeasurementUnits() == MeasurementUnits.Imperial) {
+            this.fahrenheitCheckMenuItem.setSelected(true);
+            this.TemperatureSuffix = " °F";
+        } else if (CurrentWeatherInformation.getMeasurementUnits() == MeasurementUnits.Metric) {
+            this.TemperatureSuffix = " °C";
+            this.celsiusCheckMenuItem.setSelected(true);
+        } else {
+            this.TemperatureSuffix = " K";
+            this.kelvinCheckMenuItem.setSelected(true);
+        }
     }
 
     /**
@@ -91,6 +159,9 @@ public class DailyForecastPage {
      * @param days - the number of days for the forecast
      */
     private void loadDayForecastComponents(int days) {
+        this.viewModel.GetWeatherDataByCity(CurrentWeatherInformation.getCityName(), DAYS);
+        this.dayForecastPanes.clear();
+        this.dailyForecastVBox.getChildren().clear();
         Task<ArrayList<DayForecastPane>> task = new Task<ArrayList<DayForecastPane>>() {
 
             @Override
@@ -155,8 +226,7 @@ public class DailyForecastPage {
      */
     private String getDayMaxTemperature(int dayIndex) {
         String maxTemperature = this.viewModel.GetDayMaxTemperature(dayIndex);
-        String temperatureSuffix = "°F";
-        return maxTemperature + temperatureSuffix;
+        return maxTemperature + this.TemperatureSuffix;
     }
 
     /**
@@ -167,8 +237,7 @@ public class DailyForecastPage {
      */
     private String getDayMinTemperature(int dayIndex) {
         String minTemperature = this.viewModel.GetDayMinTemperature(dayIndex);
-        String temperatureSuffix = "°F";
-        return minTemperature + temperatureSuffix;
+        return minTemperature + this.TemperatureSuffix;
     }
 
     /**
@@ -195,11 +264,20 @@ public class DailyForecastPage {
         this.progressLabel.setVisible(false);
     }
 
+    private void showLoadingIndication() {
+        this.progressIndicator.setVisible(true);
+        this.progressLabel.setVisible(true);
+    }
+
     /**
      * Shows the scroll pane that contains the daily forecast info
      */
     private void showDailyForecastInformation() {
         this.scrollPane.setVisible(true);
+    }
+
+    private void hideDailyForecastInformation() {
+        this.scrollPane.setVisible(false);
     }
 
     /**

@@ -62,6 +62,7 @@ public class LandingPageViewModel {
         }
 
         try {
+            this.weatherDataRetriever.setUnitsOfMeasurement(CurrentWeatherInformation.getMeasurementUnits());
             this.currentWeatherData = new JSONObject(this.weatherDataRetriever.GetDataByCity(city));
             CurrentWeatherInformation.setWeatherData(this.currentWeatherData);
             return this.currentWeatherData;

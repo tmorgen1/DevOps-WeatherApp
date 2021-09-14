@@ -27,6 +27,7 @@ import edu.westga.weatherapp_gui.App;
 import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
 import edu.westga.weatherapp_gui.view.utils.WindowGenerator;
 import edu.westga.weatherapp_gui.viewmodel.LandingPageViewModel;
+import edu.westga.weatherapp_shared.enums.MeasurementUnits;
 
 /**
  * Defines the landing page view.
@@ -122,11 +123,16 @@ public class LandingPage {
     @FXML
     private CheckMenuItem kelvinCheckMenuItem;
 
+    private String TemperatureSuffix = " °F";
+
+    private String WindSpeedSuffix = " mi/h";
+
     /**
      * Initializes after all FXML fields are loaded
      */
     @FXML
     void initialize() {
+        this.setMeasurementSettings();
         this.viewModel = new LandingPageViewModel(null, null);
         if (CurrentWeatherInformation.getCityName() != null && CurrentWeatherInformation.getWeatherData() != null) {
             this.viewModel.SetCurrentWeatherData(CurrentWeatherInformation.getWeatherData());
@@ -148,6 +154,10 @@ public class LandingPage {
             return;
         }
 
+        this.tryGetAndUpdateWeatherData();
+    }
+
+    private void tryGetAndUpdateWeatherData() {
         try {
             String city = this.locationSearchTextField.getText();
             JSONObject result = this.viewModel.getWeatherDataByCity(city);
@@ -164,26 +174,55 @@ public class LandingPage {
 
     @FXML
     void onCelsiusSelected(ActionEvent event) {
+        this.TemperatureSuffix = " °C";
+        this.WindSpeedSuffix = " km/h";
         this.setAllCheckMenuItemsFalse();
         this.celsiusCheckMenuItem.setSelected(true);
+        CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Metric);
+        this.updateDataIfSearchedCity();
     }
 
     @FXML
     void onFahrenheitSelected(ActionEvent event) {
+        this.TemperatureSuffix = " °F";
+        this.WindSpeedSuffix = " mi/h";
         this.setAllCheckMenuItemsFalse();
         this.fahrenheitCheckMenuItem.setSelected(true);
+        CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Imperial);
+        this.updateDataIfSearchedCity();
     }
 
     @FXML
     void onKelvinSelected(ActionEvent event) {
+        this.TemperatureSuffix = " K";
+        this.WindSpeedSuffix = " km/h";
         this.setAllCheckMenuItemsFalse();
         this.kelvinCheckMenuItem.setSelected(true);
+        CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Kelvin);
+        this.updateDataIfSearchedCity();
+    }
+
+    private void updateDataIfSearchedCity() {
+        if (!this.locationSearchTextField.getText().isEmpty()) {
+            this.tryGetAndUpdateWeatherData();
+        }
     }
 
     private void setAllCheckMenuItemsFalse() {
         this.fahrenheitCheckMenuItem.setSelected(false);
         this.celsiusCheckMenuItem.setSelected(false);
         this.kelvinCheckMenuItem.setSelected(false);
+    }
+
+    private void setMeasurementSettings() {
+        this.setAllCheckMenuItemsFalse();
+        if (CurrentWeatherInformation.getMeasurementUnits() == MeasurementUnits.Imperial) {
+            this.fahrenheitCheckMenuItem.setSelected(true);
+        } else if (CurrentWeatherInformation.getMeasurementUnits() == MeasurementUnits.Metric) {
+            this.celsiusCheckMenuItem.setSelected(true);
+        } else {
+            this.kelvinCheckMenuItem.setSelected(true);
+        }
     }
 
     /**
@@ -265,8 +304,7 @@ public class LandingPage {
         //TODO: Implement appropriate temperature suffix based on current weather data
 
         String temperature = this.viewModel.getCurrentTemperature();
-        String temperatureSuffix = "°F";
-        this.currentTemperatureLabel.setText(temperature + temperatureSuffix);
+        this.currentTemperatureLabel.setText(temperature + this.TemperatureSuffix);
     }
 
     /**
@@ -291,8 +329,7 @@ public class LandingPage {
      */
     private void updateCurrentWindSpeed() {
         String windSpeed = this.viewModel.getCurrentWindSpeed();
-        String windSpeedSuffix = "mi/h";
-        this.windSpeedLabel.setText(windSpeed + windSpeedSuffix);
+        this.windSpeedLabel.setText(windSpeed + this.WindSpeedSuffix);
     }
 
     /**

@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 
 import org.json.JSONObject;
 
+import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
 import edu.westga.weatherapp_shared.interfaces.DailyWeatherDataRetriever;
 import edu.westga.weatherapp_shared.interfaces.WeatherIconRetriever;
 
@@ -65,6 +66,7 @@ public class DailyForecastPageViewModel {
         }
 
         try {
+            this.dailyWeatherDataRetriever.setUnitsOfMeasurement(CurrentWeatherInformation.getMeasurementUnits());
             this.dailyWeatherData = new JSONObject(this.dailyWeatherDataRetriever.GetDataByCity(city, days));
             return this.dailyWeatherData;
         } catch (Exception exception) {

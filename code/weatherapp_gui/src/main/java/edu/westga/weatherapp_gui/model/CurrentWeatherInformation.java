@@ -2,6 +2,8 @@ package edu.westga.weatherapp_gui.model;
 
 import org.json.JSONObject;
 
+import edu.westga.weatherapp_shared.enums.MeasurementUnits;
+
 /**
  * Class to hold weather information for use across multiple pages.
  */
@@ -16,6 +18,11 @@ public class CurrentWeatherInformation {
      * The most recently fetched weather data
      */
     private static JSONObject WeatherData = null;
+
+    /**
+     * The current measurement units
+     */
+    private static MeasurementUnits measurementUnits = MeasurementUnits.Imperial;
 
     /**
      * Gets the most recently searched city name
@@ -62,5 +69,23 @@ public class CurrentWeatherInformation {
         }
 
         CurrentWeatherInformation.WeatherData = data;
+    }
+
+    /**
+     * Gets the current measurement units
+     * 
+     * @return the measurement units
+     */
+    public static MeasurementUnits getMeasurementUnits() {
+        return CurrentWeatherInformation.measurementUnits;
+    }
+
+    /**
+     * Sets the current measurement units
+     * 
+     * @param units - the new measurement units
+     */
+    public static void setMeasurementUnits(MeasurementUnits units) {
+        CurrentWeatherInformation.measurementUnits = units;
     }
 }

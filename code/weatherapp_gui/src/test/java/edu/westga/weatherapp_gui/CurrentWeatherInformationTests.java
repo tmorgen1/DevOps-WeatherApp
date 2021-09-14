@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
+import edu.westga.weatherapp_shared.enums.MeasurementUnits;
 
 public class CurrentWeatherInformationTests {
     @Test
@@ -59,5 +60,19 @@ public class CurrentWeatherInformationTests {
         CurrentWeatherInformation.setWeatherData(testObject);
         JSONObject result = CurrentWeatherInformation.getWeatherData();
         assertEquals(testObject, result);
+    }
+
+    @Test
+    public void getMeasurementUnitsValid() {
+        MeasurementUnits units = CurrentWeatherInformation.getMeasurementUnits();
+        assertEquals(MeasurementUnits.Imperial, units);
+    }
+
+    @Test
+    public void setMeasurementUnitsValid() {
+        MeasurementUnits units = MeasurementUnits.Kelvin;
+        CurrentWeatherInformation.setMeasurementUnits(units);
+        MeasurementUnits result = CurrentWeatherInformation.getMeasurementUnits();
+        assertEquals(result, units);
     }
 }
