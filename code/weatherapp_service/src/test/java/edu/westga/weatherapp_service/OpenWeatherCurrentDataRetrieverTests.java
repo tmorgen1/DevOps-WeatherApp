@@ -1,13 +1,13 @@
 package edu.westga.weatherapp_service;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
-
 import java.rmi.RemoteException;
 import org.junit.jupiter.api.Test;
-import edu.westga.weatherapp_service.enums.MeasurementUnits;
+import edu.westga.weatherapp_shared.enums.MeasurementUnits;
 import edu.westga.weatherapp_service.mocks.MockDataRetriever;
 import edu.westga.weatherapp_service.model.OpenWeatherCurrentDataRetriever;
 
@@ -240,5 +240,25 @@ public class OpenWeatherCurrentDataRetrieverTests
             e.printStackTrace();
             fail("Remote Exception while testing");
         }
+    }
+
+    @Test
+    public void setUnitsOfMeasurementThrowsOnNull() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new OpenWeatherCurrentDataRetriever(new MockDataRetriever()).setUnitsOfMeasurement(null);
+        });
+    }
+
+    @Test
+    public void setUnitsOfMeasurementSuccessfully() {
+        try {
+            OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
+            retriever.setUnitsOfMeasurement(MeasurementUnits.Metric);
+            assertEquals(MeasurementUnits.Metric, retriever.getUnitsOfMeasurement());
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            fail("Remote Exception while testing");
+        }
+        
     }
 }

@@ -3,9 +3,9 @@ package edu.westga.weatherapp_service.model;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import edu.westga.weatherapp_service.enums.MeasurementUnits;
-import edu.westga.weatherapp_service.interfaces.DataRetriever;
-import edu.westga.weatherapp_shared.CurrentWeatherDataRetriever;
+import edu.westga.weatherapp_shared.enums.MeasurementUnits;
+import edu.westga.weatherapp_shared.interfaces.DataRetriever;
+import edu.westga.weatherapp_shared.interfaces.CurrentWeatherDataRetriever;
 
 /**
  * This weather data retriever uses the OpenWeather API to obtain weather data.
@@ -135,13 +135,18 @@ public class OpenWeatherCurrentDataRetriever extends UnicastRemoteObject impleme
         return this.dataRetriever.GetData(apiCall);
     }
 
-    /**
-     * Provides the MeasurementUnits of the data retriever.
-     * 
-     * @return the units of measurement
-     */
-    public MeasurementUnits getUnitsOfMeasurement() {
+    @Override
+    public MeasurementUnits getUnitsOfMeasurement() throws RemoteException {
         return this.units;
+    }
+
+    @Override
+    public void setUnitsOfMeasurement(MeasurementUnits units) throws RemoteException {
+        if (units == null) {
+            throw new IllegalArgumentException("units should not be null");
+        }
+        
+        this.units = units;
     }
 
 }

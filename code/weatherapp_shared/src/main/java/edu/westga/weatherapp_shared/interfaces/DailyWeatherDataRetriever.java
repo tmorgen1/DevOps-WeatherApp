@@ -1,7 +1,8 @@
-package edu.westga.weatherapp_shared;
+package edu.westga.weatherapp_shared.interfaces;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import edu.westga.weatherapp_shared.enums.MeasurementUnits;
 
 /**
  * Daily Weather Data Retriever interface.  Extends the remote class to allow for
@@ -46,4 +47,18 @@ public interface DailyWeatherDataRetriever extends Remote {
      */
     public String GetDataByCityAndStateCodeAndCountryCode(String cityName, String stateCode, String countryCode, int numOfDays) throws RemoteException;
 
+    /**
+     * Sets the MeasurementUnits of the data retriever.
+     * Future data retrieval will obtain data in new units specified.
+     * 
+     * @param units - units of measurement
+     */
+    public void setUnitsOfMeasurement(MeasurementUnits units) throws RemoteException;
+
+    /**
+     * Provides the MeasurementUnits of the data retriever.
+     * 
+     * @return the units of measurement
+     */
+    public MeasurementUnits getUnitsOfMeasurement() throws RemoteException;
 }

@@ -2,7 +2,10 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.CheckMenuItem?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -11,44 +14,44 @@
 
 <Pane fx:id="landingPagePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0" prefWidth="401.0" style="-fx-background-color: #2A2E37;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.weatherapp_gui.view.LandingPage">
    <children>
-      <ImageView fx:id="weatherIconImageView" fitHeight="232.0" fitWidth="221.0" layoutX="91.0" layoutY="77.0" pickOnBounds="true" preserveRatio="true" visible="false">
+      <ImageView fx:id="weatherIconImageView" fitHeight="232.0" fitWidth="221.0" layoutX="91.0" layoutY="93.0" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
             <Image url="http://openweathermap.org/img/wn/10d@4x.png" />
          </image>
       </ImageView>
-      <TextField fx:id="locationSearchTextField" layoutX="36.0" layoutY="58.0" onKeyPressed="#onEnterPressed" prefHeight="37.0" prefWidth="330.0" promptText="Enter Location">
+      <TextField fx:id="locationSearchTextField" layoutX="36.0" layoutY="74.0" onKeyPressed="#onEnterPressed" prefHeight="37.0" prefWidth="330.0" promptText="Enter Location">
          <font>
             <Font size="16.0" />
          </font></TextField>
-      <Label fx:id="weatherDescriptionLabel" alignment="CENTER" contentDisplay="CENTER" layoutY="284.0" prefHeight="29.0" prefWidth="401.0" text="Rainy" textFill="WHITE" visible="false">
+      <Label fx:id="weatherDescriptionLabel" alignment="CENTER" contentDisplay="CENTER" layoutY="300.0" prefHeight="29.0" prefWidth="401.0" text="Rainy" textFill="WHITE" visible="false">
          <font>
             <Font name="Segoe UI" size="24.0" />
          </font>
       </Label>
-      <Label fx:id="currentTemperatureLabel" alignment="CENTER" layoutX="1.0" layoutY="303.0" prefHeight="43.0" prefWidth="401.0" text="75°F" textFill="WHITE" visible="false">
+      <Label fx:id="currentTemperatureLabel" alignment="CENTER" layoutX="1.0" layoutY="319.0" prefHeight="43.0" prefWidth="401.0" text="75°F" textFill="WHITE" visible="false">
          <font>
             <Font name="Segoe UI Bold" size="52.0" />
          </font>
       </Label>
-      <ImageView fx:id="windImageView" fitHeight="29.0" fitWidth="26.0" layoutX="103.0" layoutY="366.0" pickOnBounds="true" preserveRatio="true" visible="false">
+      <ImageView fx:id="windImageView" fitHeight="29.0" fitWidth="26.0" layoutX="103.0" layoutY="382.0" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
             <Image url="@../../../../icons/wind-icon.png" />
          </image></ImageView>
-      <Label fx:id="windSpeedLabel" layoutX="129.0" layoutY="368.0" text="5mi/h" textFill="WHITE" visible="false">
+      <Label fx:id="windSpeedLabel" layoutX="129.0" layoutY="384.0" text="5mi/h" textFill="WHITE" visible="false">
          <font>
             <Font name="Segoe UI" size="17.0" />
          </font>
       </Label>
-      <ImageView fx:id="humidityImageView" fitHeight="37.0" fitWidth="26.0" layoutX="234.0" layoutY="366.0" pickOnBounds="true" preserveRatio="true" visible="false">
+      <ImageView fx:id="humidityImageView" fitHeight="37.0" fitWidth="26.0" layoutX="234.0" layoutY="382.0" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
             <Image url="@../../../../icons/humidity-icon.png" />
          </image></ImageView>
-      <Label fx:id="humidityLabel" layoutX="265.0" layoutY="368.0" text="87%" textFill="WHITE" visible="false">
+      <Label fx:id="humidityLabel" layoutX="265.0" layoutY="384.0" text="87%" textFill="WHITE" visible="false">
          <font>
             <Font name="Segoe UI" size="17.0" />
          </font>
       </Label>
-      <JFXButton fx:id="dailyForecastButton" buttonType="RAISED" layoutX="104.0" layoutY="426.0" onAction="#onDailyForecastClicked" prefHeight="46.0" prefWidth="196.0" style="-fx-border-radius: 15; -fx-background-color: #ffffff00; -fx-border-color: #EC6E4C; -fx-background-radius: 15;" text="Daily Forecast" textFill="WHITE">
+      <JFXButton fx:id="dailyForecastButton" buttonType="RAISED" layoutX="104.0" layoutY="442.0" onAction="#onDailyForecastClicked" prefHeight="46.0" prefWidth="196.0" style="-fx-border-radius: 15; -fx-background-color: #ffffff00; -fx-border-color: #EC6E4C; -fx-background-radius: 15;" text="Daily Forecast" textFill="WHITE">
          <font>
             <Font size="20.0" />
          </font>
@@ -56,7 +59,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </JFXButton>
-      <JFXButton fx:id="warningsButton" buttonType="RAISED" layoutX="104.0" layoutY="486.0" onAction="#onWarningsClicked" prefHeight="46.0" prefWidth="196.0" style="-fx-border-radius: 15; -fx-background-color: #ffffff00; -fx-border-color: #EC6E4C; -fx-background-radius: 15;" text="Warnings" textFill="WHITE">
+      <JFXButton fx:id="warningsButton" buttonType="RAISED" layoutX="104.0" layoutY="502.0" onAction="#onWarningsClicked" prefHeight="46.0" prefWidth="196.0" style="-fx-border-radius: 15; -fx-background-color: #ffffff00; -fx-border-color: #EC6E4C; -fx-background-radius: 15;" text="Warnings" textFill="WHITE">
          <font>
             <Font size="20.0" />
          </font>
@@ -64,15 +67,26 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </JFXButton>
-      <Label layoutX="103.0" layoutY="14.0" text="Current Weather" textFill="WHITE">
+      <Label layoutX="103.0" layoutY="30.0" text="Current Weather" textFill="WHITE">
          <font>
             <Font name="Segoe UI Bold" size="25.0" />
          </font>
       </Label>
-      <Label fx:id="noWeatherInformationLabel" alignment="CENTER" layoutY="270.0" prefHeight="29.0" prefWidth="401.0" text="No Weather Information" textFill="WHITE">
+      <Label fx:id="noWeatherInformationLabel" alignment="CENTER" layoutY="286.0" prefHeight="29.0" prefWidth="401.0" text="No Weather Information" textFill="WHITE">
          <font>
             <Font name="Segoe UI" size="24.0" />
          </font>
       </Label>
+      <MenuBar prefHeight="25.0" prefWidth="401.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="Settings">
+               <items>
+                  <CheckMenuItem fx:id="fahrenheitCheckMenuItem" mnemonicParsing="false" onAction="#onFahrenheitSelected" selected="true" text="Fahrenheit" />
+                  <CheckMenuItem fx:id="celsiusCheckMenuItem" mnemonicParsing="false" onAction="#onCelsiusSelected" text="Celsius" />
+                  <CheckMenuItem fx:id="kelvinCheckMenuItem" mnemonicParsing="false" onAction="#onKelvinSelected" text="Kelvin" />
+               </items>
+          </Menu>
+        </menus>
+      </MenuBar>
    </children>
 </Pane>

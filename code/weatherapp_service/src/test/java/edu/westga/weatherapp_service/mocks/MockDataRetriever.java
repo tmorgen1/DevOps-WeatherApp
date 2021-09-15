@@ -2,8 +2,8 @@ package edu.westga.weatherapp_service.mocks;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import edu.westga.weatherapp_service.enums.MeasurementUnits;
-import edu.westga.weatherapp_service.interfaces.DataRetriever;
+import edu.westga.weatherapp_shared.enums.MeasurementUnits;
+import edu.westga.weatherapp_shared.interfaces.DataRetriever;
 
 public class MockDataRetriever implements DataRetriever {
 

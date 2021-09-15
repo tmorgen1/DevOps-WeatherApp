@@ -2,14 +2,14 @@ package edu.westga.weatherapp_gui.mocks;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import edu.westga.weatherapp_service.enums.MeasurementUnits;
-import edu.westga.weatherapp_service.interfaces.DataRetriever;
+import edu.westga.weatherapp_shared.enums.MeasurementUnits;
+import edu.westga.weatherapp_shared.interfaces.DataRetriever;
 
 public class MockDataRetriever implements DataRetriever {
 
     @Override
     public String GetData(URL apiCall) {
-        return "{\"weather\": [{\"main\": Cloudy, \"icon\": test}], \"main\": {\"temp\": 70, \"humidity\": 80}, \"wind\": {\"speed\": 5}}";
+        return "{\"city\": {\"timezone\": 100},\"weather\": [{\"main\": Cloudy, \"icon\": test}], \"main\": {\"temp\": 70, \"humidity\": 80}, \"wind\": {\"speed\": 5}, \"list\":[{\"temp\":{\"max\": 98, \"min\": 90}, \"dt\": 500,\"weather\":[{\"icon\": fake-url}]}]}";
     }
 
     @Override

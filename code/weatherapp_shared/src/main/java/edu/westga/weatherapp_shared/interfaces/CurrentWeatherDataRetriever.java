@@ -1,7 +1,9 @@
-package edu.westga.weatherapp_shared;
+package edu.westga.weatherapp_shared.interfaces;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+
+import edu.westga.weatherapp_shared.enums.MeasurementUnits;
 
 /**
  * Current Weather Data Retriever interface.  Extends the remote class to allow for
@@ -44,4 +46,19 @@ public interface CurrentWeatherDataRetriever extends Remote {
     public String GetDataByCityAndStateCodeAndCountryCode(String cityName, String stateCode, String countryCode) throws RemoteException;
 
     //TODO: implement geocoords for get location/ip
+
+    /**
+     * Sets the MeasurementUnits of the data retriever.
+     * Future data retrieval will obtain data in new units specified.
+     * 
+     * @param units - units of measurement
+     */
+    public void setUnitsOfMeasurement(MeasurementUnits units) throws RemoteException;
+
+    /**
+     * Provides the MeasurementUnits of the data retriever.
+     * 
+     * @return the units of measurement
+     */
+    public MeasurementUnits getUnitsOfMeasurement() throws RemoteException;
 }
