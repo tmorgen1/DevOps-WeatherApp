@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
-import edu.westga.weatherapp_gui.model.WeatherLocation;
+import edu.westga.weatherapp_shared.model.WeatherLocation;
 
 public class WeatherLocationTests {
     

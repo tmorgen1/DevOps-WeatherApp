@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Collection;
+import edu.westga.weatherapp_shared.model.WeatherLocation;
 
 /**
  * This class handles saving/loading favorited weather location data.
