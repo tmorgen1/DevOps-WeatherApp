@@ -1,6 +1,6 @@
 package edu.westga.weatherapp_service;
 
-import edu.westga.weatherapp_service.enums.MeasurementUnits;
+import edu.westga.weatherapp_shared.enums.MeasurementUnits;
 import edu.westga.weatherapp_service.mocks.MockDataRetriever;
 import edu.westga.weatherapp_service.model.OpenWeatherSevereWarningsRetriever;
 import edu.westga.weatherapp_service.model.SevereWeatherWarning;

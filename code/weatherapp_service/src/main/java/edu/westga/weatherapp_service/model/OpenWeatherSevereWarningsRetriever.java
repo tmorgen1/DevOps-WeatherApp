@@ -1,9 +1,9 @@
 package edu.westga.weatherapp_service.model;
 
-import edu.westga.weatherapp_service.enums.MeasurementUnits;
-import edu.westga.weatherapp_service.interfaces.DataRetriever;
+import edu.westga.weatherapp_shared.enums.MeasurementUnits;
+import edu.westga.weatherapp_shared.interfaces.DataRetriever;
 import edu.westga.weatherapp_service.resources.ServiceConstants;
-import edu.westga.weatherapp_shared.SevereWeatherWarningsRetriever;
+import edu.westga.weatherapp_shared.interfaces.SevereWeatherWarningsRetriever;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
