@@ -55,7 +55,7 @@ public class OpenWeatherCurrentDataRetriever extends UnicastRemoteObject impleme
      * is provided.
      * 
      * @param retriever - the object to handle web url calls
-     * @param units - the units of measurement
+     * @param units     - the units of measurement
      * @throws RemoteException
      */
     public OpenWeatherCurrentDataRetriever(DataRetriever retriever, MeasurementUnits units) throws RemoteException {
@@ -108,6 +108,27 @@ public class OpenWeatherCurrentDataRetriever extends UnicastRemoteObject impleme
     }
 
     @Override
+    public String GetDataByCityAndCountryCode(String cityName, String countryCode) throws RemoteException {
+        if (cityName == null) {
+            throw new IllegalArgumentException("cityName should not be null");
+        }
+        if (countryCode == null) {
+            throw new IllegalArgumentException("countryCode should not be null");
+        }
+        if (cityName.isEmpty()) {
+            throw new IllegalArgumentException("cityName should not be empty");
+        }
+        if (countryCode.isEmpty()) {
+            throw new IllegalArgumentException("countryCode should not be empty");
+        }
+
+        URL apiCall = this.dataRetriever.GetServiceAPICallURL("&q=" + cityName + "," + countryCode,
+                OpenWeatherCurrentDataRetriever.OPEN_WEATHER_API_CALL_BASE, OpenWeatherCurrentDataRetriever.API_KEY,
+                this.units);
+        return this.dataRetriever.GetData(apiCall);
+    }
+
+    @Override
     public String GetDataByCityAndStateCodeAndCountryCode(String cityName, String stateCode, String countryCode)
             throws RemoteException {
         if (cityName == null) {
@@ -145,7 +166,7 @@ public class OpenWeatherCurrentDataRetriever extends UnicastRemoteObject impleme
         if (units == null) {
             throw new IllegalArgumentException("units should not be null");
         }
-        
+
         this.units = units;
     }
 

@@ -4,17 +4,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.json.JSONObject;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
 import edu.westga.weatherapp_shared.enums.MeasurementUnits;
+import edu.westga.weatherapp_shared.model.WeatherLocation;
 
 public class CurrentWeatherInformationTests {
+    @AfterEach
+    public void resetMeasurementUnits() {
+        CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Imperial);
+    }
+
     @Test
-    public void getCityNameValid() {
-        CurrentWeatherInformation.setCityName("test");
-        String result = CurrentWeatherInformation.getCityName();
-        assertEquals("test", result);
+    public void getWeatherLocationValid() {
+        WeatherLocation location = new WeatherLocation("city", "country", "state", 30.40, 34.00);
+        CurrentWeatherInformation.setWeatherLocation(location);
+        WeatherLocation result = CurrentWeatherInformation.getWeatherLocation();
+        assertEquals(location, result);
     }
 
     @Test
@@ -26,32 +34,18 @@ public class CurrentWeatherInformationTests {
     }
 
     @Test
-    public void setCityNameThrowsExceptionWithNullCity() {
+    public void setWeatherLocationThrowsExceptionWithNullCity() {
         assertThrows(IllegalArgumentException.class, () -> {
-            CurrentWeatherInformation.setCityName(null);
+            CurrentWeatherInformation.setWeatherLocation(null);
         });
     }
 
     @Test
-    public void setCityNameThrowsExceptionWithEmptyCity() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            CurrentWeatherInformation.setCityName("");
-        });
-    }
-
-    @Test
-    public void setCityNameValid() {
-        String testCityName = "test";
-        CurrentWeatherInformation.setCityName(testCityName);
-        String result = CurrentWeatherInformation.getCityName();
-        assertEquals(testCityName, result);
-    }
-
-    @Test
-    public void setWeatherDataThrowsExceptionWithNullData() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            CurrentWeatherInformation.setWeatherData(null);
-        });
+    public void setWeatherLocationValid() {
+        WeatherLocation location = new WeatherLocation("city", "country", "state", 30.40, 34.00);
+        CurrentWeatherInformation.setWeatherLocation(location);
+        WeatherLocation result = CurrentWeatherInformation.getWeatherLocation();
+        assertEquals(location, result);
     }
 
     @Test

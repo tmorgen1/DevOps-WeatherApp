@@ -108,6 +108,32 @@ public class OpenWeatherDailyDataRetriever extends UnicastRemoteObject implement
     }
 
     @Override
+    public String GetDataByCityAndCountryCode(String cityName, String countryCode, int numOfDays)
+            throws RemoteException {
+        if (cityName == null) {
+            throw new IllegalArgumentException("cityName should not be null");
+        }
+        if (countryCode == null) {
+            throw new IllegalArgumentException("countryCode should not be null");
+        }
+        if (cityName.isEmpty()) {
+            throw new IllegalArgumentException("cityName should not be empty");
+        }
+        if (countryCode.isEmpty()) {
+            throw new IllegalArgumentException("countryCode should not be empty");
+        }
+        if (numOfDays < 1 || numOfDays > 16) {
+            throw new IllegalArgumentException("numOfDays should be between 1 and 16, inclusive");
+        }
+
+        URL apiCall = this.dataRetriever.GetServiceAPICallURL(
+                "&q=" + cityName + "," + countryCode + "&cnt=" + numOfDays,
+                OpenWeatherDailyDataRetriever.OPEN_WEATHER_API_CALL_BASE, OpenWeatherDailyDataRetriever.API_KEY,
+                this.units);
+        return this.dataRetriever.GetData(apiCall);
+    }
+
+    @Override
     public String GetDataByCityAndStateCodeAndCountryCode(String cityName, String stateCode, String countryCode,
             int numOfDays) throws RemoteException {
         if (cityName == null) {
@@ -149,7 +175,7 @@ public class OpenWeatherDailyDataRetriever extends UnicastRemoteObject implement
         if (units == null) {
             throw new IllegalArgumentException("units should not be null");
         }
-        
+
         this.units = units;
     }
 

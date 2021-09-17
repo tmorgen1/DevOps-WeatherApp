@@ -35,6 +35,18 @@ public interface DailyWeatherDataRetriever extends Remote {
     public String GetDataByCityAndStateCode(String cityName, String stateCode, int numOfDays) throws RemoteException;
 
     /**
+     * Obtains the daily weather data for a location given the city name and country code.
+     * Returns null if data could not be retrieved.
+     * 
+     * @param cityName - the name of the city
+     * @param countryCode - the country code
+     * @param numOfDays - the number of days to gather data for
+     * @return a String containing the weather data
+     * @throws RemoteException
+     */
+    public String GetDataByCityAndCountryCode(String cityName, String countryCode, int numOfDays) throws RemoteException;
+
+    /**
      * Obtains the daily weather data for a location given the city name, state code, and country code.
      * Returns null if data could not be retrieved.
      * 

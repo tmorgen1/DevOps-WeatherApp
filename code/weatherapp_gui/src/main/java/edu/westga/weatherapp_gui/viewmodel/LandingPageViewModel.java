@@ -2,10 +2,14 @@ package edu.westga.weatherapp_gui.viewmodel;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.util.Collection;
+import java.util.List;
 
 import org.json.JSONObject;
 import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
+import edu.westga.weatherapp_shared.model.WeatherLocation;
 import edu.westga.weatherapp_shared.interfaces.CurrentWeatherDataRetriever;
+import edu.westga.weatherapp_shared.interfaces.LocationSearcher;
 import edu.westga.weatherapp_shared.interfaces.WeatherIconRetriever;
 /**
  * Defines the landing page view model class and contains all functionality for
@@ -24,6 +28,11 @@ public class LandingPageViewModel {
     private WeatherIconRetriever weatherIconRetriever;
 
     /**
+     * The weather location searcher
+     */
+    private LocationSearcher weatherLocationSearcher;
+
+    /**
      * The retrieved current weather data
      */
     private JSONObject currentWeatherData;
@@ -31,16 +40,22 @@ public class LandingPageViewModel {
     /**
      * Creates an instance of the landing page view model. Binds to java rmi if no
      * data retrievers specified.
+     * 
+     * @param weatherDataRetriver - the weather data retriever
+     * @param iconRetriever - the icon retriever
+     * @param locationSearcher - the location searcher
      */
-    public LandingPageViewModel(CurrentWeatherDataRetriever weatherDataRetriver, WeatherIconRetriever iconRetriever) {
-        if (weatherDataRetriver != null && iconRetriever != null) {
+    public LandingPageViewModel(CurrentWeatherDataRetriever weatherDataRetriver, WeatherIconRetriever iconRetriever, LocationSearcher locationSearcher) {
+        if (weatherDataRetriver != null && iconRetriever != null && locationSearcher != null) {
             this.weatherDataRetriever = weatherDataRetriver;
             this.weatherIconRetriever = iconRetriever;
+            this.weatherLocationSearcher = locationSearcher;
         } else {
             try {
                 this.weatherDataRetriever = (CurrentWeatherDataRetriever) Naming
                         .lookup("rmi://localhost:5000/current-weather");
                 this.weatherIconRetriever = (WeatherIconRetriever) Naming.lookup("rmi://localhost:5000/weather-icons");
+                this.weatherLocationSearcher = (LocationSearcher) Naming.lookup("rmi://localhost:5000/location-searcher");
             } catch (Exception exception) {
                 System.err.println("Error looking up java rmi binding");
             }
@@ -50,10 +65,38 @@ public class LandingPageViewModel {
     /**
      * Gets the current weather data from the weather data retriever by city name
      * 
-     * @param city - the name of the city
+     * @param weatherLocation - the name of the city
      * @return the current weather data json object
      */
-    public JSONObject getWeatherDataByCity(String city) {
+    public JSONObject GetWeatherDataByWeatherLocation(WeatherLocation weatherLocation) {
+        if (weatherLocation == null) {
+            throw new IllegalArgumentException("City cannot be null");
+        }
+        String state = weatherLocation.getState();
+        String city = weatherLocation.getCity();
+        String country = weatherLocation.getCountry();
+
+        try {
+            this.weatherDataRetriever.setUnitsOfMeasurement(CurrentWeatherInformation.getMeasurementUnits());
+            if (state.equals("N/A")) {
+                this.currentWeatherData = new JSONObject(this.weatherDataRetriever.GetDataByCityAndCountryCode(city, country));
+            } else {
+                this.currentWeatherData = new JSONObject(this.weatherDataRetriever.GetDataByCityAndStateCodeAndCountryCode(city, state, country));
+            }
+            CurrentWeatherInformation.setWeatherData(this.currentWeatherData);
+            return this.currentWeatherData;
+        } catch (Exception exception) {
+            return null;
+        }
+    }
+
+    /**
+     * Gets the autocompletion search results based on the given city name
+     * 
+     * @param city - the city name
+     * @return a collection of weather locations
+     */
+    public Collection<WeatherLocation> GetLocationSearchResults(String city) {
         if (city == null) {
             throw new IllegalArgumentException("City cannot be null");
         }
@@ -62,11 +105,9 @@ public class LandingPageViewModel {
         }
 
         try {
-            this.weatherDataRetriever.setUnitsOfMeasurement(CurrentWeatherInformation.getMeasurementUnits());
-            this.currentWeatherData = new JSONObject(this.weatherDataRetriever.GetDataByCity(city));
-            CurrentWeatherInformation.setWeatherData(this.currentWeatherData);
-            return this.currentWeatherData;
-        } catch (Exception exception) {
+            Collection<WeatherLocation> locations = this.weatherLocationSearcher.searchLocations(city, 10);
+            return locations;
+        } catch (Exception e) {
             return null;
         }
     }
@@ -77,7 +118,7 @@ public class LandingPageViewModel {
      * 
      * @return String - Current weather icon url
      */
-    public String getCurrentWeatherIcon() {
+    public String GetCurrentWeatherIcon() {
         if (this.currentWeatherData == null) {
             throw new IllegalArgumentException("No current weather data");
         }
@@ -99,7 +140,7 @@ public class LandingPageViewModel {
      * 
      * @return String - Current temperature
      */
-    public String getCurrentTemperature() {
+    public String GetCurrentTemperature() {
         if (this.currentWeatherData == null) {
             throw new IllegalArgumentException("No current weather data");
         }
@@ -114,7 +155,7 @@ public class LandingPageViewModel {
      * 
      * @return String - Current wind speed
      */
-    public String getCurrentWindSpeed() {
+    public String GetCurrentWindSpeed() {
         if (this.currentWeatherData == null) {
             throw new IllegalArgumentException("No current weather data");
         }
@@ -129,7 +170,7 @@ public class LandingPageViewModel {
      * 
      * @return String - Current humidity
      */
-    public String getCurrentHumidity() {
+    public String GetCurrentHumidity() {
         if (this.currentWeatherData == null) {
             throw new IllegalArgumentException("No current weather data");
         }
@@ -144,7 +185,7 @@ public class LandingPageViewModel {
      * 
      * @return String - Current weather description
      */
-    public String getCurrentWeatherDescription() {
+    public String GetCurrentWeatherDescription() {
         if (this.currentWeatherData == null) {
             throw new IllegalArgumentException("No current weather data");
         }

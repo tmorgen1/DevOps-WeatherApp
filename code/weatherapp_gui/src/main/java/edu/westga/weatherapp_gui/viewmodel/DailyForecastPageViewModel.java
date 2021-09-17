@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
 import edu.westga.weatherapp_shared.interfaces.DailyWeatherDataRetriever;
 import edu.westga.weatherapp_shared.interfaces.WeatherIconRetriever;
+import edu.westga.weatherapp_shared.model.WeatherLocation;
 
 /**
  * Defines the daily forecast page view model class and contains all
@@ -60,14 +61,21 @@ public class DailyForecastPageViewModel {
      * @param days - the number of days to retrieve
      * @return the daily weather json data
      */
-    public JSONObject GetWeatherDataByCity(String city, int days) {
-        if (city == null) {
+    public JSONObject GetWeatherDataByWeatherLocation(WeatherLocation weatherLocation, int days) {
+        if (weatherLocation == null) {
             throw new IllegalArgumentException("City cannot be null");
         }
+        String state = weatherLocation.getState();
+        String city = weatherLocation.getCity();
+        String country = weatherLocation.getCountry();
 
         try {
             this.dailyWeatherDataRetriever.setUnitsOfMeasurement(CurrentWeatherInformation.getMeasurementUnits());
-            this.dailyWeatherData = new JSONObject(this.dailyWeatherDataRetriever.GetDataByCity(city, days));
+            if (state.equals("N/A")) {
+                this.dailyWeatherData = new JSONObject(this.dailyWeatherDataRetriever.GetDataByCityAndCountryCode(city, country, days));
+            } else {
+                this.dailyWeatherData = new JSONObject(this.dailyWeatherDataRetriever.GetDataByCityAndStateCodeAndCountryCode(city, state, country, days));
+            }
             return this.dailyWeatherData;
         } catch (Exception exception) {
             return null;

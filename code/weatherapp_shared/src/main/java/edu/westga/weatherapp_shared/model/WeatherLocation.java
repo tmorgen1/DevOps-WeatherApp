@@ -113,6 +113,10 @@ public class WeatherLocation implements Serializable {
 
     @Override
     public String toString() {
+        if (this.state.equals("N/A")) {
+            return this.city + " " + this.country + " " + this.longitude + " " + this.latitude;
+        }
+        
         return this.city + " " + this.country + " " + this.state + " " + this.longitude + " " + this.latitude;
     }
 }
