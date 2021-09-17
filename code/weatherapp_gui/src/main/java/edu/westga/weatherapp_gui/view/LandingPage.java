@@ -441,6 +441,7 @@ public class LandingPage {
         if (CurrentWeatherInformation.getWeatherLocation() != null) {
             this.viewModel.RemoveFavoritedLocation(CurrentWeatherInformation.getWeatherLocation());
             this.switchToOutlineFavoriteIcon();
+            this.setFavoritedLocationsListItems();
         }
     }
 
@@ -460,6 +461,7 @@ public class LandingPage {
         if (CurrentWeatherInformation.getWeatherLocation() != null) {
             this.viewModel.AddFavoritedLocation(CurrentWeatherInformation.getWeatherLocation());
             this.switchToFilledFavoriteIcon();
+            this.setFavoritedLocationsListItems();
         }
     }
 
