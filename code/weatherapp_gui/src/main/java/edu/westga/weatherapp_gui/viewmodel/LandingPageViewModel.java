@@ -1,16 +1,19 @@
 package edu.westga.weatherapp_gui.viewmodel;
 
+import java.io.IOException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import org.json.JSONObject;
 import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
+import edu.westga.weatherapp_gui.model.WeatherLocationSerializer;
 import edu.westga.weatherapp_shared.model.WeatherLocation;
 import edu.westga.weatherapp_shared.interfaces.CurrentWeatherDataRetriever;
 import edu.westga.weatherapp_shared.interfaces.LocationSearcher;
 import edu.westga.weatherapp_shared.interfaces.WeatherIconRetriever;
+
 /**
  * Defines the landing page view model class and contains all functionality for
  * the landing page view
@@ -38,6 +41,11 @@ public class LandingPageViewModel {
     private JSONObject currentWeatherData;
 
     /**
+     * The favorited weather locations
+     */
+    private Collection<WeatherLocation> favoritedWeatherLocations;
+
+    /**
      * Creates an instance of the landing page view model. Binds to java rmi if no
      * data retrievers specified.
      * 
@@ -60,6 +68,8 @@ public class LandingPageViewModel {
                 System.err.println("Error looking up java rmi binding");
             }
         }
+
+        this.LoadFavoritedLocations();
     }
 
     /**
@@ -204,5 +214,81 @@ public class LandingPageViewModel {
             throw new IllegalArgumentException("Weather data cannot be null");
         }
         this.currentWeatherData = weatherData;
+    }
+
+    /**
+     * Removes the favorited location and saves the favorites to a file.
+     * 
+     * @param weatherLocation - the favorited location to remove
+     */
+    public void RemoveFavoritedLocation(WeatherLocation weatherLocation) {
+        if (weatherLocation == null) {
+            throw new IllegalArgumentException("Weather location cannot be null");
+        }
+
+        this.favoritedWeatherLocations.remove(weatherLocation);
+        this.SaveFavoritedLocations();
+    }
+
+    /**
+     * Adds the favorited location and saves the favorites to a file.
+     * 
+     * @param weatherLocation - the favorited location to add
+     */
+    public void AddFavoritedLocation(WeatherLocation weatherLocation) {
+        if (weatherLocation == null) {
+            throw new IllegalArgumentException("Weather location cannot be null");
+        }
+
+        this.favoritedWeatherLocations.add(weatherLocation);
+        this.SaveFavoritedLocations();
+    }
+
+    /**
+     * Gets the collection of favorited weather locations
+     * 
+     * @return the favorited weather locations
+     */
+    public Collection<WeatherLocation> GetFavoritedWeatherLocations() {
+        return this.favoritedWeatherLocations;
+    }
+
+    /**
+     * Checks if the given weather location is contained in the favorited locations list
+     * 
+     * @param weatherLocation - the given weather location
+     * @return True if it is contained, false otherwise
+     */
+    public boolean FavoritesContainsWeatherLocation(WeatherLocation weatherLocation) {
+        for (WeatherLocation currentLocation : favoritedWeatherLocations) {
+            if (currentLocation.equals(weatherLocation)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Saves the collection of favorited weather locations to a file
+     */
+    private void SaveFavoritedLocations() {
+        try {
+            WeatherLocationSerializer weatherLocationSerializer = new WeatherLocationSerializer();
+            weatherLocationSerializer.saveFavoritedLocationsToFile(this.favoritedWeatherLocations);
+        } catch (IOException e) {
+            System.err.println("IOException: Error saving favorited locations");
+        }
+    }
+
+    /**
+     * Loads the favorited locations from a file
+     */
+    private void LoadFavoritedLocations() {
+        try {
+            WeatherLocationSerializer weatherLocationSerializer = new WeatherLocationSerializer();
+            this.favoritedWeatherLocations = weatherLocationSerializer.loadFavoritedLocationsFromFile();
+        } catch (ClassNotFoundException | IOException e) {
+            this.favoritedWeatherLocations = (Collection<WeatherLocation>) new ArrayList<WeatherLocation>();
+        }
     }
 }

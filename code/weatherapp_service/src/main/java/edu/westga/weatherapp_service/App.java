@@ -1,6 +1,5 @@
 package edu.westga.weatherapp_service;
 
-import java.io.File;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;

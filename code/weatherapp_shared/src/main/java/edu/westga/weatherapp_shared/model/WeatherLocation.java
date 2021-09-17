@@ -3,11 +3,12 @@ package edu.westga.weatherapp_shared.model;
 import java.io.Serializable;
 
 /**
- * This class wraps information regarding a weather location.  Each data member should be allowed 
- * to be null, because a user may only provide so much information; however, no String can be empty.
+ * This class wraps information regarding a weather location. Each data member
+ * should be allowed to be null, because a user may only provide so much
+ * information; however, no String can be empty.
  */
 public class WeatherLocation implements Serializable {
-    
+
     /**
      * The name of the city
      */
@@ -34,13 +35,14 @@ public class WeatherLocation implements Serializable {
     private Double latitude;
 
     /**
-     * Instantiates a weather location object.  None of the strings should be empty, however any object can be null.
+     * Instantiates a weather location object. None of the strings should be empty,
+     * however any object can be null.
      * 
-     * @param city - city name
-     * @param country - country code, as of OpenWeather
-     * @param state - state code, as of OpenWeather
+     * @param city      - city name
+     * @param country   - country code, as of OpenWeather
+     * @param state     - state code, as of OpenWeather
      * @param longitude - gps longitude, (x)
-     * @param latitude - gps latitude, (y)
+     * @param latitude  - gps latitude, (y)
      */
     public WeatherLocation(String city, String country, String state, Double longitude, Double latitude) {
         if (city != null) {
@@ -116,7 +118,23 @@ public class WeatherLocation implements Serializable {
         if (this.state.equals("N/A")) {
             return this.city + " " + this.country + " " + this.longitude + " " + this.latitude;
         }
-        
+
         return this.city + " " + this.country + " " + this.state + " " + this.longitude + " " + this.latitude;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+
+        WeatherLocation location = (WeatherLocation) obj;
+        if (location.city.equals(this.city) && location.country.equals(this.country)
+                && location.state.equals(this.state) && location.latitude.equals(this.latitude)
+                && location.longitude.equals(this.longitude)) {
+            return true;
+        }
+
+        return false;
     }
 }

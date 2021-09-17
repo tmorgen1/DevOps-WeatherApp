@@ -128,29 +128,56 @@ public class LandingPage {
     @FXML
     private CheckMenuItem fahrenheitCheckMenuItem;
 
+    /**
+     * The celsius check menu item
+     */
     @FXML
     private CheckMenuItem celsiusCheckMenuItem;
 
+    /**
+     * The kelvin check menu item
+     */
     @FXML
     private CheckMenuItem kelvinCheckMenuItem;
 
+    /**
+     * The search pane
+     */
     @FXML
     private Pane searchPane;
 
+    /**
+     * The favorited list view
+     */
     @FXML
     private ListView<WeatherLocation> favoritedListView;
 
+    /**
+     * The search results list view
+     */
     @FXML
     private ListView<WeatherLocation> searchResultsListView;
 
+    /**
+     * The favorite outline image view
+     */
     @FXML
     private ImageView favoriteOutlineImageView;
 
+    /**
+     * The favorite filled image view
+     */
     @FXML
     private ImageView favoriteFilledImageView;
 
+    /**
+     * The temperature suffix
+     */
     private String TemperatureSuffix = " °F";
 
+    /**
+     * The wind speed suffix
+     */
     private String WindSpeedSuffix = " mi/h";
 
     /**
@@ -158,13 +185,16 @@ public class LandingPage {
      */
     @FXML
     void initialize() {
+        this.viewModel = new LandingPageViewModel(null, null, null);
         Platform.runLater(() -> this.landingPagePane.requestFocus());
+        this.setFavoritedLocationsListItems();
         this.setupSearchListViewSelectionListener();
         this.setupLocationSearchTextChangedListener();
+        this.setupFavoritesListViewSelectionListener();
         this.setMeasurementSettings();
         this.setupSearchTextFieldOnFocusListener();
-        this.viewModel = new LandingPageViewModel(null, null, null);
         this.checkForSavedCurrentWeatherData();
+        this.updateFavoriteIcon();
     }
 
     /**
@@ -235,17 +265,31 @@ public class LandingPage {
      * updateSelectedWeatherLocation.
      */
     private void setupSearchListViewSelectionListener() {
-        this.searchResultsListView.getSelectionModel().selectedItemProperty()
-                .addListener(new ChangeListener<WeatherLocation>() {
+        this.searchResultsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<WeatherLocation>() {
+            @Override
+            public void changed(ObservableValue<? extends WeatherLocation> observable, WeatherLocation oldValue,
+                    WeatherLocation newValue) {
+                if (newValue != null) {
+                    LandingPage.this.updateSelectedWeatherLocation(newValue);
+                }
+            }
+        });
+    }
 
-                    @Override
-                    public void changed(ObservableValue<? extends WeatherLocation> observable, WeatherLocation oldValue,
-                            WeatherLocation newValue) {
-                        if (newValue != null) {
-                            LandingPage.this.updateSelectedWeatherLocation(newValue);
-                        }
-                    }
-                });
+    /**
+     * Sets up the favorites list view selection listener. Then calls
+     * updateSelectedWeatherLocation.
+     */
+    private void setupFavoritesListViewSelectionListener() {
+        this.favoritedListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<WeatherLocation>() {
+            @Override
+            public void changed(ObservableValue<? extends WeatherLocation> observable, WeatherLocation oldValue,
+                    WeatherLocation newValue) {
+                if (newValue != null) {
+                    LandingPage.this.updateSelectedWeatherLocation(newValue);
+                }
+            }
+        });
     }
 
     /**
@@ -266,8 +310,7 @@ public class LandingPage {
      * Sets the favorited list view to fake data.
      */
     private void setFavoritedLocationsListItems() {
-        ObservableList<WeatherLocation> favoritedItems = FXCollections
-                .observableArrayList(new WeatherLocation("savedCity", "country", "state", 30.45, 36.71));
+        ObservableList<WeatherLocation> favoritedItems = FXCollections.observableArrayList(this.viewModel.GetFavoritedWeatherLocations());
         this.favoritedListView.setItems(favoritedItems);
     }
 
@@ -284,8 +327,19 @@ public class LandingPage {
             }
 
             this.updateAllWeatherInformation();
+            this.updateFavoriteIcon();
         } catch (IllegalArgumentException e) {
             this.displayNoLocationSnackbar("No Location Found");
+        }
+    }
+
+    private void updateFavoriteIcon() {
+        if (CurrentWeatherInformation.getWeatherLocation() != null) {
+            if (this.viewModel.FavoritesContainsWeatherLocation(CurrentWeatherInformation.getWeatherLocation())) {
+                this.switchToFilledFavoriteIcon();
+            } else {
+                this.switchToOutlineFavoriteIcon();
+            }
         }
     }
 
@@ -374,17 +428,47 @@ public class LandingPage {
      * Removes the focus from the search bar.
      */
     private void removeFocusFromSearchBar() {
+        Platform.runLater(() -> this.favoritedListView.getSelectionModel().clearSelection());
+        Platform.runLater(() -> this.searchResultsListView.getSelectionModel().clearSelection());
         this.landingPagePane.requestFocus();
     }
 
+    /**
+     * Removes the location from the favorites list and saves the file.
+     */
     @FXML
     void onFavoriteFilledClicked(MouseEvent event) {
-
+        if (CurrentWeatherInformation.getWeatherLocation() != null) {
+            this.viewModel.RemoveFavoritedLocation(CurrentWeatherInformation.getWeatherLocation());
+            this.switchToOutlineFavoriteIcon();
+        }
     }
 
+    /**
+     * Hides the filled favorite icon image view and shows the outline favorite icon image view
+     */
+    private void switchToOutlineFavoriteIcon() {
+        this.favoriteOutlineImageView.setVisible(true);
+        this.favoriteFilledImageView.setVisible(false);
+    }
+
+    /**
+     * Adds the location to the favorites list and saves the file.
+     */
     @FXML
     void onFavoriteOutlineClicked(MouseEvent event) {
+        if (CurrentWeatherInformation.getWeatherLocation() != null) {
+            this.viewModel.AddFavoritedLocation(CurrentWeatherInformation.getWeatherLocation());
+            this.switchToFilledFavoriteIcon();
+        }
+    }
 
+    /**
+     * Hides the outline favorite icon image view and shows the filled favorite icon image view
+     */
+    private void switchToFilledFavoriteIcon() {
+        this.favoriteOutlineImageView.setVisible(false);
+        this.favoriteFilledImageView.setVisible(true);
     }
 
     /**
