@@ -1,6 +1,8 @@
 package edu.westga.weatherapp_service.model;
 
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import edu.westga.weatherapp_shared.enums.MeasurementUnits;
@@ -77,6 +79,8 @@ public class OpenWeatherDailyDataRetriever extends UnicastRemoteObject implement
             throw new IllegalArgumentException("numOfDays should be between 1 and 16, inclusive");
         }
 
+        cityName = URLEncoder.encode(cityName, StandardCharsets.UTF_8);
+
         URL apiCall = this.dataRetriever.GetServiceAPICallURL("&q=" + cityName + "&cnt=" + numOfDays,
                 OpenWeatherDailyDataRetriever.OPEN_WEATHER_API_CALL_BASE, OpenWeatherDailyDataRetriever.API_KEY,
                 this.units);
@@ -100,6 +104,8 @@ public class OpenWeatherDailyDataRetriever extends UnicastRemoteObject implement
         if (numOfDays < 1 || numOfDays > 16) {
             throw new IllegalArgumentException("numOfDays should be between 1 and 16, inclusive");
         }
+
+        cityName = URLEncoder.encode(cityName, StandardCharsets.UTF_8);
 
         URL apiCall = this.dataRetriever.GetServiceAPICallURL("&q=" + cityName + "," + stateCode + "&cnt=" + numOfDays,
                 OpenWeatherDailyDataRetriever.OPEN_WEATHER_API_CALL_BASE, OpenWeatherDailyDataRetriever.API_KEY,
@@ -125,6 +131,8 @@ public class OpenWeatherDailyDataRetriever extends UnicastRemoteObject implement
         if (numOfDays < 1 || numOfDays > 16) {
             throw new IllegalArgumentException("numOfDays should be between 1 and 16, inclusive");
         }
+
+        cityName = URLEncoder.encode(cityName, StandardCharsets.UTF_8);
 
         URL apiCall = this.dataRetriever.GetServiceAPICallURL(
                 "&q=" + cityName + "," + countryCode + "&cnt=" + numOfDays,
@@ -157,6 +165,8 @@ public class OpenWeatherDailyDataRetriever extends UnicastRemoteObject implement
         if (numOfDays < 1 || numOfDays > 16) {
             throw new IllegalArgumentException("numOfDays should be between 1 and 16, inclusive");
         }
+
+        cityName = URLEncoder.encode(cityName, StandardCharsets.UTF_8);
 
         URL apiCall = this.dataRetriever.GetServiceAPICallURL(
                 "&q=" + cityName + "," + stateCode + "," + countryCode + "&cnt=" + numOfDays,

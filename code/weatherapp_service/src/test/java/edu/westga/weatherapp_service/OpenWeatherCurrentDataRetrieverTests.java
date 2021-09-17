@@ -14,11 +14,17 @@ import edu.westga.weatherapp_service.model.OpenWeatherCurrentDataRetriever;
 /**
  * Unit test for the OpenWeatherCurrentDataRetriever class.
  */
-public class OpenWeatherCurrentDataRetrieverTests 
-{
+public class OpenWeatherCurrentDataRetrieverTests {
+    
     @Test
-    public void oneParamConstructorShouldSetUnitsToImperial()
-    {
+    public void parameterizedConstructorShouldThrowExceptionOnNullDataRetriever() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new OpenWeatherCurrentDataRetriever(null, MeasurementUnits.Imperial);
+        });
+    }
+
+    @Test
+    public void oneParamConstructorShouldSetUnitsToImperial() {
         try {
             OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
             assertTrue(retriever.getUnitsOfMeasurement() == MeasurementUnits.Imperial);
@@ -31,7 +37,8 @@ public class OpenWeatherCurrentDataRetrieverTests
     @Test
     public void parameterizedConstructorShouldSetUnits() {
         try {
-            OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever(), MeasurementUnits.Metric);
+            OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever(),
+                    MeasurementUnits.Metric);
             assertTrue(retriever.getUnitsOfMeasurement() == MeasurementUnits.Metric);
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -56,7 +63,8 @@ public class OpenWeatherCurrentDataRetrieverTests
     @Test
     public void getDataByCityThrowsExceptionOnNullCity() {
         try {
-            OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever(), MeasurementUnits.Kelvin);
+            OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever(),
+                    MeasurementUnits.Kelvin);
             assertThrows(IllegalArgumentException.class, () -> {
                 retriever.GetDataByCity(null);
             });
@@ -259,6 +267,68 @@ public class OpenWeatherCurrentDataRetrieverTests
             e.printStackTrace();
             fail("Remote Exception while testing");
         }
-        
+    }
+
+    @Test
+    public void getDataByCityAndCountryCodeThrowsExceptionOnNullCityName() {
+        try {
+            OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
+            assertThrows(IllegalArgumentException.class, () -> {
+                retriever.GetDataByCityAndCountryCode(null, "countryCode");
+            });
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            fail("Remote Exception while testing");
+        }
+    }
+
+    @Test
+    public void getDataByCityAndCountryCodeThrowsExceptionOnNullCountryCode() {
+        try {
+            OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
+            assertThrows(IllegalArgumentException.class, () -> {
+                retriever.GetDataByCityAndCountryCode("cityName", null);
+            });
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            fail("Remote Exception while testing");
+        }
+    }
+
+    @Test
+    public void getDataByCityAndCountryCodeThrowsExceptionOnEmptyCityName() {
+        try {
+            OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
+            assertThrows(IllegalArgumentException.class, () -> {
+                retriever.GetDataByCityAndCountryCode("", "countryCode");
+            });
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            fail("Remote Exception while testing");
+        }
+    }
+
+    @Test
+    public void getDataByCityAndCountryCodeThrowsExceptionOnEmptyCountryCode() {
+        try {
+            OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
+            assertThrows(IllegalArgumentException.class, () -> {
+                retriever.GetDataByCityAndCountryCode("cityName", "");
+            });
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            fail("Remote Exception while testing");
+        }
+    }
+
+    @Test
+    public void getDataByCityAndCountryCodeSuccessfully() {
+        try {
+            OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
+            assertNotNull(retriever.GetDataByCityAndCountryCode("newnan", "US"));
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            fail("Remote Exception while testing");
+        }
     }
 }

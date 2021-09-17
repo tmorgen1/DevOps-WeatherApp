@@ -2,7 +2,11 @@ package edu.westga.weatherapp_service.model;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import edu.westga.weatherapp_shared.enums.MeasurementUnits;
 import edu.westga.weatherapp_shared.interfaces.DataRetriever;
@@ -50,8 +54,9 @@ public class APIDataRetriever implements DataRetriever {
 
         URL apiCall = null;
         try {
-            apiCall = new URL(apiCallBase + apiKey + unitTypeAppendString + apiCallCommand);
-        } catch (MalformedURLException exception) {
+            URI uri = new URI(apiCallBase + apiKey + unitTypeAppendString + apiCallCommand);
+            apiCall = new URL(uri.toASCIIString());
+        } catch (MalformedURLException | URISyntaxException exception) {
             System.err.println("Malformed URL Exception: API call could not be generated");
         }
 
