@@ -13,3 +13,6 @@ buildNumber.properties
 .classpath
 .settings
 .vscode/
+maven/
+serverlog.txt
+favorited_locations.wl

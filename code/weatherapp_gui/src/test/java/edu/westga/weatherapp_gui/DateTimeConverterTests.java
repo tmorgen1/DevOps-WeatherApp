@@ -44,10 +44,10 @@ public class DateTimeConverterTests {
 
     @Test
     public void formatDateValid() {
-        Date testDate = new Date();
+        Date testDate = new Date(1631552400L);
         String format = "EEEE";
         String formattedDate = DateTimeConverter.FormatDate(testDate, format);
-        assertEquals("Tuesday", formattedDate);
+        assertEquals("Monday", formattedDate);
     }
 
     @Test

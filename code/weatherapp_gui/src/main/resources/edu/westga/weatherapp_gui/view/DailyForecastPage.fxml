@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="dailyForecastPagePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0" prefWidth="401.0" style="-fx-background-color: #2A2E37;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.weatherapp_gui.view.DailyForecastPage">
+<Pane fx:id="dailyForecastPagePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0" prefWidth="401.0" style="-fx-background-color: #2A2E37;" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="edu.westga.weatherapp_gui.view.DailyForecastPage">
    <children>
       <Label layoutX="118.0" layoutY="36.0" text="Daily Forecast" textFill="WHITE">
          <font>
@@ -41,7 +41,7 @@
       </Label>
       <MenuBar prefHeight="25.0" prefWidth="401.0">
          <menus>
-            <Menu mnemonicParsing="false" text="Settings">
+            <Menu fx:id="settingMenu" disable="true" mnemonicParsing="false" text="Settings">
                <items>
                   <CheckMenuItem fx:id="fahrenheitCheckMenuItem" mnemonicParsing="false" onAction="#onFahrenheitSelected" selected="true" text="Fahrenheit" />
                   <CheckMenuItem fx:id="celsiusCheckMenuItem" mnemonicParsing="false" onAction="#onCelsiusSelected" text="Celsius" />

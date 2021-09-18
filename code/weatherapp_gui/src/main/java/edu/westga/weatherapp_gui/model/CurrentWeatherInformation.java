@@ -3,6 +3,7 @@ package edu.westga.weatherapp_gui.model;
 import org.json.JSONObject;
 
 import edu.westga.weatherapp_shared.enums.MeasurementUnits;
+import edu.westga.weatherapp_shared.model.WeatherLocation;
 
 /**
  * Class to hold weather information for use across multiple pages.
@@ -10,9 +11,9 @@ import edu.westga.weatherapp_shared.enums.MeasurementUnits;
 public class CurrentWeatherInformation {
 
     /**
-     * The most recently searched city name
+     * The most recently searched city
      */
-    private static String CityName = null;
+    private static WeatherLocation WeatherLocation = null;
 
     /**
      * The most recently fetched weather data
@@ -25,28 +26,25 @@ public class CurrentWeatherInformation {
     private static MeasurementUnits measurementUnits = MeasurementUnits.Imperial;
 
     /**
-     * Gets the most recently searched city name
+     * Gets the most recently searched weather location
      * 
-     * @return - the city name
+     * @return - the weather location
      */
-    public static String getCityName() {
-        return CurrentWeatherInformation.CityName;
+    public static WeatherLocation getWeatherLocation() {
+        return CurrentWeatherInformation.WeatherLocation;
     }
 
     /**
-     * Sets the city name to the specified name
+     * Sets the weather location to the specified
      * 
-     * @param city - the new city name
+     * @param weatherLocation - the new weather location
      */
-    public static void setCityName(String city) {
-        if (city == null) {
+    public static void setWeatherLocation(WeatherLocation weatherLocation) {
+        if (weatherLocation == null) {
             throw new IllegalArgumentException("City cannot be null");
         }
-        if (city.isEmpty()) {
-            throw new IllegalArgumentException("City cannot be empty");
-        }
 
-        CurrentWeatherInformation.CityName = city;
+        CurrentWeatherInformation.WeatherLocation = weatherLocation;
     }
 
     /**
@@ -64,10 +62,6 @@ public class CurrentWeatherInformation {
      * @param data - the new weather data
      */
     public static void setWeatherData(JSONObject data) {
-        if (data == null) {
-            throw new IllegalArgumentException("Weather data cannot be null");
-        }
-
         CurrentWeatherInformation.WeatherData = data;
     }
 

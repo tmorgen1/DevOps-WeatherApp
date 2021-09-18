@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import edu.westga.weatherapp_gui.model.WeatherLocation;
+import edu.westga.weatherapp_shared.model.WeatherLocation;
 import edu.westga.weatherapp_gui.model.WeatherLocationSerializer;
 
 public class WeatherLocationSerializerTests {

@@ -22,6 +22,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.Node;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.ScrollPane;
 
@@ -30,6 +31,9 @@ import javafx.scene.control.ScrollPane;
  */
 public class DailyForecastPage {
 
+    /**
+     * The number of days for the forecast to load
+     */
     public static final int DAYS = 16;
 
     /**
@@ -78,19 +82,38 @@ public class DailyForecastPage {
     @FXML
     private ScrollPane scrollPane;
 
+    /**
+     * The fahrenheit check menu item
+     */
     @FXML
     private CheckMenuItem fahrenheitCheckMenuItem;
 
+    /**
+     * The celsius check menu item
+     */
     @FXML
     private CheckMenuItem celsiusCheckMenuItem;
 
+    /**
+     * The kelvin check menu item
+     */
     @FXML
     private CheckMenuItem kelvinCheckMenuItem;
 
+    /**
+     * The settings menu
+     */
+    @FXML
+    private Menu settingMenu;
+
+    /**
+     * The current temperature suffix
+     */
     private String TemperatureSuffix = " °F";
 
     /**
-     * Initializes after all FXML fields are loaded
+     * Initializes after all FXML fields are loaded. Sets the measurement settings
+     * if it has been changed. Loads the daily forecast.
      */
     @FXML
     void initialize() {
@@ -100,45 +123,82 @@ public class DailyForecastPage {
         this.loadDayForecastComponents(DAYS);
     }
 
+    /**
+     * Handles the celsius check menu item selected event. Changes the current
+     * temperature suffix. Selects the celsius check menu item and deselects all
+     * others. Clears the currently saved current weather info. Pulls fresh daily
+     * forecast data with the new settings.
+     * 
+     * @param event - the select event
+     */
     @FXML
     void onCelsiusSelected(ActionEvent event) {
         this.TemperatureSuffix = " °C";
         this.setAllCheckMenuItemsFalse();
+        CurrentWeatherInformation.setWeatherData(null);
         this.celsiusCheckMenuItem.setSelected(true);
         CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Metric);
-        this.updateDataIfSearchedCity();
+        this.reloadForecastWithNewUnits();
     }
 
+    /**
+     * Handles the fahrenheit check menu item selected event. Changes the current
+     * temperature suffix. Selects the fahrenheit check menu item and deselects all
+     * others. Clears the currently saved current weather info. Pulls fresh daily
+     * forecast data with the new settings.
+     * 
+     * @param event - the select event
+     */
     @FXML
     void onFahrenheitSelected(ActionEvent event) {
         this.TemperatureSuffix = " °F";
         this.setAllCheckMenuItemsFalse();
+        CurrentWeatherInformation.setWeatherData(null);
         this.fahrenheitCheckMenuItem.setSelected(true);
         CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Imperial);
-        this.updateDataIfSearchedCity();
+        this.reloadForecastWithNewUnits();
     }
 
+    /**
+     * Handles the kelvin check menu item selected event. Changes the current
+     * temperature suffix. Selects the kelvin check menu item and deselects all
+     * others. Clears the currently saved current weather info. Pulls fresh daily
+     * forecast data with the new settings.
+     * 
+     * @param event - the select event
+     */
     @FXML
     void onKelvinSelected(ActionEvent event) {
         this.TemperatureSuffix = " K";
         this.setAllCheckMenuItemsFalse();
+        CurrentWeatherInformation.setWeatherData(null);
         this.kelvinCheckMenuItem.setSelected(true);
         CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Kelvin);
-        this.updateDataIfSearchedCity();
+        this.reloadForecastWithNewUnits();
     }
 
-    private void updateDataIfSearchedCity() {
+    /**
+     * Hides the current daily forecast, shows the loading indication, and fetches
+     * fresh forecast information.
+     */
+    private void reloadForecastWithNewUnits() {
         this.hideDailyForecastInformation();
         this.showLoadingIndication();
         this.loadDayForecastComponents(DAYS);
     }
 
+    /**
+     * Sets all of the check menu items to be false.
+     */
     private void setAllCheckMenuItemsFalse() {
         this.fahrenheitCheckMenuItem.setSelected(false);
         this.celsiusCheckMenuItem.setSelected(false);
         this.kelvinCheckMenuItem.setSelected(false);
     }
 
+    /**
+     * Sets the check menu item to the saved measurement units setting
+     */
     private void setMeasurementSettings() {
         this.setAllCheckMenuItemsFalse();
         if (CurrentWeatherInformation.getMeasurementUnits() == MeasurementUnits.Imperial) {
@@ -159,7 +219,7 @@ public class DailyForecastPage {
      * @param days - the number of days for the forecast
      */
     private void loadDayForecastComponents(int days) {
-        this.viewModel.GetWeatherDataByCity(CurrentWeatherInformation.getCityName(), DAYS);
+        this.viewModel.GetWeatherDataByWeatherLocation(CurrentWeatherInformation.getWeatherLocation(), DAYS);
         this.dayForecastPanes.clear();
         this.dailyForecastVBox.getChildren().clear();
         Task<ArrayList<DayForecastPane>> task = new Task<ArrayList<DayForecastPane>>() {
@@ -262,11 +322,16 @@ public class DailyForecastPage {
     private void hideLoadingIndication() {
         this.progressIndicator.setVisible(false);
         this.progressLabel.setVisible(false);
+        this.settingMenu.setDisable(false);
     }
 
+    /**
+     * Shows the loadings progress indicator and progress label
+     */
     private void showLoadingIndication() {
         this.progressIndicator.setVisible(true);
         this.progressLabel.setVisible(true);
+        this.settingMenu.setDisable(true);
     }
 
     /**
@@ -276,6 +341,9 @@ public class DailyForecastPage {
         this.scrollPane.setVisible(true);
     }
 
+    /**
+     * Hides the scroll pane that contains the daily forecast info
+     */
     private void hideDailyForecastInformation() {
         this.scrollPane.setVisible(false);
     }
