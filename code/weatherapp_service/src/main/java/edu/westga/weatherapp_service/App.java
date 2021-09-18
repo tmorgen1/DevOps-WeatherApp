@@ -8,8 +8,10 @@ import edu.westga.weatherapp_service.model.APIDataRetriever;
 import edu.westga.weatherapp_service.model.OpenWeatherCurrentDataRetriever;
 import edu.westga.weatherapp_service.model.OpenWeatherDailyDataRetriever;
 import edu.westga.weatherapp_service.model.OpenWeatherIconRetriever;
+import edu.westga.weatherapp_service.model.OpenWeatherSevereWarningsRetriever;
 import edu.westga.weatherapp_shared.interfaces.CurrentWeatherDataRetriever;
 import edu.westga.weatherapp_shared.interfaces.DailyWeatherDataRetriever;
+import edu.westga.weatherapp_shared.interfaces.SevereWeatherWarningsRetriever;
 import edu.westga.weatherapp_shared.interfaces.WeatherIconRetriever;
 
 /**
@@ -41,8 +43,11 @@ public class App
 
             DailyWeatherDataRetriever dailyWeatherSkeleton = new OpenWeatherDailyDataRetriever(new APIDataRetriever());
             Naming.rebind("rmi://localhost:5000/daily-weather", dailyWeatherSkeleton);
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
+
+            SevereWeatherWarningsRetriever severeWarningsSkeleton = new OpenWeatherSevereWarningsRetriever(new APIDataRetriever());
+            Naming.rebind("rmi:/" + "/localhost:5000/severe-warnings", severeWarningsSkeleton);
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage());
         }
     }
 }

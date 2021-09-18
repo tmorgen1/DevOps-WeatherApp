@@ -1,12 +1,9 @@
 package edu.westga.weatherapp_service.model;
 
-import edu.westga.weatherapp_service.enums.MeasurementUnits;
-import edu.westga.weatherapp_service.interfaces.DataRetriever;
+import edu.westga.weatherapp_shared.enums.MeasurementUnits;
+import edu.westga.weatherapp_shared.interfaces.DataRetriever;
+import edu.westga.weatherapp_shared.interfaces.SevereWeatherWarningsRetriever;
 import edu.westga.weatherapp_service.resources.ServiceConstants;
-import edu.westga.weatherapp_shared.SevereWeatherWarningsRetriever;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.net.URL;
 import java.rmi.RemoteException;
@@ -26,6 +23,10 @@ public class OpenWeatherSevereWarningsRetriever extends UnicastRemoteObject impl
     public static final int LATITUDE_LOWER_BOUND = -90;
     public static final int LONGITUDE_UPPER_BOUND = 180;
     public static final int LONGITUDE_LOWER_BOUND = -180;
+    public static final String LATITUDE_OUT_OF_BOUND = "Invalid Latitude - Latitude must be between -90 and 90 inclusive.";
+    public static final String LONGITUDE_OUT_OF_BOUND = "Invalid Longitude - Longitude must be between -180 and 180 inclusive.";
+    public static final String INCORRECT_UNITS = "Invalid Units - Units must not be null and be of enum type MeasurementUnits";
+    public static final String SEVERE_WEATHER_WARNINGS_INFORMATION_KEY = "alerts";
     private static final String SEVERE_WARNING_BASE_URL = "http:/"
             + "/pro.openweathermap.org/data/2.5/onecall?exclude=minutely,hourly,daily,current";
     private DataRetriever dataRetriever;
@@ -48,36 +49,22 @@ public class OpenWeatherSevereWarningsRetriever extends UnicastRemoteObject impl
     }
 
     @Override
-    public SevereWeatherWarning[] getSevereWeatherWarningsForLocation(double latitude, double longitude, Enum<?> units)
+    public String getSevereWeatherWarningsForLocation(double latitude, double longitude, Enum<?> units)
             throws RemoteException, IllegalArgumentException {
         if (latitude < OpenWeatherSevereWarningsRetriever.LATITUDE_LOWER_BOUND
                 || latitude > OpenWeatherSevereWarningsRetriever.LATITUDE_UPPER_BOUND) {
-            throw new IllegalArgumentException(ServiceConstants.LATITUDE_OUT_OF_BOUND);
+            throw new IllegalArgumentException(OpenWeatherSevereWarningsRetriever.LATITUDE_OUT_OF_BOUND);
         }
         if (longitude < OpenWeatherSevereWarningsRetriever.LONGITUDE_LOWER_BOUND
                 || longitude > OpenWeatherSevereWarningsRetriever.LONGITUDE_UPPER_BOUND) {
-            throw new IllegalArgumentException(ServiceConstants.LONGITUDE_OUT_OF_BOUND);
+            throw new IllegalArgumentException(OpenWeatherSevereWarningsRetriever.LONGITUDE_OUT_OF_BOUND);
         }
         if (units == null || !units.getClass().equals(MeasurementUnits.class)) {
-            throw new IllegalArgumentException(ServiceConstants.INCORRECT_UNITS);
+            throw new IllegalArgumentException(OpenWeatherSevereWarningsRetriever.INCORRECT_UNITS);
         }
-        JSONObject data = new JSONObject(this.fetchDataOfSevereWeatherWarningsForLocation(latitude, longitude, units));
-        SevereWeatherWarning[] severeWeatherWarnings = this.convertSevereWeatherWarningsForLocationFromJsonToArray(data);
-        return severeWeatherWarnings;
-    }
+        String data = this.fetchDataOfSevereWeatherWarningsForLocation(latitude, longitude, units);
 
-    private SevereWeatherWarning[] convertSevereWeatherWarningsForLocationFromJsonToArray(JSONObject data) {
-        JSONArray warningsData = this.parseDataFromJsonObjectAsAJsonArray(data);
-        SevereWeatherWarning[] severeWeatherWarnings = new SevereWeatherWarning[warningsData.length()];
-        for (int ix = 0; ix < warningsData.length(); ix++) {
-            String forecasterName = warningsData.getJSONObject(ix).getString("sender_name");
-            String warningName = warningsData.getJSONObject(ix).getString("event");
-            String start = String.valueOf(warningsData.getJSONObject(ix).getLong("start"));
-            String end = String.valueOf(warningsData.getJSONObject(ix).getLong("end"));
-            String description = warningsData.getJSONObject(ix).getString("description");
-            severeWeatherWarnings[ix] = new SevereWeatherWarning(forecasterName, warningName, start, end, description);
-        }
-        return severeWeatherWarnings;
+        return data;
     }
 
     private String fetchDataOfSevereWeatherWarningsForLocation(double latitude, double longitude, Enum<?> units) {
@@ -87,13 +74,5 @@ public class OpenWeatherSevereWarningsRetriever extends UnicastRemoteObject impl
         URL apiCall = this.dataRetriever.GetServiceAPICallURL(paramLatitude + paramLongitude,
                 OpenWeatherSevereWarningsRetriever.SEVERE_WARNING_BASE_URL, ServiceConstants.API_KEY, unit);
         return this.dataRetriever.GetData(apiCall);
-    }
-
-    private JSONArray parseDataFromJsonObjectAsAJsonArray(JSONObject data) {
-        JSONArray warningsData = data.optJSONArray("alerts");
-        if (warningsData == null) {
-            warningsData = new JSONArray();
-        }
-        return warningsData;
     }
 }

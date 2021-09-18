@@ -1,4 +1,4 @@
-package edu.westga.weatherapp_shared;
+package edu.westga.weatherapp_shared.interfaces;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -26,6 +26,6 @@ public interface SevereWeatherWarningsRetriever extends Remote {
      * @return a string array of the severe weather warnings for the given location
      * @throws RemoteException
      */
-    Object[] getSevereWeatherWarningsForLocation(double latitude, double longitude,
+    String getSevereWeatherWarningsForLocation(double latitude, double longitude,
             Enum<?> unit) throws RemoteException, IllegalArgumentException;
 }

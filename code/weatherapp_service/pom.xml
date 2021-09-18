@@ -32,14 +32,7 @@
       <version>5.4.0</version>
       <scope>test</scope>
     </dependency>
-
-    <dependency>
-      <groupId>org.json</groupId>
-      <artifactId>json</artifactId>
-      <version>20210307</version>
-      <optional>false</optional>
-    </dependency>
-
+    
     <dependency>
       <groupId>edu.westga.weatherapp_shared</groupId>
       <artifactId>weatherapp_shared</artifactId>
