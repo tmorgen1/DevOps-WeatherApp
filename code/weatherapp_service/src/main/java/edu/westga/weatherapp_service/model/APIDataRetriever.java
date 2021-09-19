@@ -5,8 +5,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import edu.westga.weatherapp_shared.enums.MeasurementUnits;
 import edu.westga.weatherapp_shared.interfaces.DataRetriever;
@@ -23,6 +21,7 @@ public class APIDataRetriever implements DataRetriever {
 
         try (Scanner scanner = new Scanner(apiCall.openStream())) {
             StringBuffer jsonBuffer = new StringBuffer();
+            scanner.useDelimiter("\\A");
             while (scanner.hasNext()) {
                 jsonBuffer.append(scanner.next());
             }
@@ -62,5 +61,4 @@ public class APIDataRetriever implements DataRetriever {
 
         return apiCall;
     }
-
 }

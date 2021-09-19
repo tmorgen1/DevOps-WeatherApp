@@ -535,7 +535,12 @@ public class LandingPage {
      */
     @FXML
     void onWarningsClicked(ActionEvent event) {
-        // TODO: add navigation to weather warnings page
+        try {
+            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            WindowGenerator.changeScene(currentStage, App.SEVERE_WARNINGS_PAGE_VIEW, App.SEVERE_WARNINGS_PAGE_TITLE);
+        } catch (IOException exception) {
+            this.displayNoLocationSnackbar("Please Enter a Location First");
+        }
     }
 
     /**
