@@ -19,6 +19,14 @@
   </properties>
 
   <dependencies>
+    <!-- JUnit for JaCoCo coverage report -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+
     <!-- JavaFX -->
 		<dependency> 
 			<groupId>org.openjfx</groupId>
@@ -26,6 +34,7 @@
 			<version>15.0.1</version>
 		</dependency>
 
+    <!-- JavaFX -->
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-fxml</artifactId>
@@ -40,6 +49,7 @@
 			<scope>test</scope>
 		</dependency>
 
+    <!-- Java toolkit for JSON -->
     <dependency>
       <groupId>org.json</groupId>
       <artifactId>json</artifactId>
@@ -47,38 +57,65 @@
       <optional>false</optional>
     </dependency>
 
+    <!-- The shared weather app project -->
     <dependency>
       <groupId>edu.westga.weatherapp_shared</groupId>
       <artifactId>weatherapp_shared</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
 
+    <!-- JavaFX material design components -->
     <dependency>
       <groupId>com.jfoenix</groupId>
       <artifactId>jfoenix</artifactId>
       <version>9.0.10</version>
-  </dependency>
+    </dependency>
   </dependencies>
 
   <build>
-      <plugins>        
-        <plugin> <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
+      <plugins>
+        <!-- JaCoCo code coverage -->  
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>0.8.7</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>prepare-agent</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>report</id>
+              <phase>prepare-package</phase>
+              <goals>
+                <goal>report</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
+        <plugin>
           <artifactId>maven-clean-plugin</artifactId>
           <version>3.1.0</version>
         </plugin>
         
-        <plugin><!-- compiler services -->
+        <!-- compiler services -->
+        <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.8.0</version>
         </plugin>
         
-        <plugin><!-- testing services -->
+        <!-- testing services -->
+        <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.22.2</version>
         </plugin>
         
-        <plugin><!-- javafx support -->
+        <!-- javafx support -->
+        <plugin>
           <groupId>org.openjfx</groupId>
           <artifactId>javafx-maven-plugin</artifactId>
           <version>0.0.6</version>
@@ -87,7 +124,8 @@
           </configuration>
         </plugin>
         
-        <plugin><!-- builds executable jar files -->
+        <!-- builds executable jar files -->
+        <plugin>
           <artifactId>maven-jar-plugin</artifactId>
           <version>3.0.2</version>
           <configuration><!-- Add this configuration group to establish the main class for launching the app -->
@@ -103,11 +141,13 @@
           </configuration>
         </plugin>
         
-        <plugin> <!-- default lifecycle, jar packaging: see https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
+        <!-- default lifecycle, jar packaging: see https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
+        <plugin>
           <artifactId>maven-resources-plugin</artifactId>
           <version>3.0.2</version>
         </plugin>
 
+        <!-- assembly services -->
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
           <configuration>
