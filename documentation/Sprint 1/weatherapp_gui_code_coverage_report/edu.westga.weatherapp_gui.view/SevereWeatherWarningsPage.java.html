@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SevereWeatherWarningsPage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">weatherapp_gui</a> &gt; <a href="index.source.html" class="el_package">edu.westga.weatherapp_gui.view</a> &gt; <span class="el_source">SevereWeatherWarningsPage.java</span></div><h1>SevereWeatherWarningsPage.java</h1><pre class="source lang-java linenums">package edu.westga.weatherapp_gui.view;
+
+import java.io.IOException;
+import java.util.List;
+
+import edu.westga.weatherapp_gui.App;
+import edu.westga.weatherapp_gui.view.utils.SevereWeatherWarningsTitledPanesToStringConverter;
+import edu.westga.weatherapp_gui.view.utils.WindowGenerator;
+import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
+import edu.westga.weatherapp_gui.viewmodel.SevereWeatherWarningsPageViewModel;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
+import javafx.fxml.FXML;
+import javafx.scene.control.Accordion;
+import javafx.scene.control.Label;
+import javafx.scene.control.TitledPane;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
+
+/**
+ * The severe weather warnings page class.
+ * 
+ * @author Eboni Walker
+ * @version 1.0
+ */
+<span class="nc" id="L32">public class SevereWeatherWarningsPage {</span>
+
+    /**
+     * this severe warnings page's pane
+     */
+    @FXML
+    private Pane severeWarningsPagePane;
+
+    /**
+     * the severe weather warning's accordion
+     */
+    @FXML
+    private Accordion severeWarningsAccordion;
+
+    /**
+     * The back arrow image view
+     */
+    @FXML
+    private ImageView backArrowImageView;
+
+    /**
+     * the label that displays if there are no severe weather warnings for a location
+     */
+    @FXML
+    private Label noWarningsForLocationLabel;
+
+    /**
+     * the label that displays if the page encounters errors
+     */
+    @FXML
+    private Label errorLabel;
+
+    /**
+     * the view model for this page
+     */
+    private SevereWeatherWarningsPageViewModel viewModel;
+
+    /**
+     * the titled Pane list list property that the accooridion gets its values from
+     */
+    private ObjectProperty&lt;List&lt;TitledPane&gt;&gt; severeWarningsTitledPanesListProperty;
+
+    /**
+     * Initializes this page after all FXML fields are loaded
+     */
+    @FXML
+    void initialize() {
+<span class="nc" id="L79">        this.viewModel = new SevereWeatherWarningsPageViewModel(null);</span>
+<span class="nc" id="L80">        this.severeWarningsTitledPanesListProperty = new SimpleObjectProperty&lt;List&lt;TitledPane&gt;&gt;();</span>
+<span class="nc" id="L81">        this.bindToViewModel();</span>
+<span class="nc" id="L82">        this.loadSevereWarningsTitlePanes();</span>
+<span class="nc" id="L83">    }</span>
+
+    /**
+     * Binds the view's content properties to the view model
+     */
+    private void bindToViewModel() {
+<span class="nc" id="L89">        Bindings.bindBidirectional(this.viewModel.getsevereWeatherWarningsStringProperty(),</span>
+                this.severeWarningsTitledPanesListProperty, new SevereWeatherWarningsTitledPanesToStringConverter());
+<span class="nc" id="L91">        this.noWarningsForLocationLabel.visibleProperty()</span>
+<span class="nc" id="L92">                .bind(this.viewModel.getNoWarningsForLocationVisibilityProperty());</span>
+<span class="nc" id="L93">        this.severeWarningsAccordion.visibleProperty()</span>
+<span class="nc" id="L94">                .bind(this.viewModel.getSevereWarningAccordionVisibilityProperty());</span>
+<span class="nc" id="L95">        this.errorLabel.textProperty().bind(this.viewModel.getErrorLabelStringProperty());</span>
+<span class="nc" id="L96">        this.errorLabel.visibleProperty().bind(this.viewModel.getErrorLabelVisibilityProperty());</span>
+<span class="nc" id="L97">    }</span>
+
+    /**
+     * Loads the titled panes for the severe weathe warnings
+     */
+    private void loadSevereWarningsTitlePanes() {
+<span class="nc" id="L103">        this.viewModel.setsevereWeatherWarningsObjectPropertyValue(CurrentWeatherInformation.getWeatherLocation(),</span>
+<span class="nc" id="L104">                CurrentWeatherInformation.getMeasurementUnits());</span>
+<span class="nc" id="L105">        ObservableList&lt;TitledPane&gt; accordionSevereWarningsTitledPanes = FXCollections</span>
+<span class="nc" id="L106">                .observableArrayList(this.severeWarningsTitledPanesListProperty.getValue());</span>
+<span class="nc" id="L107">        this.severeWarningsAccordion.getPanes().setAll(accordionSevereWarningsTitledPanes);</span>
+<span class="nc" id="L108">    }</span>
+
+    /**
+     * Event handler for the back arrow image view. Handles the on click mouse
+     * event. Switches to the landing page scene
+     * 
+     * @param event - the clicked mouse event
+     */
+    @FXML
+    private void onBackArrowClicked(MouseEvent event) {
+        try {
+<span class="nc" id="L119">            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();</span>
+<span class="nc" id="L120">            WindowGenerator.changeScene(currentStage, App.LANDING_PAGE_VIEW, App.LANDING_PAGE_TITLE);</span>
+<span class="nc" id="L121">        } catch (IOException exception) {</span>
+<span class="nc" id="L122">            this.viewModel.setErrorLabelStringPropertyValue(&quot;IO Exception: Error switching scenes&quot;);</span>
+<span class="nc" id="L123">        }</span>
+<span class="nc" id="L124">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

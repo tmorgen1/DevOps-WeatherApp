@@ -1,0 +1,19 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+weatherapp_gui,edu.westga.weatherapp_gui.view,LandingPage,634,0,34,0,205,0,61,0,44,0
+weatherapp_gui,edu.westga.weatherapp_gui.view,DailyForecastPage.new Task() {...},61,0,2,0,11,0,3,0,2,0
+weatherapp_gui,edu.westga.weatherapp_gui.view,SevereWeatherWarningTitledPane,200,0,20,0,50,0,23,0,13,0
+weatherapp_gui,edu.westga.weatherapp_gui.view,LandingPage.new ChangeListener() {...},13,0,2,0,4,0,3,0,2,0
+weatherapp_gui,edu.westga.weatherapp_gui.view,LandingPage.new ChangeListener() {...},13,0,2,0,4,0,3,0,2,0
+weatherapp_gui,edu.westga.weatherapp_gui.view,LandingPage.new ChangeListener() {...},21,0,2,0,5,0,3,0,2,0
+weatherapp_gui,edu.westga.weatherapp_gui.view,DailyForecastPage,300,0,8,0,88,0,25,0,21,0
+weatherapp_gui,edu.westga.weatherapp_gui.view,SevereWeatherWarningsPage,93,0,0,0,26,0,5,0,5,0
+weatherapp_gui,edu.westga.weatherapp_gui.view,DayForecastPane,70,0,0,0,25,0,6,0,6,0
+weatherapp_gui,edu.westga.weatherapp_gui.model,DateTimeConverter,3,53,0,4,1,11,1,6,1,4
+weatherapp_gui,edu.westga.weatherapp_gui.model,WeatherLocationSerializer,0,35,0,0,0,10,0,3,0,3
+weatherapp_gui,edu.westga.weatherapp_gui.model,CurrentWeatherInformation,3,29,0,2,1,14,1,8,1,7
+weatherapp_gui,edu.westga.weatherapp_gui.viewmodel,LandingPageViewModel,30,297,1,33,13,78,1,31,0,15
+weatherapp_gui,edu.westga.weatherapp_gui.viewmodel,DailyForecastPageViewModel,18,184,0,18,8,40,0,16,0,7
+weatherapp_gui,edu.westga.weatherapp_gui.viewmodel,SevereWeatherWarningsPageViewModel,144,0,12,0,43,0,17,0,11,0
+weatherapp_gui,edu.westga.weatherapp_gui.view.utils,SevereWeatherWarningsTitledPanesToStringConverter,117,0,12,0,28,0,11,0,5,0
+weatherapp_gui,edu.westga.weatherapp_gui.view.utils,WindowGenerator,29,0,0,0,8,0,2,0,2,0
+weatherapp_gui,edu.westga.weatherapp_gui,App,27,0,0,0,9,0,3,0,3,0

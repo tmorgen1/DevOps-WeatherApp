@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DateTimeConverter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">weatherapp_gui</a> &gt; <a href="index.source.html" class="el_package">edu.westga.weatherapp_gui.model</a> &gt; <span class="el_source">DateTimeConverter.java</span></div><h1>DateTimeConverter.java</h1><pre class="source lang-java linenums">package edu.westga.weatherapp_gui.model;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+/**
+ * UTC date time converter
+ */
+<span class="nc" id="L10">public class DateTimeConverter {</span>
+
+    /**
+     * Converts the given utc date time and timezone to the day of the week name
+     * 
+     * @param utcDateTime - the specified utc date time
+     * @param timezone - the specified timezone
+     * @return the day of the week name
+     */
+    public static String ConvertUtcToDayOfWeek(Long utcDateTime, Long timezone) {
+<span class="fc" id="L20">        Date date = DateTimeConverter.ConvertUtcToDate(utcDateTime, timezone);</span>
+<span class="fc" id="L21">        return DateTimeConverter.FormatDate(date, &quot;EEEE&quot;);</span>
+    }
+
+    /**
+     * Converts the given utc to a short date string of the month and day.
+     * 
+     * @param utcDateTime - the utc date time number
+     * @param timezone - the timezone number
+     * @return - the shorthand date
+     */
+    public static String ConvertUtcToShortDate(Long utcDateTime, Long timezone) {
+<span class="fc" id="L32">        Date date = DateTimeConverter.ConvertUtcToDate(utcDateTime, timezone);</span>
+<span class="fc" id="L33">        return DateTimeConverter.FormatDate(date, &quot;MMMM d&quot;);</span>
+    }
+
+    /**
+     * Formats the given date to the specifed format
+     * 
+     * @param date - the date
+     * @param format - the date format
+     * @return - the formatted date
+     */
+    public static String FormatDate(Date date, String format) {
+<span class="fc bfc" id="L44" title="All 2 branches covered.">        if (format == null) {</span>
+<span class="fc" id="L45">            throw new IllegalArgumentException(&quot;Format cannot be null&quot;);</span>
+        }
+<span class="fc bfc" id="L47" title="All 2 branches covered.">        if (format.isEmpty()) {</span>
+<span class="fc" id="L48">            throw new IllegalArgumentException(&quot;Format cannot be empty&quot;);</span>
+        }
+
+<span class="fc" id="L51">        DateFormat formatter = new SimpleDateFormat(format);</span>
+<span class="fc" id="L52">        return formatter.format(date);</span>
+    }
+
+    /**
+     * Converts the given utc date to a date object
+     * 
+     * @param utcDateTime - the utc date
+     * @param timezone - the timezone
+     * @return - the date object
+     */
+    public static Date ConvertUtcToDate(Long utcDateTime, Long timezone) {
+<span class="fc" id="L63">        return new Date(utcDateTime * 1000 + (timezone * 1000));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

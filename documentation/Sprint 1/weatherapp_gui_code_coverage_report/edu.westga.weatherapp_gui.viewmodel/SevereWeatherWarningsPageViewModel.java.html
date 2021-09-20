@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SevereWeatherWarningsPageViewModel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">weatherapp_gui</a> &gt; <a href="index.source.html" class="el_package">edu.westga.weatherapp_gui.viewmodel</a> &gt; <span class="el_source">SevereWeatherWarningsPageViewModel.java</span></div><h1>SevereWeatherWarningsPageViewModel.java</h1><pre class="source lang-java linenums">package edu.westga.weatherapp_gui.viewmodel;
+
+import java.rmi.Naming;
+import java.rmi.RemoteException;
+
+import edu.westga.weatherapp_shared.enums.MeasurementUnits;
+import edu.westga.weatherapp_shared.interfaces.SevereWeatherWarningsRetriever;
+import edu.westga.weatherapp_shared.model.WeatherLocation;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+
+/**
+ * The view model class for the severe weather warnings page.
+ * 
+ * @author Eboni Walker
+ * @version 1.0
+ */
+public class SevereWeatherWarningsPageViewModel {
+
+    /**
+     * the severe weather warnings string property for use in bindings
+     */
+    private SimpleStringProperty severeWeatherWarningsStringProperty;
+
+    /**
+     * the error label string property for use in bindings
+     */
+    private SimpleStringProperty errorLabelStringProperty;
+
+    /**
+     * the no warnings for location visibility property for use in bindings
+     */
+    private BooleanProperty noWarningsForLocationVisibilityProperty;
+
+    /**
+     * the severe warnings accordion visibility property for use in bindings
+     */
+    private BooleanProperty severeWarningsAccordionVisibilityProperty;
+
+    /**
+     * the  error label visibility property for use in bindings
+     */
+    private BooleanProperty errorLabelVisibilityProperty;
+
+    /**
+     * the severe weather warnings retriever
+     */
+    private SevereWeatherWarningsRetriever severeWeatherWarningsRetriever;
+
+    /**
+     * Creates an instance of the Severe Weather Warnings Page View Model
+     * 
+     * 
+     * @param dataRetriever the data retriever
+     * @precondition none
+     * @postcondition getsevereWeatherWarningsObjectProperty() != null
+     */
+<span class="nc" id="L59">    public SevereWeatherWarningsPageViewModel(SevereWeatherWarningsRetriever dataRetriever) {</span>
+<span class="nc" id="L60">        this.severeWeatherWarningsStringProperty = new SimpleStringProperty();</span>
+<span class="nc" id="L61">        this.errorLabelStringProperty = new SimpleStringProperty();</span>
+<span class="nc" id="L62">        this.errorLabelVisibilityProperty = new SimpleBooleanProperty();</span>
+<span class="nc" id="L63">        this.noWarningsForLocationVisibilityProperty = new SimpleBooleanProperty();</span>
+<span class="nc" id="L64">        this.severeWarningsAccordionVisibilityProperty = new SimpleBooleanProperty();</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        if (dataRetriever != null) {</span>
+<span class="nc" id="L66">            this.severeWeatherWarningsRetriever = dataRetriever;</span>
+        } else {
+            try {
+<span class="nc" id="L69">                this.severeWeatherWarningsRetriever = (SevereWeatherWarningsRetriever) Naming</span>
+<span class="nc" id="L70">                        .lookup(&quot;rmi://localhost:5000/severe-warnings&quot;);</span>
+<span class="nc" id="L71">            } catch (Exception ex) {</span>
+<span class="nc" id="L72">                this.setErrorLabelStringPropertyValue(&quot;Error looking up java rmi binding&quot;);</span>
+<span class="nc" id="L73">                this.setErrorLabelVisibilityProperty(true);</span>
+<span class="nc" id="L74">            }</span>
+        }
+<span class="nc" id="L76">    }</span>
+
+    /**
+     * Sets the string value of the severe weather warnings object property value
+     * 
+     * @precondition location != null &amp;&amp; units != null
+     * @postcondition getsevereWeatherWarningsObjectProperty() != null &amp;&amp;
+     *                (getsevereWeatherWarningsObjectProperty().equals(data) ||
+     *                getsevereWeatherWarningsObjectProperty()equals(&quot;&quot;))
+     * 
+     * @param location the location for the warnings
+     * @param units    the unit of measument the warning should come in
+     * @throws IllegalArgumentException
+     * @throws RemoteException
+     */
+    public void setsevereWeatherWarningsObjectPropertyValue(WeatherLocation location, MeasurementUnits units) {
+<span class="nc bnc" id="L92" title="All 2 branches missed.">        if (location == null) {</span>
+<span class="nc" id="L93">            throw new IllegalArgumentException(&quot;The location cannot be null.&quot;);</span>
+        }
+        String data;
+        try {
+<span class="nc" id="L97">            data = this.severeWeatherWarningsRetriever.getSevereWeatherWarningsForLocation(location.getLatitude(),</span>
+<span class="nc" id="L98">                    location.getLongitude(), units);</span>
+<span class="nc" id="L99">            this.severeWeatherWarningsStringProperty.setValue(data);</span>
+<span class="nc" id="L100">            this.setNoWarningsForLocationVisibilityPropertyValue(data);</span>
+<span class="nc" id="L101">            this.setSevereWarningAccordionVisibilityPropertyValue(data);</span>
+<span class="nc" id="L102">        } catch (RemoteException | IllegalArgumentException ex) {</span>
+<span class="nc" id="L103">            this.setErrorLabelStringPropertyValue(ex.getMessage());</span>
+<span class="nc" id="L104">        }</span>
+<span class="nc" id="L105">    }</span>
+
+    /**
+     * Gets the error label string property
+     * 
+     * @return the errorLabelStringProperty
+     */
+    public SimpleStringProperty getErrorLabelStringProperty() {
+<span class="nc" id="L113">        return this.errorLabelStringProperty;</span>
+    }
+
+    /**
+     * Gets the severe weather warnings string property
+     * 
+     * @return returns the severe weather warnings string property
+     */
+    public SimpleStringProperty getsevereWeatherWarningsStringProperty() {
+<span class="nc" id="L122">        return this.severeWeatherWarningsStringProperty;</span>
+    }
+
+    /**
+     * Gets the no warnings for location visibility property
+     * 
+     * @return the noWarningsForLocationVisibilityProperty
+     */
+    public BooleanProperty getNoWarningsForLocationVisibilityProperty() {
+<span class="nc" id="L131">        return this.noWarningsForLocationVisibilityProperty;</span>
+    }
+
+    /**
+     * Gets the severe warnings accordion visibility property
+     * 
+     * @return the severeWarningsAccordionVisibilityProperty
+     */
+    public BooleanProperty getSevereWarningAccordionVisibilityProperty() {
+<span class="nc" id="L140">        return this.severeWarningsAccordionVisibilityProperty;</span>
+    }
+
+    /**
+     * Gets the error label visibility property
+     * 
+     * @return the errorLabelVisibilityProperty
+     */
+    public BooleanProperty getErrorLabelVisibilityProperty() {
+<span class="nc" id="L149">        return this.errorLabelVisibilityProperty;</span>
+    }
+
+    /**
+     * Sets the error label visibility property
+     * 
+     * @param errorLabelVisibilityPropertyValue the value to set it to
+     */
+    public void setErrorLabelVisibilityProperty(boolean errorLabelVisibilityPropertyValue) {
+<span class="nc" id="L158">        this.errorLabelVisibilityProperty.setValue(errorLabelVisibilityPropertyValue);</span>
+<span class="nc" id="L159">    }</span>
+
+    /**
+     * Sets the error error label string property value
+     * 
+     * @param errorLabelStringPropertyValue the value to set it to
+     */
+    public void setErrorLabelStringPropertyValue(String errorLabelStringPropertyValue) {
+<span class="nc" id="L167">        this.errorLabelStringProperty.setValue(errorLabelStringPropertyValue);</span>
+<span class="nc" id="L168">    }</span>
+
+    /**
+     * Sets the no warnings for location visibility property value
+     * 
+     * @param data the data that detemines the value of the property
+     */
+    private void setNoWarningsForLocationVisibilityPropertyValue(String data) {
+<span class="nc bnc" id="L176" title="All 4 branches missed.">        if (data == null || !data.contains(&quot;alerts&quot;)) {</span>
+<span class="nc" id="L177">            this.noWarningsForLocationVisibilityProperty.setValue(true);</span>
+        } else {
+<span class="nc" id="L179">            this.noWarningsForLocationVisibilityProperty.setValue(false);</span>
+        }
+<span class="nc" id="L181">    }</span>
+
+    /**
+     * Sets the severe warning accordion visibility property value
+     * 
+     * @param data the data that detemines the value of the property
+     */
+    private void setSevereWarningAccordionVisibilityPropertyValue(String data) {
+<span class="nc bnc" id="L189" title="All 4 branches missed.">        if (data == null || !data.contains(&quot;alerts&quot;)) {</span>
+<span class="nc" id="L190">            this.severeWarningsAccordionVisibilityProperty.setValue(false);</span>
+        } else {
+<span class="nc" id="L192">            this.severeWarningsAccordionVisibilityProperty.setValue(true);</span>
+        }
+<span class="nc" id="L194">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

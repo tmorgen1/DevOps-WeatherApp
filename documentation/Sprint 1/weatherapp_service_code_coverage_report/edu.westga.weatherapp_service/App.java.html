@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>App.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">weatherapp_service</a> &gt; <a href="index.source.html" class="el_package">edu.westga.weatherapp_service</a> &gt; <span class="el_source">App.java</span></div><h1>App.java</h1><pre class="source lang-java linenums">package edu.westga.weatherapp_service;
+
+import java.rmi.Naming;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import edu.westga.weatherapp_service.model.APIDataRetriever;
+import edu.westga.weatherapp_service.model.OpenWeatherCurrentDataRetriever;
+import edu.westga.weatherapp_service.model.OpenWeatherDailyDataRetriever;
+import edu.westga.weatherapp_service.model.OpenWeatherIconRetriever;
+import edu.westga.weatherapp_service.model.OpenWeatherSevereWarningsRetriever;
+import edu.westga.weatherapp_service.model.WeatherLocationSearcher;
+import edu.westga.weatherapp_shared.interfaces.CurrentWeatherDataRetriever;
+import edu.westga.weatherapp_shared.interfaces.DailyWeatherDataRetriever;
+import edu.westga.weatherapp_shared.interfaces.LocationSearcher;
+import edu.westga.weatherapp_shared.interfaces.SevereWeatherWarningsRetriever;
+import edu.westga.weatherapp_shared.interfaces.WeatherIconRetriever;
+
+/**
+ * Main class for the service provider for Group 6 DevOps Weather App.
+ */
+<span class="nc" id="L21">public class App </span>
+{
+    /**
+     * Weather Locations Json File Name
+     */
+    public static final String WEATHER_LOCATIONS_FILE_NAME = &quot;city.list.json&quot;;
+
+    /**
+     * RMI Registry Port.
+     */
+    private static final int RMI_PORT = 5000;
+
+    /**
+     * Entry point of the program.
+     * 
+     * @param args
+     * @throws RemoteException
+     */
+    public static void main( String[] args ) throws RemoteException
+    {
+<span class="nc" id="L41">        LocateRegistry.createRegistry(App.RMI_PORT);</span>
+        
+        try {
+<span class="nc" id="L44">            CurrentWeatherDataRetriever currentWeatherSkeleton = new OpenWeatherCurrentDataRetriever(new APIDataRetriever());</span>
+<span class="nc" id="L45">            Naming.rebind(&quot;rmi://localhost:&quot; + App.RMI_PORT + &quot;/current-weather&quot;, currentWeatherSkeleton);</span>
+
+<span class="nc" id="L47">            WeatherIconRetriever weatherIconSkeleton = new OpenWeatherIconRetriever();</span>
+<span class="nc" id="L48">            Naming.rebind(&quot;rmi://localhost:&quot; + App.RMI_PORT + &quot;/weather-icons&quot;, weatherIconSkeleton);</span>
+
+<span class="nc" id="L50">            DailyWeatherDataRetriever dailyWeatherSkeleton = new OpenWeatherDailyDataRetriever(new APIDataRetriever());</span>
+<span class="nc" id="L51">            Naming.rebind(&quot;rmi://localhost:5000/daily-weather&quot;, dailyWeatherSkeleton);</span>
+
+<span class="nc" id="L53">            SevereWeatherWarningsRetriever severeWarningsSkeleton = new OpenWeatherSevereWarningsRetriever(new APIDataRetriever());</span>
+<span class="nc" id="L54">            Naming.rebind(&quot;rmi://localhost:5000/severe-warnings&quot;, severeWarningsSkeleton);</span>
+
+<span class="nc" id="L56">            LocationSearcher weatherLocationSearcherSkeleton = new WeatherLocationSearcher(App.WEATHER_LOCATIONS_FILE_NAME);</span>
+<span class="nc" id="L57">            Naming.rebind(&quot;rmi://localhost:&quot; + App.RMI_PORT + &quot;/location-searcher&quot;, weatherLocationSearcherSkeleton);</span>
+<span class="nc" id="L58">        } catch (Exception ex) {</span>
+<span class="nc" id="L59">            System.err.println(ex.getMessage());</span>
+<span class="nc" id="L60">        } </span>
+<span class="nc" id="L61">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

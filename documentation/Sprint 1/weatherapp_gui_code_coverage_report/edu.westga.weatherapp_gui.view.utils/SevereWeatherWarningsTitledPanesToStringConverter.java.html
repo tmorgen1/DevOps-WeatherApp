@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SevereWeatherWarningsTitledPanesToStringConverter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">weatherapp_gui</a> &gt; <a href="index.source.html" class="el_package">edu.westga.weatherapp_gui.view.utils</a> &gt; <span class="el_source">SevereWeatherWarningsTitledPanesToStringConverter.java</span></div><h1>SevereWeatherWarningsTitledPanesToStringConverter.java</h1><pre class="source lang-java linenums">package edu.westga.weatherapp_gui.view.utils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import edu.westga.weatherapp_gui.view.SevereWeatherWarningTitledPane;
+import javafx.scene.control.TitledPane;
+import javafx.util.StringConverter;
+
+/**
+ * SevereWeatherWarningsTitledPanesToStringConverter the raw weather warning
+ * data to and from TitledPanes
+ * 
+ * @author Eboni Walker
+ * @version 1.0
+ */
+<span class="nc" id="L20">public class SevereWeatherWarningsTitledPanesToStringConverter extends StringConverter&lt;List&lt;TitledPane&gt;&gt; {</span>
+
+    /**
+     * Converts the string of severe weather warnings to a list of titled panes
+     * 
+     * @param weatherWarnings the data potentially containing severe weather warning
+     *                        data
+     * 
+     * @return the list of severe weather warning titled panes
+     */
+    @Override
+    public List&lt;TitledPane&gt; fromString(String weatherWarnings) {
+<span class="nc" id="L32">        JSONObject weatherWarningsData = new JSONObject(weatherWarnings);</span>
+<span class="nc" id="L33">        List&lt;TitledPane&gt; weatherWarningsTitledPanes = this</span>
+<span class="nc" id="L34">                .convertSevereWeatherWarningsForLocationFromJsonToArray(weatherWarningsData);</span>
+<span class="nc" id="L35">        return weatherWarningsTitledPanes;</span>
+    }
+
+    /**
+     * Converts the severe weather warnings data from a location into a list of
+     * titled panes
+     * 
+     * @param data the raw data from the source
+     * 
+     * @return the list of severe weather warning titled panes
+     */
+    private List&lt;TitledPane&gt; convertSevereWeatherWarningsForLocationFromJsonToArray(JSONObject data) {
+<span class="nc" id="L47">        JSONArray warningsData = this.extractWarningDataFromJsonObjectAsAJsonArray(data);</span>
+<span class="nc" id="L48">        List&lt;TitledPane&gt; severeWeatherWarningsTitledPanes = new ArrayList&lt;TitledPane&gt;();</span>
+<span class="nc bnc" id="L49" title="All 2 branches missed.">        for (int ix = 0; ix &lt; warningsData.length(); ix++) {</span>
+<span class="nc" id="L50">            String warningName = warningsData.getJSONObject(ix).getString(&quot;event&quot;);</span>
+<span class="nc" id="L51">            String start = String.valueOf(warningsData.getJSONObject(ix).getLong(&quot;start&quot;));</span>
+<span class="nc" id="L52">            String end = String.valueOf(warningsData.getJSONObject(ix).getLong(&quot;end&quot;));</span>
+<span class="nc" id="L53">            String timezone = String.valueOf(data.getLong(&quot;timezone_offset&quot;));</span>
+<span class="nc" id="L54">            String details = warningsData.getJSONObject(ix).getString(&quot;description&quot;);</span>
+<span class="nc" id="L55">            SevereWeatherWarningTitledPane severeWarningTitledPane = new SevereWeatherWarningTitledPane(warningName,</span>
+<span class="nc" id="L56">                    start, end, details, timezone, data.toString());</span>
+<span class="nc" id="L57">            severeWeatherWarningsTitledPanes.add(severeWarningTitledPane);</span>
+        }
+<span class="nc" id="L59">        return severeWeatherWarningsTitledPanes;</span>
+    }
+
+    /**
+     * 
+     * Extracts the severe weather warning's data from the raw data as a jsonarray
+     * 
+     * @param data the raw data from the source
+     * 
+     * @return the json array of that data or an empty json array if no data found
+     */
+
+    private JSONArray extractWarningDataFromJsonObjectAsAJsonArray(JSONObject data) {
+<span class="nc" id="L72">        JSONArray warningsData = data.optJSONArray(&quot;alerts&quot;);</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">        if (warningsData == null) {</span>
+<span class="nc" id="L74">            warningsData = new JSONArray();</span>
+        }
+<span class="nc" id="L76">        return warningsData;</span>
+    }
+
+    /**
+     * Converts the SevereWeatherWarningTitledPane to string
+     * 
+     * @param weatherWarningTitledPanes the list of severe weather warnings titled
+     *                                  panes
+     * 
+     * @return the string form of the list of severe weather warnings titled pane
+     */
+    @Override
+    public String toString(List&lt;TitledPane&gt; weatherWarningTitledPanes) {
+<span class="nc" id="L89">        String rawData = &quot;&quot;;</span>
+
+<span class="nc" id="L91">        TitledPane firstTitledPane = null;</span>
+
+<span class="nc bnc" id="L93" title="All 4 branches missed.">        if (weatherWarningTitledPanes != null &amp;&amp; !weatherWarningTitledPanes.isEmpty()) {</span>
+<span class="nc" id="L94">            firstTitledPane = weatherWarningTitledPanes.get(0);</span>
+        }
+
+<span class="nc bnc" id="L97" title="All 4 branches missed.">        if (firstTitledPane != null &amp;&amp; firstTitledPane instanceof SevereWeatherWarningTitledPane) {</span>
+<span class="nc" id="L98">            rawData = ((SevereWeatherWarningTitledPane) weatherWarningTitledPanes.get(0)).getRawData();</span>
+        }
+<span class="nc" id="L100">        return rawData;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

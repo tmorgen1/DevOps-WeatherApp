@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WeatherLocationSearcher.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">weatherapp_service</a> &gt; <a href="index.source.html" class="el_package">edu.westga.weatherapp_service.model</a> &gt; <span class="el_source">WeatherLocationSearcher.java</span></div><h1>WeatherLocationSearcher.java</h1><pre class="source lang-java linenums">package edu.westga.weatherapp_service.model;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.Collection;
+import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import edu.westga.weatherapp_shared.interfaces.LocationSearcher;
+import edu.westga.weatherapp_shared.model.WeatherLocation;
+
+/**
+ * Class that handles checking the database of locations that the OpenWeather api can grab data from.  Handles
+ * autocomplete logic, essentially, by polling the entries with given search strings.
+ */
+public class WeatherLocationSearcher extends UnicastRemoteObject implements LocationSearcher {
+    
+    /**
+     * Contains the JSONObject entries for all the locations OpenWeather has data for.
+     */
+    private JSONArray locations;
+
+    /**
+     * Instantiates a WeatherLocationSearcher object.  Requires the filename/path to the .json file
+     * that contains the json array with json objects of locations.  These json objects of locations
+     * should contain the following data for proper searching:
+     * 
+     * &quot;name&quot; : city name
+     * &quot;country&quot; : country name
+     * &quot;state&quot; : state name, if applicable
+     * &quot;coord&quot; : {
+     *      &quot;lon&quot; : double value, the longitude
+     *      &quot;lat&quot; : double value, the latitude
+     * }
+     * 
+     * @param fileName - filename/path to the .json file
+     * @throws RemoteException
+     */
+<span class="fc" id="L45">    public WeatherLocationSearcher(String fileName) throws RemoteException {</span>
+<span class="fc" id="L46">        this.locations = this.readLocationDataFromJson(fileName);</span>
+<span class="fc" id="L47">    }</span>
+
+    /**
+     * Checks for the existence of the file, then proceeds to read the data and return a 
+     * JSONArray with the data.  Returns null if the file does not exist, or
+     * if there was an issue reading the file.
+     * 
+     * @param fileName - filename/path to the .json file
+     * @return JSONArray containing the data from the file
+     */
+    private JSONArray readLocationDataFromJson(String fileName) {
+<span class="fc" id="L58">        JSONArray locationsJson = null;</span>
+        
+<span class="fc" id="L60">        File locationsFile = new File(fileName);</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        if (!locationsFile.exists()) {</span>
+<span class="fc" id="L62">            return locationsJson;</span>
+        }
+
+<span class="fc" id="L65">        try (InputStream inputStream = new FileInputStream(locationsFile)) {</span>
+<span class="fc" id="L66">            String jsonText = IOUtils.toString(inputStream, StandardCharsets.UTF_8);</span>
+
+<span class="fc" id="L68">            locationsJson = new JSONArray(jsonText);</span>
+<span class="nc" id="L69">        } catch (IOException ioException) {</span>
+<span class="nc" id="L70">            System.err.println(&quot;Error while reading from input stream.&quot;);</span>
+<span class="nc" id="L71">            return locationsJson;</span>
+<span class="fc" id="L72">        }</span>
+
+<span class="fc" id="L74">        return locationsJson;</span>
+    }
+
+    @Override
+    public Collection&lt;WeatherLocation&gt; searchLocations(String searchEntry, int maxEntryResponse) throws RemoteException {
+<span class="fc bfc" id="L79" title="All 4 branches covered.">        if (maxEntryResponse &lt; 1 || maxEntryResponse &gt; 20) {</span>
+<span class="fc" id="L80">            throw new IllegalArgumentException(&quot;maxEntryResponse should not be less than 1 or greather than 20&quot;);</span>
+        }
+
+<span class="fc" id="L83">        Collection&lt;WeatherLocation&gt; searchResults = new ArrayList&lt;WeatherLocation&gt;();</span>
+
+<span class="pc bpc" id="L85" title="1 of 2 branches missed.">        for (int i = 0; i &lt; this.locations.length(); i++) {</span>
+<span class="fc bfc" id="L86" title="All 2 branches covered.">            if (searchResults.size() &gt;= maxEntryResponse) {</span>
+<span class="fc" id="L87">                break;</span>
+            }
+
+<span class="fc" id="L90">            JSONObject currentJsonObject = this.locations.getJSONObject(i);</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">            if (currentJsonObject.getString(&quot;name&quot;).toLowerCase().startsWith(searchEntry.toLowerCase())) {</span>
+<span class="fc" id="L92">                WeatherLocation weatherLocationWrapper = this.createWeatherLocationFromJson(currentJsonObject);</span>
+<span class="fc" id="L93">                searchResults.add(weatherLocationWrapper);</span>
+            }
+        }
+
+<span class="fc" id="L97">        return searchResults;</span>
+    }
+
+    /**
+     * Wraps the information present within a weather location json object into a WeatherLocation object.
+     * If the state name is empty, the WeatherLocation is returned with 'N/A' because no entry within
+     * the WeatherLocation should be empty.
+     * 
+     * @param jsonObject - weather location json object
+     * @return wrapped json object
+     */
+    private WeatherLocation createWeatherLocationFromJson(JSONObject jsonObject) {
+<span class="fc" id="L109">        String city = jsonObject.getString(&quot;name&quot;);</span>
+<span class="fc" id="L110">        String country = jsonObject.getString(&quot;country&quot;);</span>
+<span class="fc" id="L111">        String state = jsonObject.getString(&quot;state&quot;);</span>
+<span class="pc bpc" id="L112" title="1 of 2 branches missed.">        if (state.isEmpty()) {</span>
+<span class="fc" id="L113">            state = &quot;N/A&quot;;</span>
+        }
+<span class="fc" id="L115">        Double longitude = jsonObject.getJSONObject(&quot;coord&quot;).getDouble(&quot;lon&quot;);</span>
+<span class="fc" id="L116">        Double latitude = jsonObject.getJSONObject(&quot;coord&quot;).getDouble(&quot;lat&quot;);</span>
+
+<span class="fc" id="L118">        return new WeatherLocation(city, country, state, longitude, latitude);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
