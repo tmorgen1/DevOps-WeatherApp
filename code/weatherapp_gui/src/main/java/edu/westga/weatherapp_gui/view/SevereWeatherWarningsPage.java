@@ -12,12 +12,11 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -32,33 +31,48 @@ import javafx.stage.Stage;
  */
 public class SevereWeatherWarningsPage {
 
+    /**
+     * this severe warnings page's pane
+     */
     @FXML
     private Pane severeWarningsPagePane;
 
+    /**
+     * the severe weather warning's accordion
+     */
     @FXML
     private Accordion severeWarningsAccordion;
 
+    /**
+     * The back arrow image view
+     */
     @FXML
     private ImageView backArrowImageView;
 
-    @FXML
-    private ScrollPane scrollPane;
-
-    @FXML
-    private ProgressIndicator progressIndicator;
-
-    @FXML
-    private Label progressLabel;
-
+    /**
+     * the label that displays if there are no severe weather warnings for a location
+     */
     @FXML
     private Label noWarningsForLocationLabel;
 
+    /**
+     * the label that displays if the page encounters errors
+     */
+    @FXML
+    private Label errorLabel;
+
+    /**
+     * the view model for this page
+     */
     private SevereWeatherWarningsPageViewModel viewModel;
 
+    /**
+     * the titled Pane list list property that the accooridion gets its values from
+     */
     private ObjectProperty<List<TitledPane>> severeWarningsTitledPanesListProperty;
 
     /**
-     * Initializes after all FXML fields are loaded
+     * Initializes this page after all FXML fields are loaded
      */
     @FXML
     void initialize() {
@@ -68,30 +82,29 @@ public class SevereWeatherWarningsPage {
         this.loadSevereWarningsTitlePanes();
     }
 
+    /**
+     * Binds the view's content properties to the view model
+     */
     private void bindToViewModel() {
         Bindings.bindBidirectional(this.viewModel.getsevereWeatherWarningsStringProperty(),
                 this.severeWarningsTitledPanesListProperty, new SevereWeatherWarningsTitledPanesToStringConverter());
-        this.noWarningsForLocationLabel.visibleProperty().bind(this.viewModel.getNoWarningsForLocationVisibilityProperty());
-        this.severeWarningsAccordion.visibleProperty().bind(this.viewModel.getSevereWarningAccordionVisibilityProperty());
+        this.noWarningsForLocationLabel.visibleProperty()
+                .bind(this.viewModel.getNoWarningsForLocationVisibilityProperty());
+        this.severeWarningsAccordion.visibleProperty()
+                .bind(this.viewModel.getSevereWarningAccordionVisibilityProperty());
+        this.errorLabel.textProperty().bind(this.viewModel.getErrorLabelStringProperty());
+        this.errorLabel.visibleProperty().bind(this.viewModel.getErrorLabelVisibilityProperty());
     }
 
     /**
      * Loads the titled panes for the severe weathe warnings
      */
     private void loadSevereWarningsTitlePanes() {
-        this.hideLoadingIndication();
         this.viewModel.setsevereWeatherWarningsObjectPropertyValue(CurrentWeatherInformation.getWeatherLocation(),
                 CurrentWeatherInformation.getMeasurementUnits());
-        this.severeWarningsAccordion.getPanes()
-                .setAll(FXCollections.observableArrayList(this.severeWarningsTitledPanesListProperty.getValue()));
-    }
-
-    /**
-     * Hides the loading progress indicator and progress label
-     */
-    private void hideLoadingIndication() {
-        this.progressIndicator.setVisible(false);
-        this.progressLabel.setVisible(false);
+        ObservableList<TitledPane> accordionSevereWarningsTitledPanes = FXCollections
+                .observableArrayList(this.severeWarningsTitledPanesListProperty.getValue());
+        this.severeWarningsAccordion.getPanes().setAll(accordionSevereWarningsTitledPanes);
     }
 
     /**

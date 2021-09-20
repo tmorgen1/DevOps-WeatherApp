@@ -18,10 +18,34 @@ import javafx.beans.property.SimpleStringProperty;
  */
 public class SevereWeatherWarningsPageViewModel {
 
+    /**
+     * the severe weather warnings string property for use in bindings
+     */
     private SimpleStringProperty severeWeatherWarningsStringProperty;
+
+    /**
+     * the error label string property for use in bindings
+     */
     private SimpleStringProperty errorLabelStringProperty;
+
+    /**
+     * the no warnings for location visibility property for use in bindings
+     */
     private BooleanProperty noWarningsForLocationVisibilityProperty;
+
+    /**
+     * the severe warnings accordion visibility property for use in bindings
+     */
     private BooleanProperty severeWarningsAccordionVisibilityProperty;
+
+    /**
+     * the  error label visibility property for use in bindings
+     */
+    private BooleanProperty errorLabelVisibilityProperty;
+
+    /**
+     * the severe weather warnings retriever
+     */
     private SevereWeatherWarningsRetriever severeWeatherWarningsRetriever;
 
     /**
@@ -33,21 +57,22 @@ public class SevereWeatherWarningsPageViewModel {
      * @postcondition getsevereWeatherWarningsObjectProperty() != null
      */
     public SevereWeatherWarningsPageViewModel(SevereWeatherWarningsRetriever dataRetriever) {
+        this.severeWeatherWarningsStringProperty = new SimpleStringProperty();
+        this.errorLabelStringProperty = new SimpleStringProperty();
+        this.errorLabelVisibilityProperty = new SimpleBooleanProperty();
+        this.noWarningsForLocationVisibilityProperty = new SimpleBooleanProperty();
+        this.severeWarningsAccordionVisibilityProperty = new SimpleBooleanProperty();
         if (dataRetriever != null) {
             this.severeWeatherWarningsRetriever = dataRetriever;
-
         } else {
             try {
                 this.severeWeatherWarningsRetriever = (SevereWeatherWarningsRetriever) Naming
                         .lookup("rmi://localhost:5000/severe-warnings");
-            } catch (Exception exception) {
-                System.err.println("Error looking up java rmi binding");
+            } catch (Exception ex) {
+                this.setErrorLabelStringPropertyValue("Error looking up java rmi binding");
+                this.setErrorLabelVisibilityProperty(true);
             }
         }
-        this.severeWeatherWarningsStringProperty = new SimpleStringProperty();
-        this.errorLabelStringProperty = new SimpleStringProperty();
-        this.noWarningsForLocationVisibilityProperty = new SimpleBooleanProperty();
-        this.severeWarningsAccordionVisibilityProperty = new SimpleBooleanProperty();
     }
 
     /**
@@ -98,15 +123,6 @@ public class SevereWeatherWarningsPageViewModel {
     }
 
     /**
-     * Sets the error error label string property value
-     * 
-     * @param errorLabelStringPropertyValue
-     */
-    public void setErrorLabelStringPropertyValue(String errorLabelStringPropertyValue) {
-        this.errorLabelStringProperty.setValue(errorLabelStringPropertyValue);
-    }
-
-    /**
      * Gets the no warnings for location visibility property
      * 
      * @return the noWarningsForLocationVisibilityProperty
@@ -124,6 +140,38 @@ public class SevereWeatherWarningsPageViewModel {
         return this.severeWarningsAccordionVisibilityProperty;
     }
 
+    /**
+     * Gets the error label visibility property
+     * 
+     * @return the errorLabelVisibilityProperty
+     */
+    public BooleanProperty getErrorLabelVisibilityProperty() {
+        return this.errorLabelVisibilityProperty;
+    }
+
+    /**
+     * Sets the error label visibility property
+     * 
+     * @param errorLabelVisibilityPropertyValue the value to set it to
+     */
+    public void setErrorLabelVisibilityProperty(boolean errorLabelVisibilityPropertyValue) {
+        this.errorLabelVisibilityProperty.setValue(errorLabelVisibilityPropertyValue);
+    }
+
+    /**
+     * Sets the error error label string property value
+     * 
+     * @param errorLabelStringPropertyValue the value to set it to
+     */
+    public void setErrorLabelStringPropertyValue(String errorLabelStringPropertyValue) {
+        this.errorLabelStringProperty.setValue(errorLabelStringPropertyValue);
+    }
+
+    /**
+     * Sets the no warnings for location visibility property value
+     * 
+     * @param data the data that detemines the value of the property
+     */
     private void setNoWarningsForLocationVisibilityPropertyValue(String data) {
         if (data == null || !data.contains("alerts")) {
             this.noWarningsForLocationVisibilityProperty.setValue(true);
@@ -132,6 +180,11 @@ public class SevereWeatherWarningsPageViewModel {
         }
     }
 
+    /**
+     * Sets the severe warning accordion visibility property value
+     * 
+     * @param data the data that detemines the value of the property
+     */
     private void setSevereWarningAccordionVisibilityPropertyValue(String data) {
         if (data == null || !data.contains("alerts")) {
             this.severeWarningsAccordionVisibilityProperty.setValue(false);
@@ -139,5 +192,4 @@ public class SevereWeatherWarningsPageViewModel {
             this.severeWarningsAccordionVisibilityProperty.setValue(true);
         }
     }
-
 }

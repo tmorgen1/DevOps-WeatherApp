@@ -2,13 +2,12 @@ package edu.westga.weatherapp_gui.view;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import edu.westga.weatherapp_gui.App;
+import edu.westga.weatherapp_gui.model.DateTimeConverter;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
 import javafx.scene.text.Text;
 
@@ -21,37 +20,84 @@ import javafx.scene.text.Text;
  */
 public class SevereWeatherWarningTitledPane extends TitledPane {
 
+    /**
+     * If the warning's name cannot be found the titled pane uses instead
+     */
     public static final String UNDETERMINED_WARNING = "Undetermined Warning Type";
-    public static final String UNDETERMINED_START = "Undetermined Start Date";
-    public static final String UNDETERMINED_END = "Undetermined End Date";
-    public static final String UNDETERMINED_DESCRIPTION = "No Description";
-    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM-dd-YY 00:00");
 
+    /**
+     * If the starting date cannot be found the titled pane uses instead
+     */
+    public static final String UNDETERMINED_START = "Undetermined Start Date";
+
+    /**
+     * If the ending date cannot be found the titled pane uses instead
+     */
+    public static final String UNDETERMINED_END = "Undetermined End Date";
+
+    /**
+     * If the details cannot be found the titled pane uses instead
+     */
+    public static final String UNDETERMINED_DETAILS = "No Details";
+
+    /**
+     * this severe weather warning titled pane
+     */
     @FXML
     private TitledPane severeWarningTitledPane;
 
+    /**
+     * this severe weather warning titled pane's scroll pane
+     */
     @FXML
-    private Label warningName;
+    private ScrollPane severeWarningScrollPane;
 
-    @FXML
-    private Label startingDate;
-
+    /**
+     * this severe weather warning titled pane's description textbox
+     */
     @FXML
     private Text description;
 
-    @FXML
-    private Label endingDate;
+    /**
+     * the warning name of the severe weather warning that this titled pane
+     * represents
+     */
+    private String warningName;
 
+    /**
+     * the starting date of the severe weather warning that this titled pane
+     * represents
+     */
+    private String startingDate;
+
+    /**
+     * the ending date of the severe weather warning that this titled pane
+     * represents
+     */
+    private String endingDate;
+
+    /**
+     * the timezone of the severe weather warning that this titled pane represents
+     */
+    private String timezone;
+
+    /**
+     * the details of the severe weather warning that this titled pane
+     * represents
+     */
+    private String details;
+
+    /**
+     * the raw data of the severe weather warning that this titled pane
+     * represents
+     */
     private String rawData;
 
-   /**
-    * TODO fix date parsing errors
-    * TODO change arrow to icons
-    * TODO display loading wheel until alerts are loaded
-    * TODO set titled pane background
-    * TODO change anchor pane to scroll pane
-    * TODO Finish error label message and displaying add it toe the fxml as well
-    */
+    /**
+     * TODO change arrow to icons TODO Finish error label message and displaying add
+     * it to the fxml as well 
+     * Finish pan viewl model Finish tests
+     */
 
     /**
      * Creates an instance of the Severe Weather Warning Titled Pane
@@ -59,21 +105,24 @@ public class SevereWeatherWarningTitledPane extends TitledPane {
      * @param warningName  the warning's name
      * @param startingDate the start date of the warning's period of effect
      * @param endingDate   the end date of the warning's period of effect
-     * @param description  a description of the warning
+     * @param details      a description of the warning
+     * @param timezone     the timezone of the warning
      * @param rawData      the original raw data of the warning
      * @throws FileNotFoundException
      */
-    public SevereWeatherWarningTitledPane(String warningName, String startingDate, String endingDate,
-            String description, String rawData) {
+    public SevereWeatherWarningTitledPane(String warningName, String startingDate, String endingDate, String details,
+             String timezone, String rawData) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(App.SEVERE_WARNINGS_TITLED_PANE_VIEW));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
         try {
             fxmlLoader.load();
-            this.setWarningNameTextValue(warningName);
-            this.setStartingDateTextValue(startingDate);
-            this.setEndingDateTextValue(endingDate);
-            this.setDescriptionTextValue(description);
+            this.setWarningNameDisplayValue(warningName);
+            this.setTimezone(timezone);
+            this.setStartingDateDisplayValue(startingDate);
+            this.setEndingDateDisplayValue(endingDate);
+            this.setDetailsDisplayValue(details);
+            this.setDescriptionTextValue();
             this.setRawData(rawData);
         } catch (IOException ex) {
             System.err.println("IO Exception - Error creating severe warning titled pane.");
@@ -86,16 +135,16 @@ public class SevereWeatherWarningTitledPane extends TitledPane {
      * 
      * @return the warning's name
      */
-    public Label getWarningName() {
+    public String getWarningName() {
         return this.warningName;
     }
 
     /**
-     * Gets the starting date of the severe weather warning.
+     * Gets the String date of the severe weather warning.
      * 
      * @return the warning's starting date
      */
-    public Label getStartingDate() {
+    public String getStartingDate() {
         return this.startingDate;
     }
 
@@ -104,7 +153,7 @@ public class SevereWeatherWarningTitledPane extends TitledPane {
      * 
      * @return the warning's ending date
      */
-    public Label getEndingDate() {
+    public String getEndingDate() {
         return this.endingDate;
     }
 
@@ -126,41 +175,85 @@ public class SevereWeatherWarningTitledPane extends TitledPane {
         return this.rawData;
     }
 
-    private void setWarningNameTextValue(String warningName) {
+    /**
+     * Sets the name of the severe weather warning
+     * 
+     * @param warningName the name of the severe weather warning
+     */
+    private void setWarningNameDisplayValue(String warningName) {
         if (warningName == null || warningName.isBlank()) {
             warningName = SevereWeatherWarningTitledPane.UNDETERMINED_WARNING;
         }
-        this.warningName.setText(warningName);
+        this.warningName = warningName;
         this.severeWarningTitledPane.setText(warningName);
     }
 
-    private void setStartingDateTextValue(String startingDate) {
+    /**
+     * Sets the ending date of the severe weather warning
+     * 
+     * @param startingDate the starting date of the severe weather warning
+     */
+    private void setStartingDateDisplayValue(String startingDate) {
         if (startingDate == null || startingDate.isBlank()) {
             startingDate = SevereWeatherWarningTitledPane.UNDETERMINED_START;
         }
-        this.startingDate.setText(this.parseDateToHumanReadableDate(startingDate));
+        this.startingDate = DateTimeConverter.ConvertUtcToShortDate(Long.parseLong(startingDate), Long.parseLong(this.timezone));
     }
 
-    private void setEndingDateTextValue(String endingDate) {
+    /**
+     * Sets the ending date of the severe weather warning
+     * 
+     * @param endingDate the ending date of the severe weather warning
+     */
+    private void setEndingDateDisplayValue(String endingDate) {
         if (endingDate == null || endingDate.isBlank()) {
             endingDate = SevereWeatherWarningTitledPane.UNDETERMINED_END;
         }
-        this.endingDate.setText(this.parseDateToHumanReadableDate(endingDate));
-    }
-    
-    private String parseDateToHumanReadableDate(String date) {
-        Date warningPeriodDate = new Date(Long.parseLong(date));
-        return SevereWeatherWarningTitledPane.DATE_FORMAT.format(warningPeriodDate);
+        this.endingDate = DateTimeConverter.ConvertUtcToShortDate(Long.parseLong(endingDate), Long.parseLong(this.timezone));
     }
 
-    private void setDescriptionTextValue(String description) {
-        if (description == null || description.isBlank()) {
-            description = SevereWeatherWarningTitledPane.UNDETERMINED_DESCRIPTION;
+    /**
+     * Sets the timezone of the severe weather warning
+     * 
+     * @param timezone the timezone of the severe weather warning
+     */
+    private void setTimezone(String timezone) {
+        if (timezone == null || timezone.isBlank()) {
+            timezone = "0000";
         }
-        this.description.setText(description);
+        this.timezone = timezone;
     }
 
+    /**
+     * Sets the details of the severe weather warning's descrption.
+     * 
+     * @param details the details of the severe weather warning.
+     */
+    private void setDetailsDisplayValue(String details) {
+        if (details == null || details.isBlank()) {
+            details = SevereWeatherWarningTitledPane.UNDETERMINED_DETAILS;
+        }
+        this.details = details.replaceAll("\n", " ");
+    }
+
+    /**
+     * Sets the raw data of the titled pane's severe weather warning data.
+     * 
+     * @param rawData the raw data of the titled pane's severe weather warning data.
+     */
     private void setRawData(String rawData) {
         this.rawData = rawData;
+    }
+
+    /**
+     * Sets the text content of the titled pane's drop down view.
+     */
+    private void setDescriptionTextValue() {
+        String skipLine = System.lineSeparator() + System.lineSeparator();
+        String termSpacer = "\t\t";
+        String formattedDescription = String.format(
+                "%1$s" + skipLine + "Starting Date: %2$s" + termSpacer + " Ending Date: %3$s" + skipLine + "%4$s",
+                this.warningName, this.startingDate, this.endingDate, this.details);
+        this.description.setText(formattedDescription);
     }
 }
