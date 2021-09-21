@@ -94,12 +94,6 @@ public class SevereWeatherWarningTitledPane extends TitledPane {
     private String rawData;
 
     /**
-     * TODO change arrow to icons TODO Finish error label message and displaying add
-     * it to the fxml as well 
-     * Finish pan viewl model Finish tests
-     */
-
-    /**
      * Creates an instance of the Severe Weather Warning Titled Pane
      * 
      * @param warningName  the warning's name
