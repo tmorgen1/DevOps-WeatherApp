@@ -1,4 +1,4 @@
-Check daily weather information (only daily for now)
+Check daily weather information
 
 
 Context - User has moved to the daily weather page after selecting a location.

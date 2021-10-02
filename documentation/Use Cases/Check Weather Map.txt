@@ -1,0 +1,10 @@
+Check weather map for given location
+
+
+Context - User has moved to the weather map page after selecting a location.
+
+Primary Flow - 
+    1. System displays weather map information for the location.
+
+** Unexpected data gathering error
+    a1. Alert the user that the weather information was not obtainable.

@@ -1,0 +1,11 @@
+Check hourly weather information
+
+
+Context - User is on the landing page and has successfully entered a location.
+
+Primary Flow -
+	1. System displays the hourly weather data.
+
+Alternate Flow -
+** Unexpected data gathering error
+	a1. Alert the user that the weather information was not obtainable.

@@ -2,6 +2,9 @@
 
 shopt -s expand_aliases
 
+#change directory to the code top level directory
+cd code
+
 #alias manual - run 'alias --help'
 #PWD is the dynamic environment variable storing the current working directory
 alias mvn="\"$PWD/maven/bin/mvn\""
@@ -77,6 +80,20 @@ then
 	cd "weatherapp_gui"
 	mvn javafx:run -q
 	cd ..
+#Terminate Server
+elif [[ $1 == "kill" ]]
+then
+	echo "Terminating Java Server Process"
+	# Process List (ps) is piped to grep, which searches for a line
+	# containing the 'java'.  Awk then grabs the first column of the row,
+	# which is the pid.
+	if kill $(ps | grep 'java' | awk '{print $1}')
+	then
+		echo "Terminated"
+	# For when the server is not running, or if there is some unexpected behavior.
+	else
+		echo "Error Terminating Server"
+	fi
 else
 	echo "Expected Usage: config.sh [command]"
 	echo "Possible commands:"
@@ -86,4 +103,5 @@ else
 	echo "  test        will test all projects"
 	echo "  run         will launch the client system and locally launch"
 	echo "               any necessary services"
+	echo "  kill        will terminate the server process"
 fi
