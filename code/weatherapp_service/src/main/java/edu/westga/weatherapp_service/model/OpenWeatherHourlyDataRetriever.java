@@ -8,37 +8,17 @@ import java.rmi.server.UnicastRemoteObject;
 import edu.westga.weatherapp_service.resources.ServiceConstants;
 import edu.westga.weatherapp_shared.enums.MeasurementUnits;
 import edu.westga.weatherapp_shared.interfaces.DataRetriever;
-import edu.westga.weatherapp_shared.interfaces.CurrentWeatherDataRetriever;
+import edu.westga.weatherapp_shared.interfaces.HourlyWeatherDataRetriever;
 
-/**
- * This weather data retriever uses the OpenWeather API to obtain weather data.
- * Also extends the UnicastRemoteObject to allow for Remote Method Invocation.
- */
-public class OpenWeatherCurrentDataRetriever extends UnicastRemoteObject implements CurrentWeatherDataRetriever {
+public class OpenWeatherHourlyDataRetriever extends UnicastRemoteObject implements HourlyWeatherDataRetriever {
+    
+    private static final String OPEN_WEATHER_API_CALL_BASE = "https://pro.openweathermap.org/data/2.5/forecast/hourly?appid=";
 
-    /**
-     * OpenWeather API Base call.
-     */
-    private static final String OPEN_WEATHER_API_CALL_BASE = "https://pro.openweathermap.org/data/2.5/weather?appid=";
-
-    /**
-     * The unit of measurement for api calls.
-     */
     private MeasurementUnits units;
 
-    /**
-     * The object that handles data retrieval from the web calls.
-     */
     private DataRetriever dataRetriever;
 
-    /**
-     * Creates an OpenWeather data retriever. Defaults to imperial units of
-     * measurement.
-     * 
-     * @param retriever - the object to handle web url calls
-     * @throws RemoteException
-     */
-    public OpenWeatherCurrentDataRetriever(DataRetriever retriever) throws RemoteException {
+    public OpenWeatherHourlyDataRetriever(DataRetriever retriever) throws RemoteException {
         super();
         if (retriever == null) {
             throw new IllegalArgumentException("APIDataRetriever should not be null");
@@ -47,16 +27,8 @@ public class OpenWeatherCurrentDataRetriever extends UnicastRemoteObject impleme
         this.dataRetriever = retriever;
         this.units = MeasurementUnits.Imperial;
     }
-
-    /**
-     * Creates an OpenWeather data retriever. Sets the units of measurement to what
-     * is provided.
-     * 
-     * @param retriever - the object to handle web url calls
-     * @param units     - the units of measurement
-     * @throws RemoteException
-     */
-    public OpenWeatherCurrentDataRetriever(DataRetriever retriever, MeasurementUnits units) throws RemoteException {
+    
+    public OpenWeatherHourlyDataRetriever(DataRetriever retriever, MeasurementUnits units) throws RemoteException {
         super();
         if (retriever == null) {
             throw new IllegalArgumentException("APIDataRetriever should not be null");
@@ -81,7 +53,7 @@ public class OpenWeatherCurrentDataRetriever extends UnicastRemoteObject impleme
         cityName = URLEncoder.encode(cityName, StandardCharsets.UTF_8);
 
         URL apiCall = this.dataRetriever.GetServiceAPICallURL("&q=" + cityName,
-                OpenWeatherCurrentDataRetriever.OPEN_WEATHER_API_CALL_BASE, ServiceConstants.API_KEY,
+                OpenWeatherHourlyDataRetriever.OPEN_WEATHER_API_CALL_BASE, ServiceConstants.API_KEY,
                 this.units);
         return this.dataRetriever.GetData(apiCall);
     }
@@ -104,7 +76,7 @@ public class OpenWeatherCurrentDataRetriever extends UnicastRemoteObject impleme
         cityName = URLEncoder.encode(cityName, StandardCharsets.UTF_8);
 
         URL apiCall = this.dataRetriever.GetServiceAPICallURL("&q=" + cityName + "," + stateCode,
-                OpenWeatherCurrentDataRetriever.OPEN_WEATHER_API_CALL_BASE, ServiceConstants.API_KEY,
+                OpenWeatherHourlyDataRetriever.OPEN_WEATHER_API_CALL_BASE, ServiceConstants.API_KEY,
                 this.units);
         return this.dataRetriever.GetData(apiCall);
     }
@@ -127,7 +99,7 @@ public class OpenWeatherCurrentDataRetriever extends UnicastRemoteObject impleme
         cityName = URLEncoder.encode(cityName, StandardCharsets.UTF_8);
 
         URL apiCall = this.dataRetriever.GetServiceAPICallURL("&q=" + cityName + "," + countryCode,
-                OpenWeatherCurrentDataRetriever.OPEN_WEATHER_API_CALL_BASE, ServiceConstants.API_KEY,
+                OpenWeatherHourlyDataRetriever.OPEN_WEATHER_API_CALL_BASE, ServiceConstants.API_KEY,
                 this.units);
         return this.dataRetriever.GetData(apiCall);
     }
@@ -157,7 +129,7 @@ public class OpenWeatherCurrentDataRetriever extends UnicastRemoteObject impleme
         cityName = URLEncoder.encode(cityName, StandardCharsets.UTF_8);
 
         URL apiCall = this.dataRetriever.GetServiceAPICallURL("&q=" + cityName + "," + stateCode + "," + countryCode,
-                OpenWeatherCurrentDataRetriever.OPEN_WEATHER_API_CALL_BASE, ServiceConstants.API_KEY,
+                OpenWeatherHourlyDataRetriever.OPEN_WEATHER_API_CALL_BASE, ServiceConstants.API_KEY,
                 this.units);
         return this.dataRetriever.GetData(apiCall);
     }
@@ -175,5 +147,4 @@ public class OpenWeatherCurrentDataRetriever extends UnicastRemoteObject impleme
 
         this.units = units;
     }
-
 }

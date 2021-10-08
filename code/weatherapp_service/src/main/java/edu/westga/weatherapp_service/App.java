@@ -6,11 +6,13 @@ import java.rmi.registry.LocateRegistry;
 import edu.westga.weatherapp_service.model.APIDataRetriever;
 import edu.westga.weatherapp_service.model.OpenWeatherCurrentDataRetriever;
 import edu.westga.weatherapp_service.model.OpenWeatherDailyDataRetriever;
+import edu.westga.weatherapp_service.model.OpenWeatherHourlyDataRetriever;
 import edu.westga.weatherapp_service.model.OpenWeatherIconRetriever;
 import edu.westga.weatherapp_service.model.OpenWeatherSevereWarningsRetriever;
 import edu.westga.weatherapp_service.model.WeatherLocationSearcher;
 import edu.westga.weatherapp_shared.interfaces.CurrentWeatherDataRetriever;
 import edu.westga.weatherapp_shared.interfaces.DailyWeatherDataRetriever;
+import edu.westga.weatherapp_shared.interfaces.HourlyWeatherDataRetriever;
 import edu.westga.weatherapp_shared.interfaces.LocationSearcher;
 import edu.westga.weatherapp_shared.interfaces.SevereWeatherWarningsRetriever;
 import edu.westga.weatherapp_shared.interfaces.WeatherIconRetriever;
@@ -48,15 +50,18 @@ public class App
             Naming.rebind("rmi://localhost:" + App.RMI_PORT + "/weather-icons", weatherIconSkeleton);
 
             DailyWeatherDataRetriever dailyWeatherSkeleton = new OpenWeatherDailyDataRetriever(new APIDataRetriever());
-            Naming.rebind("rmi://localhost:5000/daily-weather", dailyWeatherSkeleton);
+            Naming.rebind("rmi://localhost:" + App.RMI_PORT + "/daily-weather", dailyWeatherSkeleton);
+
+            HourlyWeatherDataRetriever hourlyWeatherSkeleton = new OpenWeatherHourlyDataRetriever(new APIDataRetriever());
+            Naming.rebind("rmi://localhost:" + App.RMI_PORT + "/hourly-weather", hourlyWeatherSkeleton);
 
             SevereWeatherWarningsRetriever severeWarningsSkeleton = new OpenWeatherSevereWarningsRetriever(new APIDataRetriever());
-            Naming.rebind("rmi://localhost:5000/severe-warnings", severeWarningsSkeleton);
+            Naming.rebind("rmi://localhost:" + App.RMI_PORT + "/severe-warnings", severeWarningsSkeleton);
 
             LocationSearcher weatherLocationSearcherSkeleton = new WeatherLocationSearcher(App.WEATHER_LOCATIONS_FILE_NAME);
             Naming.rebind("rmi://localhost:" + App.RMI_PORT + "/location-searcher", weatherLocationSearcherSkeleton);
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
-        } 
+        }
     }
 }

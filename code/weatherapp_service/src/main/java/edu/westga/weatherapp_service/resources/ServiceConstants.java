@@ -8,5 +8,5 @@ package edu.westga.weatherapp_service.resources;
  */
 public class ServiceConstants {
 
-    public static final String API_KEY = "&appid=664db12c121ec6f39b98db6040a42f2c";
+    public static final String API_KEY = "664db12c121ec6f39b98db6040a42f2c";
 }

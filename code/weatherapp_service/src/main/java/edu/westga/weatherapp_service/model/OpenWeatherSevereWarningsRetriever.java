@@ -28,7 +28,7 @@ public class OpenWeatherSevereWarningsRetriever extends UnicastRemoteObject impl
     public static final String INCORRECT_UNITS = "Invalid Units - Units must not be null and be of enum type MeasurementUnits";
     public static final String SEVERE_WEATHER_WARNINGS_INFORMATION_KEY = "alerts";
     private static final String SEVERE_WARNING_BASE_URL = "http:/"
-            + "/pro.openweathermap.org/data/2.5/onecall?exclude=minutely,hourly,daily,current";
+            + "/pro.openweathermap.org/data/2.5/onecall?exclude=minutely,hourly,daily,current&appid=";
     private DataRetriever dataRetriever;
 
     /**

@@ -5,6 +5,8 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+
+import edu.westga.weatherapp_service.resources.ServiceConstants;
 import edu.westga.weatherapp_shared.enums.MeasurementUnits;
 import edu.westga.weatherapp_shared.interfaces.DataRetriever;
 import edu.westga.weatherapp_shared.interfaces.DailyWeatherDataRetriever;
@@ -15,11 +17,6 @@ public class OpenWeatherDailyDataRetriever extends UnicastRemoteObject implement
      * OpenWeather API Base call.
      */
     private static final String OPEN_WEATHER_API_CALL_BASE = "https://pro.openweathermap.org/data/2.5/forecast/daily?appid=";
-
-    /**
-     * OpenWeather API key for developer use.
-     */
-    private static final String API_KEY = "664db12c121ec6f39b98db6040a42f2c";
 
     /**
      * The unit of measurement for api calls.
@@ -82,7 +79,7 @@ public class OpenWeatherDailyDataRetriever extends UnicastRemoteObject implement
         cityName = URLEncoder.encode(cityName, StandardCharsets.UTF_8);
 
         URL apiCall = this.dataRetriever.GetServiceAPICallURL("&q=" + cityName + "&cnt=" + numOfDays,
-                OpenWeatherDailyDataRetriever.OPEN_WEATHER_API_CALL_BASE, OpenWeatherDailyDataRetriever.API_KEY,
+                OpenWeatherDailyDataRetriever.OPEN_WEATHER_API_CALL_BASE, ServiceConstants.API_KEY,
                 this.units);
         return this.dataRetriever.GetData(apiCall);
     }
@@ -108,7 +105,7 @@ public class OpenWeatherDailyDataRetriever extends UnicastRemoteObject implement
         cityName = URLEncoder.encode(cityName, StandardCharsets.UTF_8);
 
         URL apiCall = this.dataRetriever.GetServiceAPICallURL("&q=" + cityName + "," + stateCode + "&cnt=" + numOfDays,
-                OpenWeatherDailyDataRetriever.OPEN_WEATHER_API_CALL_BASE, OpenWeatherDailyDataRetriever.API_KEY,
+                OpenWeatherDailyDataRetriever.OPEN_WEATHER_API_CALL_BASE, ServiceConstants.API_KEY,
                 this.units);
         return this.dataRetriever.GetData(apiCall);
     }
@@ -136,7 +133,7 @@ public class OpenWeatherDailyDataRetriever extends UnicastRemoteObject implement
 
         URL apiCall = this.dataRetriever.GetServiceAPICallURL(
                 "&q=" + cityName + "," + countryCode + "&cnt=" + numOfDays,
-                OpenWeatherDailyDataRetriever.OPEN_WEATHER_API_CALL_BASE, OpenWeatherDailyDataRetriever.API_KEY,
+                OpenWeatherDailyDataRetriever.OPEN_WEATHER_API_CALL_BASE, ServiceConstants.API_KEY,
                 this.units);
         return this.dataRetriever.GetData(apiCall);
     }
@@ -170,7 +167,7 @@ public class OpenWeatherDailyDataRetriever extends UnicastRemoteObject implement
 
         URL apiCall = this.dataRetriever.GetServiceAPICallURL(
                 "&q=" + cityName + "," + stateCode + "," + countryCode + "&cnt=" + numOfDays,
-                OpenWeatherDailyDataRetriever.OPEN_WEATHER_API_CALL_BASE, OpenWeatherDailyDataRetriever.API_KEY,
+                OpenWeatherDailyDataRetriever.OPEN_WEATHER_API_CALL_BASE, ServiceConstants.API_KEY,
                 this.units);
         return this.dataRetriever.GetData(apiCall);
     }

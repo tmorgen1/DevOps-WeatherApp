@@ -19,7 +19,7 @@ then
 		rm -r maven/
 	fi
 	#curl manual - run 'curl --help'
-	curl -o maven.zip https://downloads.apache.org/maven/maven-3/3.8.2/binaries/apache-maven-3.8.2-bin.zip
+	curl -o maven.zip https://dlcdn.apache.org/maven/maven-3/3.8.3/binaries/apache-maven-3.8.3-bin.zip
 	#unzip manual - run 'unzip --help'
 	unzip maven.zip
 	#remove maven.zip because its been extracted
