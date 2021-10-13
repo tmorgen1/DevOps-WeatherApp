@@ -22,6 +22,20 @@ public class DateTimeConverter {
     }
 
     /**
+     * Converts the given utc date time and timezone to the hour
+     * 
+     * @param utcDateTime - the specified utc date time
+     * @param timezone - the specified timezone
+     * @return the hour
+     */
+    public static String ConvertUtcToHour(Long utcDateTime, Long timezone) {
+        Date date = DateTimeConverter.ConvertUtcToDate(utcDateTime, timezone);
+        long hour = (date.getTime() % 86400000) / 3600000;
+        String formattedHour = (hour == 0) ? "12:00 AM" : (hour % 12 == 0) ? "12:00 PM" : hour % 12 + ":00 " +((hour >= 12) ? "PM" : "AM");
+        return formattedHour;
+    }
+
+    /**
      * Converts the given utc to a short date string of the month and day.
      * 
      * @param utcDateTime - the utc date time number

@@ -2,7 +2,6 @@ package edu.westga.weatherapp_gui.view;
 
 import java.io.IOException;
 
-import edu.westga.weatherapp_gui.App;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -47,14 +46,20 @@ public class DayForecastPane extends Pane {
 
     /**
      * Creates an instance of the day forecast pane and loads it
+     * 
+     * @param dayOfWeek - the initial day of the week
+     * @param date - the initial date
+     * @param maxTemp - the initial max temp
+     * @param minTemp - the initial min temp
+     * @param weatherIconUrl - the initial weather icon url
+     * @param loader - the fxml loader
      */
-    public DayForecastPane(String dayOfWeek, String date, String maxTemp, String minTemp, String weatherIconUrl) {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(App.DAY_FORECAST_PANE_VIEW));
-        fxmlLoader.setRoot(this);
-        fxmlLoader.setController(this);
+    public DayForecastPane(String dayOfWeek, String date, String maxTemp, String minTemp, String weatherIconUrl, FXMLLoader loader) {
+        loader.setRoot(this);
+        loader.setController(this);
         
         try {
-            fxmlLoader.load();
+            loader.load();
             this.SetDayOfTheWeekLabel(dayOfWeek);
             this.SetDateLabel(date);
             this.SetMaxTemperatureLabel(maxTemp);
@@ -70,7 +75,7 @@ public class DayForecastPane extends Pane {
      * 
      * @param dayOfWeek - the new day of the week
      */
-    private void SetDayOfTheWeekLabel(String dayOfWeek) {
+    public void SetDayOfTheWeekLabel(String dayOfWeek) {
         this.dayOfWeekLabel.setText(dayOfWeek);
     }
 
@@ -79,7 +84,7 @@ public class DayForecastPane extends Pane {
      * 
      * @param date - the new date
      */
-    private void SetDateLabel(String date) {
+    public void SetDateLabel(String date) {
         this.dateLabel.setText(date);
     }
 
@@ -88,7 +93,7 @@ public class DayForecastPane extends Pane {
      * 
      * @param temperature - the new temperature
      */
-    private void SetMaxTemperatureLabel(String temperature) {
+    public void SetMaxTemperatureLabel(String temperature) {
         this.maxTemperatureLabel.setText(temperature);
     }
 
@@ -97,7 +102,7 @@ public class DayForecastPane extends Pane {
      * 
      * @param temperature - the new temperature
      */
-    private void SetMinTemperatureLabel(String temperature) {
+    public void SetMinTemperatureLabel(String temperature) {
         this.minTemperatureLabel.setText(temperature);
     }
 
@@ -106,7 +111,7 @@ public class DayForecastPane extends Pane {
      * 
      * @param url - the new image url
      */
-    private void SetWeatherIconImageView(String url) {
+    public void SetWeatherIconImageView(String url) {
         Image image = new Image(url);
         this.weatherIconImageView.setImage(image);
     }

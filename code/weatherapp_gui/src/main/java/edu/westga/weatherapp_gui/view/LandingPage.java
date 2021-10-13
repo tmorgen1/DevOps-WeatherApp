@@ -6,18 +6,26 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.concurrent.Worker.State;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -25,6 +33,7 @@ import javafx.util.Duration;
 import javafx.scene.Node;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import com.jfoenix.controls.JFXButton;
@@ -35,6 +44,7 @@ import org.json.JSONObject;
 
 import edu.westga.weatherapp_gui.App;
 import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
+import edu.westga.weatherapp_gui.model.DateTimeConverter;
 import edu.westga.weatherapp_shared.model.WeatherLocation;
 import edu.westga.weatherapp_gui.view.utils.WindowGenerator;
 import edu.westga.weatherapp_gui.viewmodel.LandingPageViewModel;
@@ -171,6 +181,30 @@ public class LandingPage {
     private ImageView favoriteFilledImageView;
 
     /**
+     * The hourly forecast HBox
+     */
+    @FXML
+    private HBox hourlyForecastHBox;
+
+    /**
+     * The hourly info scroll pane
+     */
+    @FXML
+    private ScrollPane hourlyInfoScrollPane;
+
+    /**
+     * The loading progress indicator
+     */
+    @FXML
+    private ProgressIndicator progressIndicator;
+
+    /**
+     * The loading progress label
+     */
+    @FXML
+    private Label progressLabel;
+
+    /**
      * The temperature suffix
      */
     private String TemperatureSuffix = " °F";
@@ -181,11 +215,22 @@ public class LandingPage {
     private String WindSpeedSuffix = " mi/h";
 
     /**
+     * The array list of hourly forecast panes
+     */
+    private ArrayList<HourlyInfoPane> hourlyInfoPanes;
+
+    /**
+     * The number of hours for the forecast to load
+     */
+    public static final int HOURS = 24;
+
+    /**
      * Initializes after all FXML fields are loaded
      */
     @FXML
     void initialize() {
-        this.viewModel = new LandingPageViewModel(null, null, null);
+        this.hourlyInfoPanes = new ArrayList<HourlyInfoPane>();
+        this.viewModel = new LandingPageViewModel(null, null, null, null);
         Platform.runLater(() -> this.landingPagePane.requestFocus());
         this.setFavoritedLocationsListItems();
         this.setupSearchListViewSelectionListener();
@@ -195,6 +240,146 @@ public class LandingPage {
         this.setupSearchTextFieldOnFocusListener();
         this.checkForSavedCurrentWeatherData();
         this.updateFavoriteIcon();
+        this.loadHourlyForecastInfoPanes();
+    }
+
+    /**
+     * Loads the HourlyInfoPane components and fetches the hourly forecast data.
+     */
+    private void loadHourlyForecastInfoPanes() {
+        if (CurrentWeatherInformation.getWeatherLocation() == null) {
+            return;
+        }
+
+        this.hideNoWeatherInformation();
+        this.showLoadingIndication();
+        WeatherLocation weatherLocation = CurrentWeatherInformation.getWeatherLocation();
+        this.viewModel.GetHourlyForecastDataByWeatherLocation(weatherLocation, HOURS);
+        this.hourlyForecastHBox.getChildren().clear();
+
+        if (CurrentWeatherInformation.getHourlyInfoPanes() != null) {
+            this.updateLoadedHourlyInfoPanes();
+            return;
+        }
+
+        this.hourlyInfoPanes.clear();
+        this.createHourlyInfoPanes();
+    }
+
+    /**
+     * Creates and loads hourly info panes
+     */
+    private void createHourlyInfoPanes() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(App.HOURLY_FORECAST_PANE_VIEW));
+        Task<ArrayList<HourlyInfoPane>> task = new Task<ArrayList<HourlyInfoPane>>() {
+
+            @Override
+            public ArrayList<HourlyInfoPane> call() throws Exception {
+                ArrayList<HourlyInfoPane> panes = new ArrayList<HourlyInfoPane>();
+                for (int index = 0; index < HOURS; index++) {
+                    String dayIconUrl = LandingPage.this.getDayIconUrl(index);
+                    String hour = LandingPage.this.getHour(index);
+                    String temp = LandingPage.this.getTemperature(index);
+                    HourlyInfoPane pane = new HourlyInfoPane(temp, hour, dayIconUrl, loader);
+                    panes.add(pane);
+                }
+                return panes;
+            }
+        };
+
+        task.setOnSucceeded(e -> this.handleTaskSucceeded(e));
+        new Thread(task).start();
+    }
+
+    /**
+     * Updates the previously loaded hourly info panes rather than creating new ones to improve load times.
+     */
+    private void updateLoadedHourlyInfoPanes() {
+        Task<ArrayList<HourlyInfoPane>> task = new Task<ArrayList<HourlyInfoPane>>() {
+
+            @Override
+            public ArrayList<HourlyInfoPane> call() throws Exception {
+                ArrayList<HourlyInfoPane> previousPanes = CurrentWeatherInformation.getHourlyInfoPanes();
+                for (int index = 0; index < HOURS; index++) {
+                    String dayIconUrl = LandingPage.this.getDayIconUrl(index);
+                    String hour = LandingPage.this.getHour(index);
+                    String temp = LandingPage.this.getTemperature(index);
+        
+                    previousPanes.get(index).SetIconImageView(dayIconUrl);
+                    previousPanes.get(index).SetTemperatureLabel(temp);
+                    previousPanes.get(index).SetTimeLabel(hour);
+                }
+
+                return previousPanes;
+            }
+        };
+
+        task.setOnSucceeded(e -> this.handleTaskSucceeded(e));
+        new Thread(task).start();
+    }
+
+    /**
+     * Gets the current hour for the specified hourly info pane
+     * 
+     * @param index - the index of the specified hourly info pane
+     * @return the hour
+     */
+    private String getHour(int index) {
+        Long timezone = this.viewModel.GetTimezone();
+        Long utcDateTime = this.viewModel.GetHourUtcDateTime(index);
+        return DateTimeConverter.ConvertUtcToHour(utcDateTime, timezone);
+    }
+
+    /**
+     * Gets the temperature for the specified hourly info pane
+     * @param index - the index of the specified hourly info pane
+     * @return the temperature
+     */
+    private String getTemperature(int index) {
+        String maxTemperature = this.viewModel.GetHourTemperature(index);
+        return maxTemperature + this.TemperatureSuffix;
+    }
+
+    /**
+     * Gets the day icon url for the specified hourly info pane
+     * @param index - the index of the specified hourly info pane
+     * @return the weather icon url
+     */
+    private String getDayIconUrl(int index) {
+        return this.viewModel.GetDayWeatherIcon(index);
+    }
+
+    /**
+     * Handles the succession of loading the hourly forecast information
+     * 
+     * @param event - the worker state event
+     */
+    @SuppressWarnings("unchecked")
+    private void handleTaskSucceeded(WorkerStateEvent event) {
+        if (event.getSource().getState() == State.SUCCEEDED && event.getSource().getValue() instanceof ArrayList) {
+            this.hourlyInfoPanes = (ArrayList<HourlyInfoPane>) event.getSource().getValue();
+            this.hourlyForecastHBox.getChildren().clear();
+            this.hourlyForecastHBox.getChildren().addAll(this.hourlyInfoPanes);
+            this.hideLoadingIndication();
+            this.showWeatherInformation();
+            CurrentWeatherInformation.setHourlyInfoPanes(this.hourlyInfoPanes);
+        }
+    }
+
+    /**
+     * Hides the progress indicator and progress indicator label
+     */
+    private void hideLoadingIndication() {
+        this.progressIndicator.setVisible(false);
+        this.progressLabel.setVisible(false);
+    }
+
+    /**
+     * Displays the progress indicator and progress indicator label
+     */
+    private void showLoadingIndication() {
+        this.progressIndicator.setVisible(true);
+        this.progressLabel.setVisible(true);
     }
 
     /**
@@ -225,6 +410,18 @@ public class LandingPage {
 
         this.removeFocusFromSearchBar();
         this.tryGetAndUpdateWeatherData();
+    }
+
+    /**
+     * Scrolls the hbox horizontally instead of vertically when a scroll event is fired
+     * 
+     * @param event - the scroll event
+     */
+    @FXML
+    void hourlyInfoOnScroll(ScrollEvent event) {
+        if(event.getDeltaX() == 0 && event.getDeltaY() != 0) {
+            this.hourlyInfoScrollPane.setHvalue(this.hourlyInfoScrollPane.getHvalue() - event.getDeltaY() / this.hourlyForecastHBox.getWidth());
+        }
     }
 
     /**
@@ -326,13 +523,18 @@ public class LandingPage {
                 return;
             }
 
+            this.hideWeatherInformation();
             this.updateAllWeatherInformation();
             this.updateFavoriteIcon();
+            this.loadHourlyForecastInfoPanes();
         } catch (IllegalArgumentException e) {
             this.displayNoLocationSnackbar("No Location Found");
         }
     }
 
+    /**
+     * Updates the favorite icon to be filled if it was favorited, or unfilled if it was unfavorited
+     */
     private void updateFavoriteIcon() {
         if (CurrentWeatherInformation.getWeatherLocation() != null) {
             if (this.viewModel.FavoritesContainsWeatherLocation(CurrentWeatherInformation.getWeatherLocation())) {
@@ -556,7 +758,6 @@ public class LandingPage {
         this.updateCurrentWindSpeed();
         this.updateCurrentHumidity();
 
-        this.showWeatherInformation();
         this.hideNoWeatherInformation();
     }
 

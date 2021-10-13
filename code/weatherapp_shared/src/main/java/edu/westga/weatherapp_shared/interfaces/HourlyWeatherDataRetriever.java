@@ -16,21 +16,23 @@ public interface HourlyWeatherDataRetriever extends Remote {
      * Returns null if data could not be retrieved.
      * 
      * @param cityName - the name of the city
+     * @param numOfHours - the number of hours to gather data for
      * @return a String containing weather data for given location
      * @throws RemoteException
      */
-    public String GetDataByCity(String cityName) throws RemoteException;
+    public String GetDataByCity(String cityName, int numOfHours) throws RemoteException;
 
     /**
      * Obtains the hourly weather data for a location given the city name and state code.
      * Returns null if data could not be retrieved.
      * 
      * @param cityName - the name of the city
+     * @param numOfHours - the number of hours to gather data for
      * @param stateCode - the code for the residing state
      * @return a String containing weather data for given location
      * @throws RemoteException
      */
-    public String GetDataByCityAndStateCode(String cityName, String stateCode) throws RemoteException;
+    public String GetDataByCityAndStateCode(String cityName, String stateCode, int numOfHours) throws RemoteException;
 
     /**
      * Obtains the hourly weather data for a location given the city name and country code.
@@ -38,10 +40,11 @@ public interface HourlyWeatherDataRetriever extends Remote {
      * 
      * @param cityName - the name of the city
      * @param countryCode - the code for the residing country
+     * @param numOfHours - the number of hours to gather data for
      * @return a String containing weather data for given location
      * @throws RemoteException
      */
-    public String GetDataByCityAndCountryCode(String cityName, String countryCode) throws RemoteException;
+    public String GetDataByCityAndCountryCode(String cityName, String countryCode, int numOfHours) throws RemoteException;
 
     /**
      * Obtains the hourly weather data for a location given the city name, state code, and country code.
@@ -50,10 +53,11 @@ public interface HourlyWeatherDataRetriever extends Remote {
      * @param cityName - the name of the city
      * @param stateCode - the code for the residing state
      * @param countryCode - the code for the residing country
+     * @param numOfHours - the number of hours to gather data for
      * @return a String containing weather data for given location
      * @throws RemoteException
      */
-    public String GetDataByCityAndStateCodeAndCountryCode(String cityName, String stateCode, String countryCode) throws RemoteException;
+    public String GetDataByCityAndStateCodeAndCountryCode(String cityName, String stateCode, String countryCode, int numOfHours) throws RemoteException;
 
     /**
      * Sets the MeasurementUnits of the data retriever.

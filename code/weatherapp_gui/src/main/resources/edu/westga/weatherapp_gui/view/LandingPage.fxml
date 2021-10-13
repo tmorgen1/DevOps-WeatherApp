@@ -7,14 +7,17 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="landingPagePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onLandingPagePaneClicked" prefHeight="577.0" prefWidth="401.0" style="-fx-background-color: #2A2E37;" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="edu.westga.weatherapp_gui.view.LandingPage">
+<Pane fx:id="landingPagePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onLandingPagePaneClicked" prefHeight="697.0" prefWidth="401.0" style="-fx-background-color: #2A2E37;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.weatherapp_gui.view.LandingPage">
    <children>
       <ImageView fx:id="weatherIconImageView" fitHeight="232.0" fitWidth="221.0" layoutX="91.0" layoutY="93.0" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
@@ -119,5 +122,16 @@
             <Font size="16.0" />
          </font>
       </TextField>
+      <ScrollPane fx:id="hourlyInfoScrollPane" fitToHeight="true" hbarPolicy="ALWAYS" layoutX="15.0" layoutY="567.0" onScroll="#hourlyInfoOnScroll" pannable="true" prefHeight="120.0" prefWidth="371.0" vbarPolicy="NEVER">
+         <content>
+            <HBox fx:id="hourlyForecastHBox" prefHeight="120.0" prefWidth="371.0" spacing="6.0" style="-fx-background-color: #cacaca;" />
+         </content>
+      </ScrollPane>
+      <ProgressIndicator fx:id="progressIndicator" layoutX="175.0" layoutY="238.0" visible="false" />
+      <Label fx:id="progressLabel" layoutX="127.0" layoutY="306.0" text="Fetching Data" textFill="WHITE" visible="false">
+         <font>
+            <Font name="Segoe UI" size="24.0" />
+         </font>
+      </Label>
    </children>
 </Pane>

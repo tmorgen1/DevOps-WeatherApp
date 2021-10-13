@@ -42,7 +42,7 @@ public class OpenWeatherHourlyDataRetriever extends UnicastRemoteObject implemen
     }
 
     @Override
-    public String GetDataByCity(String cityName) throws RemoteException {
+    public String GetDataByCity(String cityName, int numOfHours) throws RemoteException {
         if (cityName == null) {
             throw new IllegalArgumentException("cityName should not be null");
         }
@@ -52,14 +52,14 @@ public class OpenWeatherHourlyDataRetriever extends UnicastRemoteObject implemen
 
         cityName = URLEncoder.encode(cityName, StandardCharsets.UTF_8);
 
-        URL apiCall = this.dataRetriever.GetServiceAPICallURL("&q=" + cityName,
+        URL apiCall = this.dataRetriever.GetServiceAPICallURL("&q=" + cityName + "&cnt=" + numOfHours,
                 OpenWeatherHourlyDataRetriever.OPEN_WEATHER_API_CALL_BASE, ServiceConstants.API_KEY,
                 this.units);
         return this.dataRetriever.GetData(apiCall);
     }
 
     @Override
-    public String GetDataByCityAndStateCode(String cityName, String stateCode) throws RemoteException {
+    public String GetDataByCityAndStateCode(String cityName, String stateCode, int numOfHours) throws RemoteException {
         if (cityName == null) {
             throw new IllegalArgumentException("cityName should not be null");
         }
@@ -75,14 +75,14 @@ public class OpenWeatherHourlyDataRetriever extends UnicastRemoteObject implemen
 
         cityName = URLEncoder.encode(cityName, StandardCharsets.UTF_8);
 
-        URL apiCall = this.dataRetriever.GetServiceAPICallURL("&q=" + cityName + "," + stateCode,
+        URL apiCall = this.dataRetriever.GetServiceAPICallURL("&q=" + cityName + "," + stateCode + "&cnt=" + numOfHours,
                 OpenWeatherHourlyDataRetriever.OPEN_WEATHER_API_CALL_BASE, ServiceConstants.API_KEY,
                 this.units);
         return this.dataRetriever.GetData(apiCall);
     }
 
     @Override
-    public String GetDataByCityAndCountryCode(String cityName, String countryCode) throws RemoteException {
+    public String GetDataByCityAndCountryCode(String cityName, String countryCode, int numOfHours) throws RemoteException {
         if (cityName == null) {
             throw new IllegalArgumentException("cityName should not be null");
         }
@@ -98,14 +98,14 @@ public class OpenWeatherHourlyDataRetriever extends UnicastRemoteObject implemen
 
         cityName = URLEncoder.encode(cityName, StandardCharsets.UTF_8);
 
-        URL apiCall = this.dataRetriever.GetServiceAPICallURL("&q=" + cityName + "," + countryCode,
+        URL apiCall = this.dataRetriever.GetServiceAPICallURL("&q=" + cityName + "," + countryCode + "&cnt=" + numOfHours,
                 OpenWeatherHourlyDataRetriever.OPEN_WEATHER_API_CALL_BASE, ServiceConstants.API_KEY,
                 this.units);
         return this.dataRetriever.GetData(apiCall);
     }
 
     @Override
-    public String GetDataByCityAndStateCodeAndCountryCode(String cityName, String stateCode, String countryCode)
+    public String GetDataByCityAndStateCodeAndCountryCode(String cityName, String stateCode, String countryCode, int numOfHours)
             throws RemoteException {
         if (cityName == null) {
             throw new IllegalArgumentException("cityName should not be null");
@@ -128,7 +128,7 @@ public class OpenWeatherHourlyDataRetriever extends UnicastRemoteObject implemen
 
         cityName = URLEncoder.encode(cityName, StandardCharsets.UTF_8);
 
-        URL apiCall = this.dataRetriever.GetServiceAPICallURL("&q=" + cityName + "," + stateCode + "," + countryCode,
+        URL apiCall = this.dataRetriever.GetServiceAPICallURL("&q=" + cityName + "," + stateCode + "," + countryCode + "&cnt=" + numOfHours,
                 OpenWeatherHourlyDataRetriever.OPEN_WEATHER_API_CALL_BASE, ServiceConstants.API_KEY,
                 this.units);
         return this.dataRetriever.GetData(apiCall);

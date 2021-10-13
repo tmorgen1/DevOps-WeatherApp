@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<fx:root maxHeight="100" maxWidth="70" minHeight="100" minWidth="70" prefHeight="100.0" prefWidth="70.0" style="-fx-background-color: #2A2E37;" type="Pane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+   <children>
+      <ImageView fx:id="iconImageView" fitHeight="60.0" fitWidth="60.0" layoutX="5.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="http://openweathermap.org/img/wn/10d@4x.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="timeLabel" alignment="CENTER" layoutY="3.0" prefHeight="15.0" prefWidth="70.0" text="12:00 PM" textFill="WHITE">
+         <font>
+            <Font name="Segoe UI" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="temperatureLabel" alignment="CENTER" layoutY="80.0" prefHeight="15.0" prefWidth="70.0" text="77 F" textFill="WHITE">
+         <font>
+            <Font name="Segoe UI" size="14.0" />
+         </font>
+      </Label>
+   </children>
+</fx:root>

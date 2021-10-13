@@ -11,6 +11,7 @@ import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
 import edu.westga.weatherapp_gui.model.WeatherLocationSerializer;
 import edu.westga.weatherapp_shared.model.WeatherLocation;
 import edu.westga.weatherapp_shared.interfaces.CurrentWeatherDataRetriever;
+import edu.westga.weatherapp_shared.interfaces.HourlyWeatherDataRetriever;
 import edu.westga.weatherapp_shared.interfaces.LocationSearcher;
 import edu.westga.weatherapp_shared.interfaces.WeatherIconRetriever;
 
@@ -36,9 +37,19 @@ public class LandingPageViewModel {
     private LocationSearcher weatherLocationSearcher;
 
     /**
+     * The hourly weather data retriver
+     */
+    private HourlyWeatherDataRetriever hourlyWeatherDataRetriever;
+
+    /**
      * The retrieved current weather data
      */
     private JSONObject currentWeatherData;
+
+    /**
+     * The retrieved hourly weather data
+     */
+    private JSONObject currentHourlyData;
 
     /**
      * The favorited weather locations
@@ -53,17 +64,19 @@ public class LandingPageViewModel {
      * @param iconRetriever - the icon retriever
      * @param locationSearcher - the location searcher
      */
-    public LandingPageViewModel(CurrentWeatherDataRetriever weatherDataRetriver, WeatherIconRetriever iconRetriever, LocationSearcher locationSearcher) {
-        if (weatherDataRetriver != null && iconRetriever != null && locationSearcher != null) {
+    public LandingPageViewModel(CurrentWeatherDataRetriever weatherDataRetriver, WeatherIconRetriever iconRetriever, LocationSearcher locationSearcher, HourlyWeatherDataRetriever hourlyWeatherDataRetriever) {
+        if (weatherDataRetriver != null && iconRetriever != null && locationSearcher != null && hourlyWeatherDataRetriever != null) {
             this.weatherDataRetriever = weatherDataRetriver;
             this.weatherIconRetriever = iconRetriever;
             this.weatherLocationSearcher = locationSearcher;
+            this.hourlyWeatherDataRetriever = hourlyWeatherDataRetriever;
         } else {
             try {
                 this.weatherDataRetriever = (CurrentWeatherDataRetriever) Naming
                         .lookup("rmi://localhost:5000/current-weather");
                 this.weatherIconRetriever = (WeatherIconRetriever) Naming.lookup("rmi://localhost:5000/weather-icons");
                 this.weatherLocationSearcher = (LocationSearcher) Naming.lookup("rmi://localhost:5000/location-searcher");
+                this.hourlyWeatherDataRetriever = (HourlyWeatherDataRetriever) Naming.lookup("rmi://localhost:5000/hourly-weather");
             } catch (Exception exception) {
                 System.err.println("Error looking up java rmi binding");
             }
@@ -96,6 +109,34 @@ public class LandingPageViewModel {
             CurrentWeatherInformation.setWeatherData(this.currentWeatherData);
             return this.currentWeatherData;
         } catch (Exception exception) {
+            return null;
+        }
+    }
+
+    /**
+     * Gets the current hourly weather forecast from the hourly weather data retriever by city location
+     * 
+     * @param weatherLocation - The location of the city
+     * @param hours - the number of hours to gather data for
+     * @return the hourly weather data json object
+     */
+    public JSONObject GetHourlyForecastDataByWeatherLocation(WeatherLocation weatherLocation, int hours) {
+        if (weatherLocation == null) {
+            throw new IllegalArgumentException("City cannot be null");
+        }
+        String state = weatherLocation.getState();
+        String city = weatherLocation.getCity();
+        String country = weatherLocation.getCountry();
+
+        try {
+            this.hourlyWeatherDataRetriever.setUnitsOfMeasurement(CurrentWeatherInformation.getMeasurementUnits());
+            if (state.equals("N/A")) {
+                this.currentHourlyData = new JSONObject(this.hourlyWeatherDataRetriever.GetDataByCityAndCountryCode(city, country, hours));
+            } else {
+                this.currentHourlyData = new JSONObject(this.hourlyWeatherDataRetriever.GetDataByCityAndStateCodeAndCountryCode(city, state, country, hours));
+            }
+            return this.currentHourlyData;
+        } catch (Exception e) {
             return null;
         }
     }
@@ -266,6 +307,72 @@ public class LandingPageViewModel {
             }
         }
         return false;
+    }
+
+    /**
+     * Gets the timezone for the searched location
+     * 
+     * @return the timezone
+     */
+    public Long GetTimezone() {
+        if (this.currentHourlyData == null) {
+            throw new IllegalArgumentException("No hourly weather data");
+        }
+
+        return Math.round(this.currentHourlyData.getJSONObject("city").getDouble("timezone"));
+    }
+
+    /**
+     * Gets the day utc time for the specified hour
+     * 
+     * @param hour - the hour index
+     * @return the hour utc time
+     */
+    public Long GetHourUtcDateTime(int hour) {
+        if (this.currentHourlyData == null) {
+            throw new IllegalArgumentException("No hourly weather data");
+        }
+
+        return Math.round(this.currentHourlyData.getJSONArray("list").getJSONObject(hour).getDouble("dt"));
+    }
+
+    /**
+     * Gets the max temperature for the specified hour
+     * 
+     * @param hour - the hour index
+     * @return the max temperature
+     */
+    public String GetHourTemperature(int hour) {
+        if (this.currentHourlyData == null) {
+            throw new IllegalArgumentException("No hourly weather data");
+        }
+
+        Long temperature = Math.round(
+                this.currentHourlyData.getJSONArray("list").getJSONObject(hour).getJSONObject("main").getDouble("temp"));
+        return String.valueOf(temperature);
+    }
+
+    /**
+     * Gets the weather icon for the specified hour
+     * 
+     * @param hour - the hour index
+     * @return the weather icon
+     */
+    public String GetDayWeatherIcon(int hour) {
+        if (this.currentHourlyData == null) {
+            throw new IllegalArgumentException("No hourly weather data");
+        }
+
+        try {
+            Object icon = this.currentHourlyData.getJSONArray("list").getJSONObject(hour).getJSONArray("weather")
+                    .getJSONObject(0).get("icon");
+            String iconString = String.valueOf(icon);
+
+            return this.weatherIconRetriever.GetWeatherIconUrlByIconId(iconString);
+        } catch (RemoteException exception) {
+            System.err.println("Remote Exception: Error retrieving weather icon url by icon id");
+            return null;
+        }
     }
 
     /**

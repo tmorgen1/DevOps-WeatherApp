@@ -20,6 +20,7 @@ public class App extends Application
 	public static final String DAILY_FORECAST_VIEW = "/edu/westga/weatherapp_gui/view/DailyForecastPage.fxml";
 
 	public static final String DAY_FORECAST_PANE_VIEW = "/edu/westga/weatherapp_gui/view/DayForecastPane.fxml";
+	public static final String HOURLY_FORECAST_PANE_VIEW = "/edu/westga/weatherapp_gui/view/HourlyInfoPane.fxml";
 
 	public static final String SEVERE_WARNINGS_PAGE_TITLE = "Weather App - Severe Weather Warnings";
 	public static final String SEVERE_WARNINGS_PAGE_VIEW = "/edu/westga/weatherapp_gui/view/SevereWeatherWarningsPage.fxml";

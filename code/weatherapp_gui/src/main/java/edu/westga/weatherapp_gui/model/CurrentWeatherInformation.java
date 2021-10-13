@@ -1,7 +1,11 @@
 package edu.westga.weatherapp_gui.model;
 
+import java.util.ArrayList;
+
 import org.json.JSONObject;
 
+import edu.westga.weatherapp_gui.view.DayForecastPane;
+import edu.westga.weatherapp_gui.view.HourlyInfoPane;
 import edu.westga.weatherapp_shared.enums.MeasurementUnits;
 import edu.westga.weatherapp_shared.model.WeatherLocation;
 
@@ -26,9 +30,55 @@ public class CurrentWeatherInformation {
     private static MeasurementUnits measurementUnits = MeasurementUnits.Imperial;
 
     /**
+     * The hourly info panes
+     */
+    private static ArrayList<HourlyInfoPane> hourlyInfoPanes;
+
+    /**
+     * The day forecast panes
+     */
+    private static ArrayList<DayForecastPane> dayForecastPanes;
+
+    /**
+     * Gets the stored list of day forecast pane components
+     * 
+     * @return the day forecast panes
+     */
+    public static ArrayList<DayForecastPane> getDayForecastPanes() {
+        return CurrentWeatherInformation.dayForecastPanes;
+    }
+
+    /**
+     * Sets the stored list of day forecast pane components
+     * 
+     * @param panes - the new day forecast panes
+     */
+    public static void setDayForecastPanes(ArrayList<DayForecastPane> panes) {
+        CurrentWeatherInformation.dayForecastPanes = panes;
+    }
+    
+    /**
+     * Gets the stored list of hourly info pane components
+     * 
+     * @return the hourly info panes
+     */
+    public static ArrayList<HourlyInfoPane> getHourlyInfoPanes() {
+        return CurrentWeatherInformation.hourlyInfoPanes;
+    }
+
+    /**
+     * Sets the stored list of hourly info panes to the given list
+     * 
+     * @param panes - the new list of panes
+     */
+    public static void setHourlyInfoPanes(ArrayList<HourlyInfoPane> panes) {
+        CurrentWeatherInformation.hourlyInfoPanes = panes;
+    }
+
+    /**
      * Gets the most recently searched weather location
      * 
-     * @return - the weather location
+     * @return the weather location
      */
     public static WeatherLocation getWeatherLocation() {
         return CurrentWeatherInformation.WeatherLocation;
@@ -50,7 +100,7 @@ public class CurrentWeatherInformation {
     /**
      * Gets the most recently fetched weather data
      * 
-     * @return - the weather data
+     * @return the weather data
      */
     public static JSONObject getWeatherData() {
         return CurrentWeatherInformation.WeatherData;

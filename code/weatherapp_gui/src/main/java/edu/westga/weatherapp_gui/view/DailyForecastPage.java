@@ -14,6 +14,7 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.concurrent.Worker.State;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -120,7 +121,7 @@ public class DailyForecastPage {
         this.dayForecastPanes = new ArrayList<DayForecastPane>();
         this.setMeasurementSettings();
         this.viewModel = new DailyForecastPageViewModel(null, null);
-        this.loadDayForecastComponents(DAYS);
+        this.loadDayForecastComponents();
     }
 
     /**
@@ -184,7 +185,7 @@ public class DailyForecastPage {
     private void reloadForecastWithNewUnits() {
         this.hideDailyForecastInformation();
         this.showLoadingIndication();
-        this.loadDayForecastComponents(DAYS);
+        this.loadDayForecastComponents();
     }
 
     /**
@@ -218,22 +219,66 @@ public class DailyForecastPage {
      * 
      * @param days - the number of days for the forecast
      */
-    private void loadDayForecastComponents(int days) {
+    private void loadDayForecastComponents() {
         this.viewModel.GetWeatherDataByWeatherLocation(CurrentWeatherInformation.getWeatherLocation(), DAYS);
-        this.dayForecastPanes.clear();
         this.dailyForecastVBox.getChildren().clear();
+
+        if (CurrentWeatherInformation.getDayForecastPanes() != null) {
+            this.updateLoadedDayForecastPanes();
+            return;
+        }
+
+        this.dayForecastPanes.clear();
+        this.createDayForecastPanes();
+    }
+
+    /**
+     * Updates the previously loaded day forecast panes instead of creating new ones to improve load times
+     */
+    private void updateLoadedDayForecastPanes() {
         Task<ArrayList<DayForecastPane>> task = new Task<ArrayList<DayForecastPane>>() {
 
             @Override
             public ArrayList<DayForecastPane> call() throws Exception {
-                ArrayList<DayForecastPane> panes = new ArrayList<DayForecastPane>();
-                for (int index = 0; index < days; index++) {
+                ArrayList<DayForecastPane> previousPanes = CurrentWeatherInformation.getDayForecastPanes();
+                for (int index = 0; index < DAYS; index++) {
                     String dayOfWeek = DailyForecastPage.this.getDayOfWeek(index);
                     String dayIconUrl = DailyForecastPage.this.getDayIconUrl(index);
                     String date = DailyForecastPage.this.getDayDate(index);
                     String maxTemp = DailyForecastPage.this.getDayMaxTemperature(index);
                     String minTemp = DailyForecastPage.this.getDayMinTemperature(index);
-                    DayForecastPane pane = new DayForecastPane(dayOfWeek, date, maxTemp, minTemp, dayIconUrl);
+
+                    previousPanes.get(index).SetDayOfTheWeekLabel(dayOfWeek);
+                    previousPanes.get(index).SetWeatherIconImageView(dayIconUrl);
+                    previousPanes.get(index).SetDateLabel(date);
+                    previousPanes.get(index).SetMaxTemperatureLabel(maxTemp);
+                    previousPanes.get(index).SetMinTemperatureLabel(minTemp);
+                }
+                return previousPanes;
+            }
+        };
+
+        task.setOnSucceeded(e -> this.handleTaskSucceeded(e));
+        new Thread(task).start();
+    }
+
+    /**
+     * Creates new day forecast panes
+     */
+    private void createDayForecastPanes() {
+        Task<ArrayList<DayForecastPane>> task = new Task<ArrayList<DayForecastPane>>() {
+
+            @Override
+            public ArrayList<DayForecastPane> call() throws Exception {
+                ArrayList<DayForecastPane> panes = new ArrayList<DayForecastPane>();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource(App.DAY_FORECAST_PANE_VIEW));
+                for (int index = 0; index < DAYS; index++) {
+                    String dayOfWeek = DailyForecastPage.this.getDayOfWeek(index);
+                    String dayIconUrl = DailyForecastPage.this.getDayIconUrl(index);
+                    String date = DailyForecastPage.this.getDayDate(index);
+                    String maxTemp = DailyForecastPage.this.getDayMaxTemperature(index);
+                    String minTemp = DailyForecastPage.this.getDayMinTemperature(index);
+                    DayForecastPane pane = new DayForecastPane(dayOfWeek, date, maxTemp, minTemp, dayIconUrl, loader);
                     panes.add(pane);
                 }
                 return panes;
@@ -251,8 +296,8 @@ public class DailyForecastPage {
      * @return the day of the week
      */
     private String getDayOfWeek(int dayIndex) {
-        Long timezone = DailyForecastPage.this.viewModel.GetTimezone();
-        Long utcDateTime = DailyForecastPage.this.viewModel.GetDayUtcDateTime(dayIndex);
+        Long timezone = this.viewModel.GetTimezone();
+        Long utcDateTime = this.viewModel.GetDayUtcDateTime(dayIndex);
         return DateTimeConverter.ConvertUtcToDayOfWeek(utcDateTime, timezone);
     }
 
@@ -360,6 +405,7 @@ public class DailyForecastPage {
             this.dailyForecastVBox.getChildren().addAll(this.dayForecastPanes);
             this.hideLoadingIndication();
             this.showDailyForecastInformation();
+            CurrentWeatherInformation.setDayForecastPanes(this.dayForecastPanes);
         }
     }
 }
