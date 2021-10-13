@@ -4,10 +4,12 @@ This application is designed to provide weather information for those who need i
 ## Installation Instructions
 All of the setup steps are conveniently completed through using the config.sh script within the code directory.
 ### Install Dependencies
-In order to install the dependencies, run `./config.sh setup`
+In order to install the dependencies, run `./setup.sh setup`
 ### Compile
-Compile the projects by running `./config.sh compile`
+Compile the projects by running `./setup.sh compile`
 ### Test
-Run the tests for the projects by running `./config.sh test`
+Run the tests for the projects by running `./setup.sh test`
 ### Run
-Run the application and the server by running `./config.sh run`
+Run the application and the server by running `./setup.sh run`
+### Terminate Server
+Terminate the Java RMI server by running `./setup.sh kill`
