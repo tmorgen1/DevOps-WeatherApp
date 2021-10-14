@@ -50,6 +50,7 @@ public class APIDataRetriever implements DataRetriever {
         }
 
         String unitTypeAppendString = "&units=" + units.name().toLowerCase();
+        apiCallCommand = apiCallCommand.replace(" ", "");
 
         URL apiCall = null;
         try {

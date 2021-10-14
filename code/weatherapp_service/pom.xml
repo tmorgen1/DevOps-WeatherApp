@@ -18,6 +18,13 @@
   </properties>
 
   <dependencies>
+    <!-- MaxMind GeoIP2 API -->
+    <dependency>
+      <groupId>com.maxmind.geoip2</groupId>
+      <artifactId>geoip2</artifactId>
+      <version>2.8.0</version>
+    </dependency>
+
     <!-- JUnit for JaCoCo coverage report -->
     <dependency>
       <groupId>junit</groupId>

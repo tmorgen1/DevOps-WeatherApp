@@ -23,5 +23,15 @@ public interface LocationSearcher extends Remote {
      * @throws RemoteException
      */
     public Collection<WeatherLocation> searchLocations(String searchEntry, int maxEntryResponse) throws RemoteException;
-
+    
+    /**
+     * Searches the database of all locations for a weather location that is near the location based on the
+     * provided public IP Address.
+     * 
+     * @param ipAddress - the public IP Address
+     * @return the WeatherLocation if a location is found near the IP Address.  Null if the ip address is formatted
+     *          incorrectly or if it is not near any locations.
+     * @throws RemoteException
+     */
+    public WeatherLocation getLocationByIP(String ipAddress) throws RemoteException;
 }
