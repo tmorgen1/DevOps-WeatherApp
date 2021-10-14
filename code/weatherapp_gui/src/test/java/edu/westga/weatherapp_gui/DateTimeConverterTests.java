@@ -58,4 +58,13 @@ public class DateTimeConverterTests {
         Date expected = Date.from(Instant.ofEpochMilli(1631538000000L));
         assertEquals(expected, result);
     }
+
+    @Test
+    public void convertUtcToHourValid() {
+        Long utcDate = 1631552400L;
+        Long timezone = -14400L;
+        String result = DateTimeConverter.ConvertUtcToHour(utcDate, timezone);
+        String expected = "1:00 PM";
+        assertEquals(expected, result);
+    }
 }

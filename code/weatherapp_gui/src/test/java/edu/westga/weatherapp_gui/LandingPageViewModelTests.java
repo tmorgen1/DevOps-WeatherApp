@@ -78,6 +78,15 @@ public class LandingPageViewModelTests {
     }
 
     @Test
+    public void constructorWithHourlyWeatherRetrieverNull() {
+        CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetrieverMock(new MockDataRetriever());
+        WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
+        LocationSearcher locationSearcher = new LocationSearcherMock();
+        LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, null);
+        assertNotNull(viewModel);
+    }
+
+    @Test
     public void getWeatherDataByWeatherLocationThrowsExceptionWithNull() {
         CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetrieverMock(new MockDataRetriever());
         HourlyWeatherDataRetriever hourlyWeatherDataRetriever = new OpenWeatherHourlyDataRetrieverMock(new MockDataRetriever());
@@ -86,6 +95,18 @@ public class LandingPageViewModelTests {
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
         assertThrows(IllegalArgumentException.class, () -> {
             viewModel.GetWeatherDataByWeatherLocation(null);
+        });
+    }
+
+    @Test
+    public void getHourlyWeatherDataByWeatherLocationThrowsExceptionWithNull() {
+        CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetrieverMock(new MockDataRetriever());
+        HourlyWeatherDataRetriever hourlyWeatherDataRetriever = new OpenWeatherHourlyDataRetrieverMock(new MockDataRetriever());
+        WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
+        LocationSearcher locationSearcher = new LocationSearcherMock();
+        LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
+        assertThrows(IllegalArgumentException.class, () -> {
+            viewModel.GetHourlyForecastDataByWeatherLocation(null, 1);
         });
     }
 
@@ -101,6 +122,17 @@ public class LandingPageViewModelTests {
     }
 
     @Test
+    public void getHourlyWeatherDataWithValidWeatherLocation() {
+        CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetrieverMock(new MockDataRetriever());
+        HourlyWeatherDataRetriever hourlyWeatherDataRetriever = new OpenWeatherHourlyDataRetrieverMock(new MockDataRetriever());
+        WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
+        LocationSearcher locationSearcher = new LocationSearcherMock();
+        LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
+        JSONObject result = viewModel.GetHourlyForecastDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 32.40), 1);
+        assertEquals(5, result.getJSONObject("wind").getDouble("speed"));
+    }
+
+    @Test
     public void getWeatherDataWithEmptyState() {
         CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetrieverMock(new MockDataRetriever());
         HourlyWeatherDataRetriever hourlyWeatherDataRetriever = new OpenWeatherHourlyDataRetrieverMock(new MockDataRetriever());
@@ -108,6 +140,17 @@ public class LandingPageViewModelTests {
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
         JSONObject result = viewModel.GetWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "N/A", 30.40, 32.40));
+        assertEquals(5, result.getJSONObject("wind").getDouble("speed"));
+    }
+
+    @Test
+    public void getHourlyWeatherDataWithEmptyState() {
+        CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetrieverMock(new MockDataRetriever());
+        HourlyWeatherDataRetriever hourlyWeatherDataRetriever = new OpenWeatherHourlyDataRetrieverMock(new MockDataRetriever());
+        WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
+        LocationSearcher locationSearcher = new LocationSearcherMock();
+        LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
+        JSONObject result = viewModel.GetHourlyForecastDataByWeatherLocation(new WeatherLocation("city", "country", "N/A", 30.40, 32.40), 1);
         assertEquals(5, result.getJSONObject("wind").getDouble("speed"));
     }
 
@@ -406,5 +449,101 @@ public class LandingPageViewModelTests {
         } catch (IOException e) {
             fail("Error saving file in test");
         }
+    }
+
+    @Test
+    public void getTimezoneThrowsExceptionWithNoWeatherData() {
+            HourlyWeatherDataRetriever hourlyWeatherDataRetriever = new OpenWeatherHourlyDataRetrieverMock(new MockDataRetriever());
+            CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetrieverMock(new MockDataRetriever());
+            WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
+            LocationSearcher locationSearcher = new LocationSearcherMock();
+            LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
+        assertThrows(IllegalArgumentException.class, () -> {
+            viewModel.GetTimezone();
+        });
+    }
+
+    @Test
+    public void getTimezoneValid() {
+        HourlyWeatherDataRetriever hourlyWeatherDataRetriever = new OpenWeatherHourlyDataRetrieverMock(new MockDataRetriever());
+        CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetrieverMock(new MockDataRetriever());
+        WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
+        LocationSearcher locationSearcher = new LocationSearcherMock();
+        LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
+        viewModel.GetHourlyForecastDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 30.40), 1);
+        Long timezone = viewModel.GetTimezone();
+        assertEquals(100, timezone);
+    }
+
+    @Test
+    public void getHourMaxTemperatureThrowsExceptionWithNoWeatherData() {
+        HourlyWeatherDataRetriever hourlyWeatherDataRetriever = new OpenWeatherHourlyDataRetrieverMock(new MockDataRetriever());
+        CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetrieverMock(new MockDataRetriever());
+        WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
+        LocationSearcher locationSearcher = new LocationSearcherMock();
+        LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
+        assertThrows(IllegalArgumentException.class, () -> {
+            viewModel.GetHourTemperature(0);
+        });
+    }
+
+    @Test
+    public void getHourMaxTemperatureValid() {
+        HourlyWeatherDataRetriever hourlyWeatherDataRetriever = new OpenWeatherHourlyDataRetrieverMock(new MockDataRetriever());
+        CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetrieverMock(new MockDataRetriever());
+        WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
+        LocationSearcher locationSearcher = new LocationSearcherMock();
+        LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
+        viewModel.GetHourlyForecastDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 30.40), 1);
+        String result = viewModel.GetHourTemperature(0);
+        assertEquals("98", result);
+    }
+
+    @Test
+    public void getHourWeatherIconThrowsExceptionWithNoWeatherData() {
+        HourlyWeatherDataRetriever hourlyWeatherDataRetriever = new OpenWeatherHourlyDataRetrieverMock(new MockDataRetriever());
+        CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetrieverMock(new MockDataRetriever());
+        WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
+        LocationSearcher locationSearcher = new LocationSearcherMock();
+        LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
+        assertThrows(IllegalArgumentException.class, () -> {
+            viewModel.GetDayWeatherIcon(0);
+        });
+    }
+
+    @Test
+    public void getHourWeatherIconValid() {
+        HourlyWeatherDataRetriever hourlyWeatherDataRetriever = new OpenWeatherHourlyDataRetrieverMock(new MockDataRetriever());
+        CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetrieverMock(new MockDataRetriever());
+        WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
+        LocationSearcher locationSearcher = new LocationSearcherMock();
+        LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
+        viewModel.GetHourlyForecastDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 30.40), 1);
+        String result = viewModel.GetDayWeatherIcon(0);
+        assertEquals("http://openweathermap.org/img/wn/fake-url@4x.png", result);
+    }
+
+    @Test
+    public void getHourUtcDateTimeThrowsExceptionWithNoWeatherData() {
+        HourlyWeatherDataRetriever hourlyWeatherDataRetriever = new OpenWeatherHourlyDataRetrieverMock(new MockDataRetriever());
+        CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetrieverMock(new MockDataRetriever());
+        WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
+        LocationSearcher locationSearcher = new LocationSearcherMock();
+        LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
+        assertThrows(IllegalArgumentException.class, () -> {
+            viewModel.GetHourUtcDateTime(0);
+        });
+    }
+
+    @Test
+    public void getHourUtcDateTimeValid() {
+        HourlyWeatherDataRetriever hourlyWeatherDataRetriever = new OpenWeatherHourlyDataRetrieverMock(new MockDataRetriever());
+        CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetrieverMock(new MockDataRetriever());
+        WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
+        LocationSearcher locationSearcher = new LocationSearcherMock();
+        LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
+        viewModel.GetHourlyForecastDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 30.40), 1);
+        Long utcTime = viewModel.GetHourUtcDateTime(0);
+        assertEquals(500, utcTime);
     }
 }
