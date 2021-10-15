@@ -8,6 +8,7 @@ import java.util.Collection;
 
 import org.json.JSONObject;
 import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
+import edu.westga.weatherapp_gui.model.IpGrabber;
 import edu.westga.weatherapp_gui.model.WeatherLocationSerializer;
 import edu.westga.weatherapp_shared.model.WeatherLocation;
 import edu.westga.weatherapp_shared.interfaces.CurrentWeatherDataRetriever;
@@ -142,6 +143,22 @@ public class LandingPageViewModel {
     }
 
     /**
+     * Gets the current location of the user based on their ip address
+     * 
+     * @return a weather location of the user's current location
+     */
+    public WeatherLocation GetCurrentLocation() {
+        try {
+            String ip = IpGrabber.GetCurrentIpAddress();
+            WeatherLocation currentLocation = this.weatherLocationSearcher.getLocationByIP(ip);
+            
+            return currentLocation;
+        } catch (RemoteException e) {
+            return null;
+        }
+    }
+
+    /**
      * Gets the autocompletion search results based on the given city name
      * 
      * @param city - the city name
@@ -156,7 +173,10 @@ public class LandingPageViewModel {
         }
 
         try {
-            Collection<WeatherLocation> locations = this.weatherLocationSearcher.searchLocations(city, 10);
+            String ip = IpGrabber.GetCurrentIpAddress();
+            WeatherLocation currentLocation = this.weatherLocationSearcher.getLocationByIP(ip);
+            Collection<WeatherLocation> locations = this.weatherLocationSearcher.searchLocations(city, 10, currentLocation.getLatitude(), currentLocation.getLongitude());
+            
             return locations;
         } catch (Exception e) {
             return null;

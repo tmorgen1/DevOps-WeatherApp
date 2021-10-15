@@ -247,8 +247,12 @@ public class LandingPage {
      * Loads the HourlyInfoPane components and fetches the hourly forecast data.
      */
     private void loadHourlyForecastInfoPanes() {
-        if (CurrentWeatherInformation.getWeatherLocation() == null) {
+        if (CurrentWeatherInformation.getWeatherLocation() == null && CurrentWeatherInformation.isFinishedFirstLoadIpGrab()) {
             return;
+        } else if (CurrentWeatherInformation.getWeatherLocation() == null && !CurrentWeatherInformation.isFinishedFirstLoadIpGrab()) {
+            WeatherLocation currentLocation = this.viewModel.GetCurrentLocation();
+            CurrentWeatherInformation.setWeatherLocation(currentLocation);
+            this.updateSelectedWeatherLocation(currentLocation);
         }
 
         this.hideNoWeatherInformation();

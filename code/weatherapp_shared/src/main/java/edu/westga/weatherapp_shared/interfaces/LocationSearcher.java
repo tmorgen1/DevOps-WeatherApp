@@ -19,10 +19,12 @@ public interface LocationSearcher extends Remote {
      * 
      * @param searchEntry - search param for city name
      * @param maxEntryResponse - max number of entries of WeatherLocations returned in the collection
+     * @param latitude - the closest latitude to the user
+     * @param longitude - the closest longitude to the user
      * @return the Collection of WeatherLocations that contain cities whose names start with the search entry
      * @throws RemoteException
      */
-    public Collection<WeatherLocation> searchLocations(String searchEntry, int maxEntryResponse) throws RemoteException;
+    public Collection<WeatherLocation> searchLocations(String searchEntry, int maxEntryResponse, double latitude, double longitude) throws RemoteException;
     
     /**
      * Searches the database of all locations for a weather location that is near the location based on the

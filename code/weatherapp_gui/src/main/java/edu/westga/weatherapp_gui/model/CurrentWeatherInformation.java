@@ -40,6 +40,29 @@ public class CurrentWeatherInformation {
     private static ArrayList<DayForecastPane> dayForecastPanes;
 
     /**
+     * Holds whether the app has finished gerabbing the user location
+     */
+    private static boolean finishedFirstLoadIpGrab;
+
+    /**
+     * Gets the finished first load ip grab value
+     * 
+     * @return the finished first load ip grab
+     */
+    public static boolean isFinishedFirstLoadIpGrab() {
+        return CurrentWeatherInformation.finishedFirstLoadIpGrab;
+    }
+
+    /**
+     * Sets the finished first load ip grab value
+     * 
+     * @param value - the new value
+     */
+    public static void setFinishedFirstLoadIpGrab(boolean value) {
+        CurrentWeatherInformation.finishedFirstLoadIpGrab = value;
+    }
+
+    /**
      * Gets the stored list of day forecast pane components
      * 
      * @return the day forecast panes

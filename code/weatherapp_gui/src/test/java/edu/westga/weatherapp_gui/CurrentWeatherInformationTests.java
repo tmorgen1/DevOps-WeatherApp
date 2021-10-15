@@ -104,4 +104,17 @@ public class CurrentWeatherInformationTests {
         ArrayList<HourlyInfoPane> result = CurrentWeatherInformation.getHourlyInfoPanes();
         assertEquals(panes, result);
     }
+
+    @Test
+    public void isFinishedFirstLoadIpGrabValid() {
+        boolean result = CurrentWeatherInformation.isFinishedFirstLoadIpGrab();
+        assertEquals(false, result);
+    }
+
+    @Test
+    public void setIsFinishedFirstLoadIpGrabValid() {
+        CurrentWeatherInformation.setFinishedFirstLoadIpGrab(true);
+        boolean result = CurrentWeatherInformation.isFinishedFirstLoadIpGrab();
+        assertEquals(true, result);
+    }
 }

@@ -9,7 +9,7 @@ import edu.westga.weatherapp_shared.model.WeatherLocation;
 public class LocationSearcherMock implements LocationSearcher {
 
     @Override
-    public Collection<WeatherLocation> searchLocations(String arg0, int arg1) throws RemoteException {
+    public Collection<WeatherLocation> searchLocations(String arg0, int arg1, double arg2, double arg3) throws RemoteException {
         return List.of(new WeatherLocation("city", "country", "state", 30.40, 30.40));
     }
 

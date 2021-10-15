@@ -14,6 +14,9 @@ import java.util.Collection;
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CityResponse;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -33,6 +36,13 @@ public class WeatherLocationSearcher extends UnicastRemoteObject implements Loca
      */
     private JSONArray searchLocations;
 
+    private static final double TOTAL_KILOMETERS_IN_MILE = 1.609344;
+
+    private static final double TOTAL_STATUTE_MILES_IN_NAUTICAL_MILE = 1.1515;
+
+    private static final double TOTAL_MINUTES_IN_DEGREE = 60;
+
+    private static final double HALF_CIRCLE_DEGREES = 180;
     /**
      * Contains the information regarding locations and their relation to IP
      * Addresses.
@@ -116,8 +126,7 @@ public class WeatherLocationSearcher extends UnicastRemoteObject implements Loca
     }
 
     @Override
-    public Collection<WeatherLocation> searchLocations(String searchEntry, int maxEntryResponse)
-            throws RemoteException {
+    public Collection<WeatherLocation> searchLocations(String searchEntry, int maxEntryResponse, double latitude, double longitude) throws RemoteException {
         if (maxEntryResponse < 1 || maxEntryResponse > 20) {
             throw new IllegalArgumentException("maxEntryResponse should not be less than 1 or greather than 20");
         }
@@ -125,15 +134,17 @@ public class WeatherLocationSearcher extends UnicastRemoteObject implements Loca
         Collection<WeatherLocation> searchResults = new ArrayList<WeatherLocation>();
 
         for (int i = 0; i < this.searchLocations.length(); i++) {
-            if (searchResults.size() >= maxEntryResponse) {
-                break;
-            }
-
             JSONObject currentJsonObject = this.searchLocations.getJSONObject(i);
             if (currentJsonObject.getString("name").toLowerCase().startsWith(searchEntry.toLowerCase())) {
                 WeatherLocation weatherLocationWrapper = this.createWeatherLocationFromJson(currentJsonObject);
                 searchResults.add(weatherLocationWrapper);
             }
+        }
+
+        List<WeatherLocation> listOfSearchResults = new ArrayList<WeatherLocation>(searchResults);
+        this.sortSearchLocationsByClosestDistance(listOfSearchResults, latitude, longitude);
+        if (searchResults.size() > 10) {
+            searchResults = new ArrayList<WeatherLocation>(listOfSearchResults.subList(0, 10));
         }
 
         return searchResults;
@@ -184,5 +195,45 @@ public class WeatherLocationSearcher extends UnicastRemoteObject implements Loca
                 response.getLocation().getLongitude(), response.getLocation().getLatitude());
 
         return weatherLocation;
+    }
+
+    /**
+     * Calculates the distance between the two sets of coordiantes
+     * 
+     * @param latitude1 - the first latitude
+     * @param longitude1 - the first longitude
+     * @param latitude2 - the other latitude
+     * @param longitude2 - the other longitude
+     * @return the distance between the two sets coordinates
+     */
+    private int calculateDistanceBetweenCoordinates(double latitude1, double longitude1, double latitude2, double longitude2) {
+        double radiansLatitude1 = Math.PI * latitude1 / HALF_CIRCLE_DEGREES;
+        double radiansLatitude2 = Math.PI * latitude2 / HALF_CIRCLE_DEGREES;
+        double theta = longitude1 - longitude2;
+        double radiansTheta = Math.PI * theta / HALF_CIRCLE_DEGREES;
+        double distance = (Math.sin(radiansLatitude1) * Math.sin(radiansLatitude2)) + (Math.cos(radiansLatitude1) * Math.cos(radiansLatitude2) * Math.cos(radiansTheta));
+        distance = Math.acos(distance);
+        distance = distance * HALF_CIRCLE_DEGREES / Math.PI;
+        distance = distance * TOTAL_MINUTES_IN_DEGREE * TOTAL_STATUTE_MILES_IN_NAUTICAL_MILE;
+        distance = distance * TOTAL_KILOMETERS_IN_MILE;
+
+        return (int) distance;
+    }
+
+    /**
+     * Sorts the list of weather locations based on how close they are to the given coordinates
+     * 
+     * @param locations - the list of weather locations
+     * @param latitude - the latitude to sort by
+     * @param longitude - the longitude to sort by
+     */
+    private void sortSearchLocationsByClosestDistance(List<WeatherLocation> locations, double latitude, double longitude) {
+        Collections.sort(locations, new Comparator<WeatherLocation>(){
+            @Override
+            public int compare(WeatherLocation weatherLocation, WeatherLocation otherWeatherLocation) {
+                return calculateDistanceBetweenCoordinates(latitude, longitude, weatherLocation.getLatitude(), weatherLocation.getLongitude())
+                    - calculateDistanceBetweenCoordinates(latitude, longitude, otherWeatherLocation.getLatitude(), otherWeatherLocation.getLongitude());
+            }
+        });
     }
 }

@@ -36,7 +36,7 @@ public class WeatherLocationSearcherTests {
         try {
             WeatherLocationSearcher searcher = new WeatherLocationSearcher(App.WEATHER_SEARCH_LOCATIONS_FILE_NAME, App.WEATHER_GEOIP_LOCATIONS_DATABASE_NAME);
             assertThrows(IllegalArgumentException.class, () -> {
-                searcher.searchLocations("blah", 0);
+                searcher.searchLocations("blah", 0, 0, 0);
             });
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -49,7 +49,7 @@ public class WeatherLocationSearcherTests {
         try {
             WeatherLocationSearcher searcher = new WeatherLocationSearcher(App.WEATHER_SEARCH_LOCATIONS_FILE_NAME, App.WEATHER_GEOIP_LOCATIONS_DATABASE_NAME);
             assertThrows(IllegalArgumentException.class, () -> {
-                searcher.searchLocations("blah", 21);
+                searcher.searchLocations("blah", 21, 0, 0);
             });
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -61,7 +61,7 @@ public class WeatherLocationSearcherTests {
     public void searchLocationsSuccessfully() {
         try {
             WeatherLocationSearcher searcher = new WeatherLocationSearcher(App.WEATHER_SEARCH_LOCATIONS_FILE_NAME, App.WEATHER_GEOIP_LOCATIONS_DATABASE_NAME);
-            assertEquals(1, searcher.searchLocations("newn", 1).size());
+            assertEquals(2, searcher.searchLocations("newn", 1, 0, 0).size());
         } catch (RemoteException e) {
             e.printStackTrace();
             fail("Remote Exception while testing");
