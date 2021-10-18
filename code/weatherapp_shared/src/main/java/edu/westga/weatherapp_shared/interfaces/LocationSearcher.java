@@ -25,6 +25,7 @@ public interface LocationSearcher extends Remote {
      * @throws RemoteException
      */
     public Collection<WeatherLocation> searchLocations(String searchEntry, int maxEntryResponse, double latitude, double longitude) throws RemoteException;
+<<<<<<< Updated upstream
     
     /**
      * Searches the database of all locations for a weather location that is near the location based on the
@@ -36,4 +37,7 @@ public interface LocationSearcher extends Remote {
      * @throws RemoteException
      */
     public WeatherLocation getLocationByIP(String ipAddress) throws RemoteException;
+=======
+
+>>>>>>> Stashed changes
 }

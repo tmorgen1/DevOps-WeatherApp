@@ -26,6 +26,9 @@ public class App extends Application
 	public static final String SEVERE_WARNINGS_PAGE_VIEW = "/edu/westga/weatherapp_gui/view/SevereWeatherWarningsPage.fxml";
 	public static final String SEVERE_WARNINGS_TITLED_PANE_VIEW = "/edu/westga/weatherapp_gui/view/SevereWeatherWarningTitledPane.fxml";
 
+	public static final String WEATHER_RADAR_PAGE_TITLE = "Weather App - Weather Radar";
+	public static final String WEATHER_RADAR_PAGE_VIEW = "/edu/westga/weatherapp_gui/view/WeatherRadarPage.fxml";
+
 	/**
 	 * JavaFX entry point.
 	 *

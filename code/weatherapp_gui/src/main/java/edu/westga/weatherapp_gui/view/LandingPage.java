@@ -417,6 +417,21 @@ public class LandingPage {
     }
 
     /**
+     * Handles the mouse click event for the weather radar clicked. Moves to the weather radar page
+     * 
+     * @param event - the mouse click event
+     */
+    @FXML
+    void onWeatherRadarClicked(MouseEvent event) {
+        try {
+            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            WindowGenerator.changeScene(currentStage, App.WEATHER_RADAR_PAGE_VIEW, App.WEATHER_RADAR_PAGE_TITLE);
+        } catch (IOException exception) {
+            this.displayNoLocationSnackbar("Please Enter a Location First");
+        }
+    }
+
+    /**
      * Scrolls the hbox horizontally instead of vertically when a scroll event is fired
      * 
      * @param event - the scroll event

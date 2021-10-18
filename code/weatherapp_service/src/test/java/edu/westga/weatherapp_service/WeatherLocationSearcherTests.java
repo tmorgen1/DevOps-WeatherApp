@@ -60,6 +60,7 @@ public class WeatherLocationSearcherTests {
     @Test
     public void searchLocationsSuccessfully() {
         try {
+<<<<<<< Updated upstream
             WeatherLocationSearcher searcher = new WeatherLocationSearcher(App.WEATHER_SEARCH_LOCATIONS_FILE_NAME, App.WEATHER_GEOIP_LOCATIONS_DATABASE_NAME);
             assertEquals(2, searcher.searchLocations("newn", 1, 0, 0).size());
         } catch (RemoteException e) {
@@ -73,6 +74,10 @@ public class WeatherLocationSearcherTests {
         try {
             WeatherLocationSearcher searcher = new WeatherLocationSearcher(App.WEATHER_SEARCH_LOCATIONS_FILE_NAME, App.WEATHER_GEOIP_LOCATIONS_DATABASE_NAME);
             assertNotNull(searcher.getLocationByIP("12.231.7.4"));
+=======
+            WeatherLocationSearcher searcher = new WeatherLocationSearcher(App.WEATHER_LOCATIONS_FILE_NAME);
+            assertEquals(2, searcher.searchLocations("newn", 1, 0, 0).size());
+>>>>>>> Stashed changes
         } catch (RemoteException e) {
             e.printStackTrace();
             fail("Remote Exception while testing");

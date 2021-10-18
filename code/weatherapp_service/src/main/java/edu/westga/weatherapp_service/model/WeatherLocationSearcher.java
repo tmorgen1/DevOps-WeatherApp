@@ -11,12 +11,19 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Collection;
+<<<<<<< Updated upstream
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CityResponse;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+=======
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+>>>>>>> Stashed changes
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -30,6 +37,18 @@ import edu.westga.weatherapp_shared.model.WeatherLocation;
  */
 public class WeatherLocationSearcher extends UnicastRemoteObject implements LocationSearcher {
 
+<<<<<<< Updated upstream
+=======
+    private static final double TOTAL_KILOMETERS_IN_MILE = 1.609344;
+
+    private static final double TOTAL_STATUTE_MILES_IN_NAUTICAL_MILE = 1.1515;
+
+    private static final double TOTAL_MINUTES_IN_DEGREE = 60;
+
+    private static final double HALF_CIRCLE_DEGREES = 180;
+
+    
+>>>>>>> Stashed changes
     /**
      * Contains the JSONObject entries for all the locations OpenWeather has data
      * for.
@@ -133,8 +152,13 @@ public class WeatherLocationSearcher extends UnicastRemoteObject implements Loca
 
         Collection<WeatherLocation> searchResults = new ArrayList<WeatherLocation>();
 
+<<<<<<< Updated upstream
         for (int i = 0; i < this.searchLocations.length(); i++) {
             JSONObject currentJsonObject = this.searchLocations.getJSONObject(i);
+=======
+        for (int i = 0; i < this.locations.length(); i++) {
+            JSONObject currentJsonObject = this.locations.getJSONObject(i);
+>>>>>>> Stashed changes
             if (currentJsonObject.getString("name").toLowerCase().startsWith(searchEntry.toLowerCase())) {
                 WeatherLocation weatherLocationWrapper = this.createWeatherLocationFromJson(currentJsonObject);
                 searchResults.add(weatherLocationWrapper);
@@ -172,6 +196,7 @@ public class WeatherLocationSearcher extends UnicastRemoteObject implements Loca
         return new WeatherLocation(city, country, state, longitude, latitude);
     }
 
+<<<<<<< Updated upstream
     @Override
     public WeatherLocation getLocationByIP(String ipAddress) throws RemoteException {
         InetAddress iNetAddress = null;
@@ -206,6 +231,8 @@ public class WeatherLocationSearcher extends UnicastRemoteObject implements Loca
      * @param longitude2 - the other longitude
      * @return the distance between the two sets coordinates
      */
+=======
+>>>>>>> Stashed changes
     private int calculateDistanceBetweenCoordinates(double latitude1, double longitude1, double latitude2, double longitude2) {
         double radiansLatitude1 = Math.PI * latitude1 / HALF_CIRCLE_DEGREES;
         double radiansLatitude2 = Math.PI * latitude2 / HALF_CIRCLE_DEGREES;
@@ -220,6 +247,7 @@ public class WeatherLocationSearcher extends UnicastRemoteObject implements Loca
         return (int) distance;
     }
 
+<<<<<<< Updated upstream
     /**
      * Sorts the list of weather locations based on how close they are to the given coordinates
      * 
@@ -227,6 +255,8 @@ public class WeatherLocationSearcher extends UnicastRemoteObject implements Loca
      * @param latitude - the latitude to sort by
      * @param longitude - the longitude to sort by
      */
+=======
+>>>>>>> Stashed changes
     private void sortSearchLocationsByClosestDistance(List<WeatherLocation> locations, double latitude, double longitude) {
         Collections.sort(locations, new Comparator<WeatherLocation>(){
             @Override
@@ -236,4 +266,8 @@ public class WeatherLocationSearcher extends UnicastRemoteObject implements Loca
             }
         });
     }
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 }
