@@ -8,6 +8,7 @@ import edu.westga.weatherapp_service.model.OpenWeatherCurrentDataRetriever;
 import edu.westga.weatherapp_service.model.OpenWeatherDailyDataRetriever;
 import edu.westga.weatherapp_service.model.OpenWeatherHourlyDataRetriever;
 import edu.westga.weatherapp_service.model.OpenWeatherIconRetriever;
+import edu.westga.weatherapp_service.model.OpenWeatherMapRadarDataRetriever;
 import edu.westga.weatherapp_service.model.OpenWeatherSevereWarningsRetriever;
 import edu.westga.weatherapp_service.model.WeatherLocationSearcher;
 import edu.westga.weatherapp_shared.interfaces.CurrentWeatherDataRetriever;
@@ -30,6 +31,11 @@ public class App {
      * Weather GEOIP Locations Database File Name
      */
     public static final String WEATHER_GEOIP_LOCATIONS_DATABASE_NAME = "GeoLite2-City.mmdb";
+
+    /**
+     * Weather Radar Map HTML File Name
+     */
+    public static final String WEATHER_RADAR_MAP_SITE_FILE_NAME = "web_radar_index.html";
 
     /**
      * RMI Registry Port.
@@ -67,6 +73,9 @@ public class App {
             LocationSearcher weatherLocationSearcherSkeleton = new WeatherLocationSearcher(
                     App.WEATHER_SEARCH_LOCATIONS_FILE_NAME, App.WEATHER_GEOIP_LOCATIONS_DATABASE_NAME);
             Naming.rebind("rmi://localhost:" + App.RMI_PORT + "/location-searcher", weatherLocationSearcherSkeleton);
+
+            OpenWeatherMapRadarDataRetriever mapRadarDataRetriever = new OpenWeatherMapRadarDataRetriever(App.WEATHER_RADAR_MAP_SITE_FILE_NAME);
+            Naming.rebind("rmi://localhost:" + App.RMI_PORT + "/radar-weather", mapRadarDataRetriever);
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
         }
