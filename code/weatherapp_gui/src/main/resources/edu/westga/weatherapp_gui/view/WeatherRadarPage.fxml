@@ -9,10 +9,10 @@
 <?import javafx.scene.web.WebView?>
 
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #2A2E37;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.weatherapp_gui.view.WeatherRadarPage">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="567.0" prefWidth="931.0" style="-fx-background-color: #2A2E37;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.weatherapp_gui.view.WeatherRadarPage">
    <children>
-      <WebView fx:id="weatherRadarWebView" layoutX="11.0" layoutY="56.0" prefHeight="334.0" prefWidth="579.0" />
-      <Label layoutX="212.0" layoutY="14.0" text="Weather Radar" textFill="WHITE">
+      <WebView fx:id="weatherRadarWebView" layoutX="16.0" layoutY="51.0" prefHeight="500.0" prefWidth="900.0" />
+      <Label layoutX="378.0" layoutY="14.0" text="Weather Radar" textFill="WHITE">
          <font>
             <Font name="Segoe UI Bold" size="25.0" />
          </font>

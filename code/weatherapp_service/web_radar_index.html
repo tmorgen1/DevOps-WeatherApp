@@ -2303,7 +2303,7 @@
     </script>
     <style>
         #map {
-            height: 75em;
+            height: 475px;
         }
     </style>
 </head>
@@ -2314,7 +2314,7 @@
         var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 18, attribution: 'Streets/Map from OpenStreetMap'
         });
-        var map = L.map('map', { center: [33, -83], zoom: 10, layers: [osmLayer] });
+        var map = L.map('map', { center: [{lat}, {lon}], zoom: 16, layers: [osmLayer] });
 
         var cloudLayer = L.OWM.cloudsClassic();
         var rainLayer = L.OWM.rainClassic();

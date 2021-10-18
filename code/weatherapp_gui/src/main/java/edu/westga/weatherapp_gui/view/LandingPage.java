@@ -16,6 +16,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Menu;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -205,6 +206,12 @@ public class LandingPage {
     private Label progressLabel;
 
     /**
+     * The settings menu
+     */
+    @FXML
+    private Menu settingMenu;
+
+    /**
      * The temperature suffix
      */
     private String TemperatureSuffix = " °F";
@@ -376,14 +383,18 @@ public class LandingPage {
     private void hideLoadingIndication() {
         this.progressIndicator.setVisible(false);
         this.progressLabel.setVisible(false);
+        this.locationSearchTextField.setDisable(false);
+        this.settingMenu.setDisable(false);
     }
 
     /**
      * Displays the progress indicator and progress indicator label
      */
     private void showLoadingIndication() {
+        this.locationSearchTextField.setDisable(true);
         this.progressIndicator.setVisible(true);
         this.progressLabel.setVisible(true);
+        this.settingMenu.setDisable(true);
     }
 
     /**
