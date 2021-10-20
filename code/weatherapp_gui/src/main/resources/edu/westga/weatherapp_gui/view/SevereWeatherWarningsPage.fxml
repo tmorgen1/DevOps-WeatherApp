@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXComboBox?>
 <?import javafx.scene.Cursor?>
-<?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.CheckMenuItem?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<Pane fx:id="severeWarningsPagePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0" prefWidth="401.0" style="-fx-background-color: #2A2E37;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.weatherapp_gui.view.SevereWeatherWarningsPage">
+<Pane fx:id="severeWarningsPagePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0" prefWidth="401.0" style="-fx-background-color: #2A2E37;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.weatherapp_gui.view.SevereWeatherWarningsPage">
    <children>
       <Label layoutX="69.0" layoutY="36.0" maxWidth="305.0" text="Severe Weather Warnings" textFill="WHITE">
          <font>
@@ -27,7 +27,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </ImageView>
-      <Accordion fx:id="severeWarningsAccordion" layoutY="81.0" prefHeight="497.0" prefWidth="401.0" visible="false" />
+      <JFXComboBox fx:id="severeWarningsComboBox" layoutX="22.0" layoutY="82.0" prefHeight="25.0" prefWidth="348.0" promptText="Select Severe Weather Warning" style="-fx-background-color: #313A45;" stylesheets="@../../../../styles/SevereWeatherWarningsStyleSheet.css" />
       <MenuBar prefHeight="25.0" prefWidth="401.0">
          <menus>
             <Menu mnemonicParsing="false" text="Settings">
@@ -44,10 +44,10 @@
             <Font name="Segoe UI" size="18.0" />
          </font>
       </Label>
-      <Label fx:id="errorLabel" layoutX="22.0" layoutY="100.0" text="Error" textFill="RED" visible="false">
+      <Text fx:id="errorText" fill="RED" layoutX="26.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="350.0">
          <font>
             <Font name="Segoe UI" size="18.0" />
          </font>
-      </Label>
+      </Text>
    </children>
 </Pane>

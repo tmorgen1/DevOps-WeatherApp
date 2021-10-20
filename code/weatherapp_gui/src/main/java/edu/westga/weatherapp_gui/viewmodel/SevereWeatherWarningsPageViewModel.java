@@ -2,13 +2,24 @@ package edu.westga.weatherapp_gui.viewmodel;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import edu.westga.weatherapp_shared.enums.MeasurementUnits;
 import edu.westga.weatherapp_shared.interfaces.SevereWeatherWarningsRetriever;
 import edu.westga.weatherapp_shared.model.WeatherLocation;
+import edu.westga.weatherapp_gui.model.SevereWeatherWarning;
+import javafx.beans.property.StringProperty;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 
 /**
  * The view model class for the severe weather warnings page.
@@ -19,14 +30,14 @@ import javafx.beans.property.SimpleStringProperty;
 public class SevereWeatherWarningsPageViewModel {
 
     /**
-     * the severe weather warnings string property for use in bindings
+     * the severe warnings combo box selected item property for use in bindings
      */
-    private SimpleStringProperty severeWeatherWarningsStringProperty;
+    private ObjectProperty<SevereWeatherWarning> severeWarningComboBoxSelectedItemProperty;
 
     /**
-     * the error label string property for use in bindings
+     * the error text string property for use in bindings
      */
-    private SimpleStringProperty errorLabelStringProperty;
+    private StringProperty errorTextStringProperty;
 
     /**
      * the no warnings for location visibility property for use in bindings
@@ -34,17 +45,22 @@ public class SevereWeatherWarningsPageViewModel {
     private BooleanProperty noWarningsForLocationVisibilityProperty;
 
     /**
-     * the severe warnings accordion visibility property for use in bindings
+     * the severe warnings combo box visibility property for use in bindings
      */
-    private BooleanProperty severeWarningsAccordionVisibilityProperty;
+    private BooleanProperty severeWarningComboBoxVisibilityProperty;
 
     /**
-     * the  error label visibility property for use in bindings
+     * the severe warnings combo box list property for use in bindings
      */
-    private BooleanProperty errorLabelVisibilityProperty;
+    private ListProperty<SevereWeatherWarning> severeWarningComboBoxListProperty;
 
     /**
-     * the severe weather warnings retriever
+     * the error Text visibility property for use in bindings
+     */
+    private BooleanProperty errorTextVisibilityProperty;
+
+    /**
+     * the severe weather warnings retrieverr
      */
     private SevereWeatherWarningsRetriever severeWeatherWarningsRetriever;
 
@@ -53,42 +69,47 @@ public class SevereWeatherWarningsPageViewModel {
      * 
      * 
      * @param dataRetriever the data retriever
-     * @precondition none
-     * @postcondition getsevereWeatherWarningsObjectProperty() != null
      */
     public SevereWeatherWarningsPageViewModel(SevereWeatherWarningsRetriever dataRetriever) {
-        this.severeWeatherWarningsStringProperty = new SimpleStringProperty();
-        this.errorLabelStringProperty = new SimpleStringProperty();
-        this.errorLabelVisibilityProperty = new SimpleBooleanProperty();
+        this.severeWarningComboBoxListProperty = new SimpleListProperty<SevereWeatherWarning>(
+                FXCollections.observableArrayList());
+        this.severeWarningComboBoxSelectedItemProperty = new SimpleObjectProperty<SevereWeatherWarning>();
+        this.errorTextStringProperty = new SimpleStringProperty();
+        this.errorTextVisibilityProperty = new SimpleBooleanProperty();
         this.noWarningsForLocationVisibilityProperty = new SimpleBooleanProperty();
-        this.severeWarningsAccordionVisibilityProperty = new SimpleBooleanProperty();
+        this.severeWarningComboBoxVisibilityProperty = new SimpleBooleanProperty();
         if (dataRetriever != null) {
             this.severeWeatherWarningsRetriever = dataRetriever;
         } else {
-            try {
-                this.severeWeatherWarningsRetriever = (SevereWeatherWarningsRetriever) Naming
-                        .lookup("rmi://localhost:5000/severe-warnings");
-            } catch (Exception ex) {
-                this.setErrorLabelStringPropertyValue("Error looking up java rmi binding");
-                this.setErrorLabelVisibilityProperty(true);
-            }
+            String lookUpUrl = "rmi:/" + "/localhost:5000/severe-warnings";
+            this.initializeSevereWeatherWarningsRetrieverUsingNaming(lookUpUrl);
         }
     }
 
     /**
-     * Sets the string value of the severe weather warnings object property value
+     * Initailizes the severeWeatherWarningsRetriever to some value
+     * 
+     * @param lookUpUrl the url for Naming to get the class to link to
+     */
+    private void initializeSevereWeatherWarningsRetrieverUsingNaming(String lookUpUrl) {
+        try {
+            this.severeWeatherWarningsRetriever = (SevereWeatherWarningsRetriever) Naming.lookup(lookUpUrl);
+        } catch (Exception ex) {
+            this.setErrorTextStringPropertyValue("Error looking up java rmi binding");
+            this.setErrorTextVisibilityProperty(true);
+        }
+    }
+
+    /**
+     * Sets the string value of the severe weather warnings page's properties values
      * 
      * @precondition location != null && units != null
-     * @postcondition getsevereWeatherWarningsObjectProperty() != null &&
-     *                (getsevereWeatherWarningsObjectProperty().equals(data) ||
-     *                getsevereWeatherWarningsObjectProperty()equals(""))
-     * 
      * @param location the location for the warnings
      * @param units    the unit of measument the warning should come in
      * @throws IllegalArgumentException
      * @throws RemoteException
      */
-    public void setsevereWeatherWarningsObjectPropertyValue(WeatherLocation location, MeasurementUnits units) {
+    public void setsevereWeatherWarningsPagePropertiesValues(WeatherLocation location, MeasurementUnits units) {
         if (location == null) {
             throw new IllegalArgumentException("The location cannot be null.");
         }
@@ -96,30 +117,90 @@ public class SevereWeatherWarningsPageViewModel {
         try {
             data = this.severeWeatherWarningsRetriever.getSevereWeatherWarningsForLocation(location.getLatitude(),
                     location.getLongitude(), units);
-            this.severeWeatherWarningsStringProperty.setValue(data);
-            this.setNoWarningsForLocationVisibilityPropertyValue(data);
-            this.setSevereWarningAccordionVisibilityPropertyValue(data);
-        } catch (RemoteException | IllegalArgumentException ex) {
-            this.setErrorLabelStringPropertyValue(ex.getMessage());
+            this.setSevereWarningPageComboBoxListProperty(data);
+            this.setNoWarningsForLocationVisibilityPropertyValue();
+            this.setSevereWarningComboBoxVisibilityPropertyValue();
+        } catch (RemoteException | IllegalArgumentException | NullPointerException ex) {
+            this.setErrorTextStringPropertyValue(ex.getMessage());
+            this.setErrorTextVisibilityProperty(true);
         }
     }
 
     /**
-     * Gets the error label string property
+     * Converts the severe weather warnings data from a location into a list of
+     * severe weather warnings and sets the value of
+     * severeWarningComboBoxListProperty to that list
      * 
-     * @return the errorLabelStringProperty
+     * @param data the raw data from the source
      */
-    public SimpleStringProperty getErrorLabelStringProperty() {
-        return this.errorLabelStringProperty;
+    private void setSevereWarningPageComboBoxListProperty(String data) {
+        if (!data.contains("alerts")) {
+            return;
+        }
+        JSONObject weatherWarningsData = new JSONObject(data);
+        JSONArray warningsData = this.extractWarningDataFromJsonObjectAsAJsonArray(weatherWarningsData);
+        ArrayList<SevereWeatherWarning> severeWeatherWarnings = new ArrayList<SevereWeatherWarning>();
+        for (int ix = 0; ix < warningsData.length(); ix++) {
+            String warningName = warningsData.getJSONObject(ix).getString("event");
+            String start = String.valueOf(warningsData.getJSONObject(ix).getLong("start"));
+            String end = String.valueOf(warningsData.getJSONObject(ix).getLong("end"));
+            String timezone = String.valueOf(weatherWarningsData.getLong("timezone_offset"));
+            String details = warningsData.getJSONObject(ix).getString("description");
+            SevereWeatherWarning severeWarning = new SevereWeatherWarning(warningName, start, end, details, timezone,
+                    warningsData.optString(ix));
+            severeWeatherWarnings.add(severeWarning);
+        }
+        this.severeWarningComboBoxListProperty.setAll(FXCollections.observableArrayList(severeWeatherWarnings));
     }
 
     /**
-     * Gets the severe weather warnings string property
      * 
-     * @return returns the severe weather warnings string property
+     * Extracts the severe weather warning's data from the raw data as a jsonarray
+     * 
+     * @param data the raw data from the source
+     * 
+     * @return the json array of that data or an empty json array if no data found
      */
-    public SimpleStringProperty getsevereWeatherWarningsStringProperty() {
-        return this.severeWeatherWarningsStringProperty;
+
+    private JSONArray extractWarningDataFromJsonObjectAsAJsonArray(JSONObject data) {
+        JSONArray warningsData = data.optJSONArray("alerts");
+        return warningsData;
+    }
+
+    /**
+     * Gets the severe warning combo box list property
+     * 
+     * @return the severeWarningComboBoxListProperty
+     */
+    public ListProperty<SevereWeatherWarning> getSevereWarningComboBoxListProperty() {
+        return this.severeWarningComboBoxListProperty;
+    }
+
+    /**
+     * Gets the severe warning combo box selected item property
+     * 
+     * @return the severeWarningComboBoxSelectedItemProperty
+     */
+    public ObjectProperty<SevereWeatherWarning> getSevereWarningComboBoxSelectedItemProperty() {
+        return this.severeWarningComboBoxSelectedItemProperty;
+    }
+
+    /**
+     * sets the severe warning combo box selected item property
+     * 
+     * @param warning the value to set it to
+     */
+    public void setSevereWarningComboBoxSelectedItemPropertyValue(SevereWeatherWarning warning) {
+        this.severeWarningComboBoxSelectedItemProperty.setValue(warning);
+    }
+
+    /**
+     * Gets the error text string property
+     * 
+     * @return the errorTextStringProperty
+     */
+    public StringProperty getErrorTextStringProperty() {
+        return this.errorTextStringProperty;
     }
 
     /**
@@ -132,48 +213,55 @@ public class SevereWeatherWarningsPageViewModel {
     }
 
     /**
-     * Gets the severe warnings accordion visibility property
+     * Gets the severe warning combo box visiblity property
      * 
-     * @return the severeWarningsAccordionVisibilityProperty
+     * @return the severeWarningComboBoxVisibilityProperty
      */
-    public BooleanProperty getSevereWarningAccordionVisibilityProperty() {
-        return this.severeWarningsAccordionVisibilityProperty;
+    public BooleanProperty getSevereWarningComboBoxVisibilityProperty() {
+        return this.severeWarningComboBoxVisibilityProperty;
     }
 
     /**
-     * Gets the error label visibility property
+     * Gets the error text visibility property
      * 
-     * @return the errorLabelVisibilityProperty
+     * @return the errorTextVisibilityProperty
      */
-    public BooleanProperty getErrorLabelVisibilityProperty() {
-        return this.errorLabelVisibilityProperty;
+    public BooleanProperty getErrorTextVisibilityProperty() {
+        return this.errorTextVisibilityProperty;
     }
 
     /**
-     * Sets the error label visibility property
+     * Sets the error text visibility property
      * 
-     * @param errorLabelVisibilityPropertyValue the value to set it to
+     * @param errorTextVisibilityPropertyValue the value to set it to
      */
-    public void setErrorLabelVisibilityProperty(boolean errorLabelVisibilityPropertyValue) {
-        this.errorLabelVisibilityProperty.setValue(errorLabelVisibilityPropertyValue);
+    public void setErrorTextVisibilityProperty(boolean errorTextVisibilityPropertyValue) {
+        this.errorTextVisibilityProperty.setValue(errorTextVisibilityPropertyValue);
     }
 
     /**
-     * Sets the error error label string property value
+     * Sets the error text string property value
      * 
-     * @param errorLabelStringPropertyValue the value to set it to
+     * @param errorTextStringPropertyValue the value to set it to
      */
-    public void setErrorLabelStringPropertyValue(String errorLabelStringPropertyValue) {
-        this.errorLabelStringProperty.setValue(errorLabelStringPropertyValue);
+    public void setErrorTextStringPropertyValue(String errorTextStringPropertyValue) {
+        this.errorTextStringProperty.setValue(errorTextStringPropertyValue);
+    }
+
+    /**
+     * Sets the severe warning page combo box visibility property value
+     * 
+     * @param severeWarningComboBoxVisibilityPropertyValue the value to set it to
+     */
+    public void setSevereWarningComboBoxVisibilityPropertyValue(Boolean severeWarningComboBoxVisibilityPropertyValue) {
+        this.severeWarningComboBoxVisibilityProperty.setValue(severeWarningComboBoxVisibilityPropertyValue);
     }
 
     /**
      * Sets the no warnings for location visibility property value
-     * 
-     * @param data the data that detemines the value of the property
      */
-    private void setNoWarningsForLocationVisibilityPropertyValue(String data) {
-        if (data == null || !data.contains("alerts")) {
+    private void setNoWarningsForLocationVisibilityPropertyValue() {
+        if (this.severeWarningComboBoxListProperty.isEmpty()) {
             this.noWarningsForLocationVisibilityProperty.setValue(true);
         } else {
             this.noWarningsForLocationVisibilityProperty.setValue(false);
@@ -181,15 +269,13 @@ public class SevereWeatherWarningsPageViewModel {
     }
 
     /**
-     * Sets the severe warning accordion visibility property value
-     * 
-     * @param data the data that detemines the value of the property
+     * Sets the severe warning combo box visibility property value
      */
-    private void setSevereWarningAccordionVisibilityPropertyValue(String data) {
-        if (data == null || !data.contains("alerts")) {
-            this.severeWarningsAccordionVisibilityProperty.setValue(false);
+    private void setSevereWarningComboBoxVisibilityPropertyValue() {
+        if (this.severeWarningComboBoxListProperty.isEmpty()) {
+            this.setSevereWarningComboBoxVisibilityPropertyValue(false);
         } else {
-            this.severeWarningsAccordionVisibilityProperty.setValue(true);
+            this.setSevereWarningComboBoxVisibilityPropertyValue(true);
         }
     }
 }

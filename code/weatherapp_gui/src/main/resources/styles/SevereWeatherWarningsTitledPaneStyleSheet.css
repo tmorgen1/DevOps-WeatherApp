@@ -1,9 +1,0 @@
-.titled-pane > .title { 
-    -fx-background-color: #313A45;
-    -fx-border-color: null;
-    -fx-background-insets: 0;
-}
-.titled-pane > .content {
-    -fx-border-color: null;
-    -fx-background-insets: 0;
-}
