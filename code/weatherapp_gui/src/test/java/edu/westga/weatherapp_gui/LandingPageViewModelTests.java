@@ -546,4 +546,17 @@ public class LandingPageViewModelTests {
         Long utcTime = viewModel.GetHourUtcDateTime(0);
         assertEquals(500, utcTime);
     }
+
+    @Test
+    public void getCurrentLocation() {
+        HourlyWeatherDataRetriever hourlyWeatherDataRetriever = new OpenWeatherHourlyDataRetrieverMock(new MockDataRetriever());
+        CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetrieverMock(new MockDataRetriever());
+        WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
+        LocationSearcher locationSearcher = new LocationSearcherMock();
+        LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
+        WeatherLocation expected = new WeatherLocation("city", "country", "state", 30.40, 30.40);
+        WeatherLocation result = viewModel.GetCurrentLocation();
+
+        assertEquals(expected, result);
+    }
 }

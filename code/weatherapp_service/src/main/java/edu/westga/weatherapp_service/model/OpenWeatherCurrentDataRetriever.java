@@ -11,7 +11,7 @@ import edu.westga.weatherapp_shared.interfaces.DataRetriever;
 import edu.westga.weatherapp_shared.interfaces.CurrentWeatherDataRetriever;
 
 /**
- * This weather data retriever uses the OpenWeather API to obtain weather data.
+ * This weather data retriever uses the OpenWeather API to obtain current weather data.
  * Also extends the UnicastRemoteObject to allow for Remote Method Invocation.
  */
 public class OpenWeatherCurrentDataRetriever extends UnicastRemoteObject implements CurrentWeatherDataRetriever {

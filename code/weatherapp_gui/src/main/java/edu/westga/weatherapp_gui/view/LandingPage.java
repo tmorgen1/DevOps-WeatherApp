@@ -16,6 +16,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Menu;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -30,6 +31,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 
 import java.io.IOException;
@@ -205,6 +207,12 @@ public class LandingPage {
     private Label progressLabel;
 
     /**
+     * The settings menu
+     */
+    @FXML
+    private Menu settingMenu;
+
+    /**
      * The temperature suffix
      */
     private String TemperatureSuffix = " °F";
@@ -376,14 +384,18 @@ public class LandingPage {
     private void hideLoadingIndication() {
         this.progressIndicator.setVisible(false);
         this.progressLabel.setVisible(false);
+        this.locationSearchTextField.setDisable(false);
+        this.settingMenu.setDisable(false);
     }
 
     /**
      * Displays the progress indicator and progress indicator label
      */
     private void showLoadingIndication() {
+        this.locationSearchTextField.setDisable(true);
         this.progressIndicator.setVisible(true);
         this.progressLabel.setVisible(true);
+        this.settingMenu.setDisable(true);
     }
 
     /**
@@ -414,6 +426,21 @@ public class LandingPage {
 
         this.removeFocusFromSearchBar();
         this.tryGetAndUpdateWeatherData();
+    }
+
+    /**
+     * Handles the mouse click event for the weather radar clicked. Moves to the weather radar page
+     * 
+     * @param event - the mouse click event
+     */
+    @FXML
+    void onWeatherRadarClicked(MouseEvent event) {
+        try {
+            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            WindowGenerator.changeScene(currentStage, App.WEATHER_RADAR_PAGE_VIEW, App.WEATHER_RADAR_PAGE_TITLE);
+        } catch (IOException exception) {
+            this.displayNoLocationSnackbar("Please Enter a Location First");
+        }
     }
 
     /**

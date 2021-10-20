@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.web.WebView?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="567.0" prefWidth="931.0" style="-fx-background-color: #2A2E37;" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="edu.westga.weatherapp_gui.view.WeatherRadarPage">
+   <children>
+      <WebView fx:id="weatherRadarWebView" layoutX="16.0" layoutY="51.0" prefHeight="500.0" prefWidth="900.0" />
+      <Label layoutX="378.0" layoutY="14.0" text="Weather Radar" textFill="WHITE">
+         <font>
+            <Font name="Segoe UI Bold" size="25.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="backArrowImageView" fitHeight="32.0" fitWidth="47.0" layoutX="14.0" layoutY="14.0" onMouseClicked="#onBackArrowClicked" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../icons/back-icon.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+   </children>
+</Pane>

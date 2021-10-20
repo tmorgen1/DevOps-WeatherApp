@@ -56,8 +56,6 @@ public interface CurrentWeatherDataRetriever extends Remote {
      */
     public String GetDataByCityAndStateCodeAndCountryCode(String cityName, String stateCode, String countryCode) throws RemoteException;
 
-    //TODO: implement geocoords for get location/ip
-
     /**
      * Sets the MeasurementUnits of the data retriever.
      * Future data retrieval will obtain data in new units specified.

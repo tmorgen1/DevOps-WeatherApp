@@ -39,7 +39,7 @@
             <Font name="Segoe UI" size="24.0" />
          </font>
       </Label>
-      <MenuBar prefHeight="25.0" prefWidth="401.0">
+      <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="401.0">
          <menus>
             <Menu fx:id="settingMenu" disable="true" mnemonicParsing="false" text="Settings">
                <items>
