@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WeatherLocationSearcher.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">weatherapp_service</a> &gt; <a href="index.source.html" class="el_package">edu.westga.weatherapp_service.model</a> &gt; <span class="el_source">WeatherLocationSearcher.java</span></div><h1>WeatherLocationSearcher.java</h1><pre class="source lang-java linenums">package edu.westga.weatherapp_service.model;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.Collection;
+import com.maxmind.geoip2.DatabaseReader;
+import com.maxmind.geoip2.exception.GeoIp2Exception;
+import com.maxmind.geoip2.model.CityResponse;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import edu.westga.weatherapp_shared.interfaces.LocationSearcher;
+import edu.westga.weatherapp_shared.model.WeatherLocation;
+
+/**
+ * Class that handles checking the database of locations that the OpenWeather
+ * api can grab data from. Handles autocomplete logic, essentially, by polling
+ * the entries with given search strings.
+ */
+public class WeatherLocationSearcher extends UnicastRemoteObject implements LocationSearcher {
+
+    /**
+     * Contains the JSONObject entries for all the locations OpenWeather has data
+     * for.
+     */
+    private JSONArray searchLocations;
+
+    private static final double TOTAL_KILOMETERS_IN_MILE = 1.609344;
+
+    private static final double TOTAL_STATUTE_MILES_IN_NAUTICAL_MILE = 1.1515;
+
+    private static final double TOTAL_MINUTES_IN_DEGREE = 60;
+
+    private static final double HALF_CIRCLE_DEGREES = 180;
+    /**
+     * Contains the information regarding locations and their relation to IP
+     * Addresses.
+     */
+    private DatabaseReader geoIpLocationDatabase;
+
+    /**
+     * Instantiates a WeatherLocationSearcher object. Requires the filename/path to
+     * the .json file that contains the json array with json objects of locations.
+     * These json objects of locations should contain the following data for proper
+     * searching:
+     * 
+     * &quot;name&quot; : city name &quot;country&quot; : country name &quot;state&quot; : state name, if
+     * applicable &quot;coord&quot; : { &quot;lon&quot; : double value, the longitude &quot;lat&quot; : double
+     * value, the latitude }
+     * 
+     * Also requires the filename/path to the .mmdb database for geoip locations to
+     * determine location by IP.
+     * 
+     * @param searchLocationFileName    - filename/path to the .json file
+     * @param geoIpLocationDatabaseName - filename/path to the .mmdb file
+     * @throws RemoteException
+     */
+    public WeatherLocationSearcher(String searchLocationFileName, String geoIpLocationDatabaseName)
+<span class="fc" id="L70">            throws RemoteException {</span>
+<span class="fc" id="L71">        this.searchLocations = this.readLocationDataFromJson(searchLocationFileName);</span>
+<span class="fc" id="L72">        this.geoIpLocationDatabase = this.getGeoIpDatabase(geoIpLocationDatabaseName);</span>
+<span class="fc" id="L73">    }</span>
+
+    /**
+     * Checks for the existence of the database file, then proceeds to create a
+     * DatabaseReader and return the DatabaseReader after it's built. Returns null
+     * if the database does not exist, or if there was an issue reading the
+     * database.
+     * 
+     * @param databaseFileName
+     * @return DatabaseReader containing the data from the file
+     */
+    private DatabaseReader getGeoIpDatabase(String databaseFileName) {
+<span class="fc" id="L85">        File database = new File(databaseFileName);</span>
+<span class="fc bfc" id="L86" title="All 2 branches covered.">        if (!database.exists()) {</span>
+<span class="fc" id="L87">            return null;</span>
+        }
+
+<span class="fc" id="L90">        DatabaseReader dbReader = null;</span>
+        try {
+<span class="fc" id="L92">            dbReader = new DatabaseReader.Builder(database).build();</span>
+<span class="nc" id="L93">        } catch (IOException e) {</span>
+<span class="nc" id="L94">            System.err.println(&quot;Error while building the geoip database.&quot;);</span>
+<span class="fc" id="L95">        }</span>
+
+<span class="fc" id="L97">        return dbReader;</span>
+    }
+
+    /**
+     * Checks for the existence of the file, then proceeds to read the data and
+     * return a JSONArray with the data. Returns null if the file does not exist, or
+     * if there was an issue reading the file.
+     * 
+     * @param fileName - filename/path to the .json file
+     * @return JSONArray containing the data from the file
+     */
+    private JSONArray readLocationDataFromJson(String fileName) {
+<span class="fc" id="L109">        JSONArray locationsJson = null;</span>
+
+<span class="fc" id="L111">        File locationsFile = new File(fileName);</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        if (!locationsFile.exists()) {</span>
+<span class="fc" id="L113">            return null;</span>
+        }
+
+<span class="fc" id="L116">        try (InputStream inputStream = new FileInputStream(locationsFile)) {</span>
+<span class="fc" id="L117">            String jsonText = IOUtils.toString(inputStream, StandardCharsets.UTF_8);</span>
+
+<span class="fc" id="L119">            locationsJson = new JSONArray(jsonText);</span>
+<span class="nc" id="L120">        } catch (IOException ioException) {</span>
+<span class="nc" id="L121">            System.err.println(&quot;Error while reading from input stream.&quot;);</span>
+<span class="nc" id="L122">            return locationsJson;</span>
+<span class="fc" id="L123">        }</span>
+
+<span class="fc" id="L125">        return locationsJson;</span>
+    }
+
+    @Override
+    public Collection&lt;WeatherLocation&gt; searchLocations(String searchEntry, int maxEntryResponse, double latitude, double longitude) throws RemoteException {
+<span class="fc bfc" id="L130" title="All 4 branches covered.">        if (maxEntryResponse &lt; 1 || maxEntryResponse &gt; 20) {</span>
+<span class="fc" id="L131">            throw new IllegalArgumentException(&quot;maxEntryResponse should not be less than 1 or greather than 20&quot;);</span>
+        }
+
+<span class="fc" id="L134">        Collection&lt;WeatherLocation&gt; searchResults = new ArrayList&lt;WeatherLocation&gt;();</span>
+
+<span class="fc bfc" id="L136" title="All 2 branches covered.">        for (int i = 0; i &lt; this.searchLocations.length(); i++) {</span>
+<span class="fc" id="L137">            JSONObject currentJsonObject = this.searchLocations.getJSONObject(i);</span>
+<span class="fc bfc" id="L138" title="All 2 branches covered.">            if (currentJsonObject.getString(&quot;name&quot;).toLowerCase().startsWith(searchEntry.toLowerCase())) {</span>
+<span class="fc" id="L139">                WeatherLocation weatherLocationWrapper = this.createWeatherLocationFromJson(currentJsonObject);</span>
+<span class="fc" id="L140">                searchResults.add(weatherLocationWrapper);</span>
+            }
+        }
+
+<span class="fc" id="L144">        List&lt;WeatherLocation&gt; listOfSearchResults = new ArrayList&lt;WeatherLocation&gt;(searchResults);</span>
+<span class="fc" id="L145">        this.sortSearchLocationsByClosestDistance(listOfSearchResults, latitude, longitude);</span>
+<span class="pc bpc" id="L146" title="1 of 2 branches missed.">        if (searchResults.size() &gt; 10) {</span>
+<span class="nc" id="L147">            searchResults = new ArrayList&lt;WeatherLocation&gt;(listOfSearchResults.subList(0, 10));</span>
+        } else {
+<span class="fc" id="L149">            searchResults = listOfSearchResults;</span>
+        }
+
+<span class="fc" id="L152">        return searchResults;</span>
+    }
+
+    /**
+     * Wraps the information present within a weather location json object into a
+     * WeatherLocation object. If the state name is empty, the WeatherLocation is
+     * returned with 'N/A' because no entry within the WeatherLocation should be
+     * empty.
+     * 
+     * @param jsonObject - weather location json object
+     * @return wrapped json object
+     */
+    private WeatherLocation createWeatherLocationFromJson(JSONObject jsonObject) {
+<span class="fc" id="L165">        String city = jsonObject.getString(&quot;name&quot;);</span>
+<span class="fc" id="L166">        String country = jsonObject.getString(&quot;country&quot;);</span>
+<span class="fc" id="L167">        String state = jsonObject.getString(&quot;state&quot;);</span>
+<span class="fc bfc" id="L168" title="All 2 branches covered.">        if (state.isEmpty()) {</span>
+<span class="fc" id="L169">            state = &quot;N/A&quot;;</span>
+        }
+<span class="fc" id="L171">        Double longitude = jsonObject.getJSONObject(&quot;coord&quot;).getDouble(&quot;lon&quot;);</span>
+<span class="fc" id="L172">        Double latitude = jsonObject.getJSONObject(&quot;coord&quot;).getDouble(&quot;lat&quot;);</span>
+
+<span class="fc" id="L174">        return new WeatherLocation(city, country, state, longitude, latitude);</span>
+    }
+
+    @Override
+    public WeatherLocation getLocationByIP(String ipAddress) throws RemoteException {
+<span class="fc" id="L179">        InetAddress iNetAddress = null;</span>
+        try {
+<span class="fc" id="L181">            iNetAddress = InetAddress.getByName(ipAddress);</span>
+<span class="nc" id="L182">        } catch (UnknownHostException e) {</span>
+<span class="nc" id="L183">            System.err.println(&quot;Error while creating an INetAddress&quot;);</span>
+<span class="nc" id="L184">            return null;</span>
+<span class="fc" id="L185">        }</span>
+
+<span class="fc" id="L187">        CityResponse response = null;</span>
+        try {
+<span class="fc" id="L189">            response = this.geoIpLocationDatabase.city(iNetAddress);</span>
+<span class="nc" id="L190">        } catch (IOException | GeoIp2Exception e) {</span>
+<span class="nc" id="L191">            System.err.println(&quot;Error while searching the database reader.&quot;);</span>
+<span class="nc" id="L192">            return null;</span>
+<span class="fc" id="L193">        }</span>
+
+<span class="fc" id="L195">        WeatherLocation weatherLocation = new WeatherLocation(response.getCity().getName(),</span>
+<span class="fc" id="L196">                response.getCountry().getName(), response.getLeastSpecificSubdivision().getName(),</span>
+<span class="fc" id="L197">                response.getLocation().getLongitude(), response.getLocation().getLatitude());</span>
+
+<span class="fc" id="L199">        return weatherLocation;</span>
+    }
+
+    /**
+     * Calculates the distance between the two sets of coordiantes
+     * 
+     * @param latitude1 - the first latitude
+     * @param longitude1 - the first longitude
+     * @param latitude2 - the other latitude
+     * @param longitude2 - the other longitude
+     * @return the distance between the two sets coordinates
+     */
+    private double calculateDistanceBetweenCoordinates(double latitude1, double longitude1, double latitude2, double longitude2) {
+<span class="fc" id="L212">        double radiansLatitude1 = Math.PI * latitude1 / HALF_CIRCLE_DEGREES;</span>
+<span class="fc" id="L213">        double radiansLatitude2 = Math.PI * latitude2 / HALF_CIRCLE_DEGREES;</span>
+<span class="fc" id="L214">        double theta = longitude1 - longitude2;</span>
+<span class="fc" id="L215">        double radiansTheta = Math.PI * theta / HALF_CIRCLE_DEGREES;</span>
+<span class="fc" id="L216">        double distance = (Math.sin(radiansLatitude1) * Math.sin(radiansLatitude2)) + (Math.cos(radiansLatitude1) * Math.cos(radiansLatitude2) * Math.cos(radiansTheta));</span>
+<span class="fc" id="L217">        distance = Math.acos(distance);</span>
+<span class="fc" id="L218">        distance = distance * HALF_CIRCLE_DEGREES / Math.PI;</span>
+<span class="fc" id="L219">        distance = distance * TOTAL_MINUTES_IN_DEGREE * TOTAL_STATUTE_MILES_IN_NAUTICAL_MILE;</span>
+<span class="fc" id="L220">        distance = distance * TOTAL_KILOMETERS_IN_MILE;</span>
+
+<span class="fc" id="L222">        return distance;</span>
+    }
+
+    /**
+     * Sorts the list of weather locations based on how close they are to the given coordinates
+     * 
+     * @param locations - the list of weather locations
+     * @param latitude - the latitude to sort by
+     * @param longitude - the longitude to sort by
+     */
+    private void sortSearchLocationsByClosestDistance(List&lt;WeatherLocation&gt; locations, double latitude, double longitude) {
+<span class="fc" id="L233">        Collections.sort(locations, new Comparator&lt;WeatherLocation&gt;(){</span>
+            @Override
+            public int compare(WeatherLocation weatherLocation, WeatherLocation otherWeatherLocation) {
+<span class="fc" id="L236">                return (int) (calculateDistanceBetweenCoordinates(latitude, longitude, weatherLocation.getLatitude(), weatherLocation.getLongitude())</span>
+<span class="fc" id="L237">                    - calculateDistanceBetweenCoordinates(latitude, longitude, otherWeatherLocation.getLatitude(), otherWeatherLocation.getLongitude()));</span>
+            }
+        });
+<span class="fc" id="L240">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

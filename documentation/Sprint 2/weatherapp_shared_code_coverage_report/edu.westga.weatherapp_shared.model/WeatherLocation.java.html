@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WeatherLocation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">weatherapp_shared</a> &gt; <a href="index.source.html" class="el_package">edu.westga.weatherapp_shared.model</a> &gt; <span class="el_source">WeatherLocation.java</span></div><h1>WeatherLocation.java</h1><pre class="source lang-java linenums">package edu.westga.weatherapp_shared.model;
+
+import java.io.Serializable;
+
+/**
+ * This class wraps information regarding a weather location. Each data member
+ * should be allowed to be null, because a user may only provide so much
+ * information; however, no String can be empty.
+ */
+public class WeatherLocation implements Serializable {
+
+    /**
+     * The name of the city
+     */
+    private String city;
+
+    /**
+     * The country code as of OpenWeather
+     */
+    private String country;
+
+    /**
+     * The state code as of OpenWeather
+     */
+    private String state;
+
+    /**
+     * The longitude of the gps location (x)
+     */
+    private Double longitude;
+
+    /**
+     * The latitude of the gps location (y)
+     */
+    private Double latitude;
+
+    /**
+     * Instantiates a weather location object. None of the strings should be empty,
+     * however any object can be null.
+     * 
+     * @param city      - city name
+     * @param country   - country code, as of OpenWeather
+     * @param state     - state code, as of OpenWeather
+     * @param longitude - gps longitude, (x)
+     * @param latitude  - gps latitude, (y)
+     */
+<span class="fc" id="L47">    public WeatherLocation(String city, String country, String state, Double longitude, Double latitude) {</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">        if (city != null) {</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">            if (city.isEmpty()) {</span>
+<span class="fc" id="L50">                throw new IllegalArgumentException(&quot;city should not be empty&quot;);</span>
+            }
+        }
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        if (country != null) {</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">            if (country.isEmpty()) {</span>
+<span class="fc" id="L55">                throw new IllegalArgumentException(&quot;country should not be empty&quot;);</span>
+            }
+        }
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        if (state != null) {</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">            if (state.isEmpty()) {</span>
+<span class="fc" id="L60">                throw new IllegalArgumentException(&quot;state should not be empty&quot;);</span>
+            }
+        }
+
+<span class="fc" id="L64">        this.city = city;</span>
+<span class="fc" id="L65">        this.country = country;</span>
+<span class="fc" id="L66">        this.state = state;</span>
+<span class="fc" id="L67">        this.longitude = longitude;</span>
+<span class="fc" id="L68">        this.latitude = latitude;</span>
+<span class="fc" id="L69">    }</span>
+
+    /**
+     * Gets the city name.
+     * 
+     * @return the city name
+     */
+    public String getCity() {
+<span class="fc" id="L77">        return this.city;</span>
+    }
+
+    /**
+     * Gets the country code
+     * 
+     * @return the country code
+     */
+    public String getCountry() {
+<span class="fc" id="L86">        return this.country;</span>
+    }
+
+    /**
+     * Gets the state code
+     * 
+     * @return the state code
+     */
+    public String getState() {
+<span class="fc" id="L95">        return this.state;</span>
+    }
+
+    /**
+     * Gets the latitude
+     * 
+     * @return the latitude
+     */
+    public Double getLatitude() {
+<span class="fc" id="L104">        return this.latitude;</span>
+    }
+
+    /**
+     * Gets the longitude
+     * 
+     * @return the longitude
+     */
+    public Double getLongitude() {
+<span class="fc" id="L113">        return this.longitude;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="fc bfc" id="L118" title="All 2 branches covered.">        if (this.state.equals(&quot;N/A&quot;)) {</span>
+<span class="fc" id="L119">            return this.city + &quot; &quot; + this.country + &quot; &quot; + this.longitude + &quot; &quot; + this.latitude;</span>
+        }
+
+<span class="fc" id="L122">        return this.city + &quot; &quot; + this.country + &quot; &quot; + this.state + &quot; &quot; + this.longitude + &quot; &quot; + this.latitude;</span>
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+<span class="fc bfc" id="L127" title="All 2 branches covered.">        if (obj == null) {</span>
+<span class="fc" id="L128">            return false;</span>
+        }
+
+<span class="fc" id="L131">        WeatherLocation location = (WeatherLocation) obj;</span>
+<span class="fc bfc" id="L132" title="All 4 branches covered.">        if (location.city.equals(this.city) &amp;&amp; location.country.equals(this.country)</span>
+<span class="pc bpc" id="L133" title="2 of 4 branches missed.">                &amp;&amp; location.state.equals(this.state) &amp;&amp; location.latitude.equals(this.latitude)</span>
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">                &amp;&amp; location.longitude.equals(this.longitude)) {</span>
+<span class="fc" id="L135">            return true;</span>
+        }
+
+<span class="fc" id="L138">        return false;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

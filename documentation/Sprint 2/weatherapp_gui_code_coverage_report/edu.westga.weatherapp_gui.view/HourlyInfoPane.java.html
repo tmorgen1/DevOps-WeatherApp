@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HourlyInfoPane.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">weatherapp_gui</a> &gt; <a href="index.source.html" class="el_package">edu.westga.weatherapp_gui.view</a> &gt; <span class="el_source">HourlyInfoPane.java</span></div><h1>HourlyInfoPane.java</h1><pre class="source lang-java linenums">package edu.westga.weatherapp_gui.view;
+
+import java.io.IOException;
+
+import javafx.scene.layout.Pane;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+/**
+ * The custom hourly forecast pane component
+ */
+public class HourlyInfoPane extends Pane {
+
+    /**
+     * The weather icon image view
+     */
+    @FXML
+    private ImageView iconImageView;
+
+    /**
+     * The time label
+     */
+    @FXML
+    private Label timeLabel;
+
+    /**
+     * The temperature label
+     */
+    @FXML
+    private Label temperatureLabel;
+
+    /**
+     * Creates an instance of the hourly forecast pane and loads it
+     * 
+     * @param temperature - the temperature for the hour
+     * @param time - the time of the hour
+     * @param weatherIconUrl - the weather icon for the hour
+     * @param loader - the fxml loader
+     */
+<span class="nc" id="L43">    public HourlyInfoPane(String temperature, String time, String weatherIconUrl, FXMLLoader loader) {</span>
+<span class="nc" id="L44">        loader.setRoot(this);</span>
+<span class="nc" id="L45">        loader.setController(this);</span>
+
+        try {
+<span class="nc" id="L48">            loader.load();</span>
+<span class="nc" id="L49">            this.SetTemperatureLabel(temperature);</span>
+<span class="nc" id="L50">            this.SetTimeLabel(time);</span>
+<span class="nc" id="L51">            this.SetIconImageView(weatherIconUrl);</span>
+<span class="nc" id="L52">        } catch (IOException exception) {</span>
+<span class="nc" id="L53">            System.err.println(&quot;IO Exception: Error loading hourly forecast pane component&quot;);</span>
+<span class="nc" id="L54">        }</span>
+<span class="nc" id="L55">    }</span>
+
+    /**
+     * Sets the weather icon image view to the specified url location
+     * 
+     * @param url - the new image url
+     */
+    public void SetIconImageView(String url) {
+<span class="nc" id="L63">        Image image = new Image(url);</span>
+<span class="nc" id="L64">        this.iconImageView.setImage(image);</span>
+<span class="nc" id="L65">    }</span>
+
+    /**
+     * Sets the temperature label to the specified temperature
+     * 
+     * @param temperature - the new temperature
+     */
+    public void SetTemperatureLabel(String temperature) {
+<span class="nc" id="L73">        this.temperatureLabel.setText(temperature);</span>
+<span class="nc" id="L74">    }</span>
+
+    /**
+     * Sets the time label to the specified time
+     * 
+     * @param time - the new time
+     */
+    public void SetTimeLabel(String time) {
+<span class="nc" id="L82">        this.timeLabel.setText(time);</span>
+<span class="nc" id="L83">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
