@@ -64,11 +64,6 @@ public class SevereWeatherWarning {
     private String details;
 
     /**
-     * the raw data of the severe weather warning that this represents
-     */
-    private String rawData;
-
-    /**
      * Creates an instance of the Severe Weather Warning
      * 
      * @param warningName  the warning's name
@@ -76,25 +71,24 @@ public class SevereWeatherWarning {
      * @param endingDate   the end date of the warning's period of effect
      * @param details      a description of the warning
      * @param timezone     the timezone of the warning
-     * @param rawData     the raw data of the warning
+     * @param rawData      the raw data of the warning
      */
     public SevereWeatherWarning(String warningName, String startingDate, String endingDate, String details,
-            String timezone, String rawData) {
-        
-        this.setFieldValues(warningName, startingDate, endingDate, details, timezone, rawData);
+            String timezone) {
+
+        this.setFieldValues(warningName, startingDate, endingDate, details, timezone);
     }
 
     /**
      * Sets this severe weather warning's field values
      */
     private void setFieldValues(String warningName, String startingDate, String endingDate, String details,
-            String timezone, String rawData) {
+            String timezone) {
         this.setWarningName(warningName);
         this.setTimezone(timezone);
         this.setStartingDate(startingDate);
         this.setEndingDate(endingDate);
         this.setDetails(details);
-        this.rawData = rawData;
     }
 
     /**
@@ -125,21 +119,21 @@ public class SevereWeatherWarning {
     }
 
     /**
+     * Gets the timezone of the severe weather warning.
+     * 
+     * @return the warning's timezone
+     */
+    public String getTimeZone() {
+        return this.timezone;
+    }
+
+    /**
      * Gets the details of the severe weather warning.
      * 
      * @return the warning's details
      */
     public String getDetails() {
         return this.details;
-    }
-
-    /**
-     * Gets the raw data of the severe weather warning.
-     * 
-     * @return the warning's raw data details
-     */
-    public String getRawData() {
-        return this.rawData;
     }
 
     /**
@@ -161,10 +155,11 @@ public class SevereWeatherWarning {
      */
     private void setStartingDate(String startingDate) {
         if (startingDate == null || startingDate.isBlank()) {
-            startingDate = SevereWeatherWarning.UNDETERMINED_START;
+            this.startingDate = SevereWeatherWarning.UNDETERMINED_START;
+        } else {
+            this.startingDate = DateTimeConverter.ConvertUtcToShortDate(Long.parseLong(startingDate),
+                    Long.parseLong(this.timezone));
         }
-        this.startingDate = DateTimeConverter.ConvertUtcToShortDate(Long.parseLong(startingDate),
-                Long.parseLong(this.timezone));
     }
 
     /**
@@ -174,10 +169,11 @@ public class SevereWeatherWarning {
      */
     private void setEndingDate(String endingDate) {
         if (endingDate == null || endingDate.isBlank()) {
-            endingDate = SevereWeatherWarning.UNDETERMINED_END;
+            this.endingDate = SevereWeatherWarning.UNDETERMINED_END;
+        } else {
+            this.endingDate = DateTimeConverter.ConvertUtcToShortDate(Long.parseLong(endingDate),
+                    Long.parseLong(this.timezone));
         }
-        this.endingDate = DateTimeConverter.ConvertUtcToShortDate(Long.parseLong(endingDate),
-                Long.parseLong(this.timezone));
     }
 
     /**

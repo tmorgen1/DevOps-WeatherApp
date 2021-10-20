@@ -14,10 +14,8 @@ import edu.westga.weatherapp_gui.model.SevereWeatherWarning;
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 
@@ -28,11 +26,6 @@ import javafx.collections.FXCollections;
  * @version 1.0
  */
 public class SevereWeatherWarningsPageViewModel {
-
-    /**
-     * the severe warnings combo box selected item property for use in bindings
-     */
-    private ObjectProperty<SevereWeatherWarning> severeWarningComboBoxSelectedItemProperty;
 
     /**
      * the error text string property for use in bindings
@@ -73,7 +66,6 @@ public class SevereWeatherWarningsPageViewModel {
     public SevereWeatherWarningsPageViewModel(SevereWeatherWarningsRetriever dataRetriever) {
         this.severeWarningComboBoxListProperty = new SimpleListProperty<SevereWeatherWarning>(
                 FXCollections.observableArrayList());
-        this.severeWarningComboBoxSelectedItemProperty = new SimpleObjectProperty<SevereWeatherWarning>();
         this.errorTextStringProperty = new SimpleStringProperty();
         this.errorTextVisibilityProperty = new SimpleBooleanProperty();
         this.noWarningsForLocationVisibilityProperty = new SimpleBooleanProperty();
@@ -146,8 +138,7 @@ public class SevereWeatherWarningsPageViewModel {
             String end = String.valueOf(warningsData.getJSONObject(ix).getLong("end"));
             String timezone = String.valueOf(weatherWarningsData.getLong("timezone_offset"));
             String details = warningsData.getJSONObject(ix).getString("description");
-            SevereWeatherWarning severeWarning = new SevereWeatherWarning(warningName, start, end, details, timezone,
-                    warningsData.optString(ix));
+            SevereWeatherWarning severeWarning = new SevereWeatherWarning(warningName, start, end, details, timezone);
             severeWeatherWarnings.add(severeWarning);
         }
         this.severeWarningComboBoxListProperty.setAll(FXCollections.observableArrayList(severeWeatherWarnings));
@@ -175,25 +166,7 @@ public class SevereWeatherWarningsPageViewModel {
     public ListProperty<SevereWeatherWarning> getSevereWarningComboBoxListProperty() {
         return this.severeWarningComboBoxListProperty;
     }
-
-    /**
-     * Gets the severe warning combo box selected item property
-     * 
-     * @return the severeWarningComboBoxSelectedItemProperty
-     */
-    public ObjectProperty<SevereWeatherWarning> getSevereWarningComboBoxSelectedItemProperty() {
-        return this.severeWarningComboBoxSelectedItemProperty;
-    }
-
-    /**
-     * sets the severe warning combo box selected item property
-     * 
-     * @param warning the value to set it to
-     */
-    public void setSevereWarningComboBoxSelectedItemPropertyValue(SevereWeatherWarning warning) {
-        this.severeWarningComboBoxSelectedItemProperty.setValue(warning);
-    }
-
+    
     /**
      * Gets the error text string property
      * 

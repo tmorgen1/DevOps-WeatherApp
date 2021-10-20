@@ -49,8 +49,13 @@ public class SevereWeatherWarningPageViewModel {
         this.descriptionTextStringProperty = new SimpleStringProperty();
         this.errorTextStringProperty = new SimpleStringProperty();
         this.errorTextVisibilityProperty = new SimpleBooleanProperty();
-        this.setWarningNameTextStringPropertyValue();
-        this.setDescriptionTextStringPropertyValue();
+        try {
+            this.setWarningNameTextStringPropertyValue();
+            this.setDescriptionTextStringPropertyValue();
+        } catch (Exception ex) {
+            this.setErrorTextStringPropertyValue(ex.getMessage());
+            this.setErrorTextVisibilityProperty(true);
+        }
     }
 
     /**
