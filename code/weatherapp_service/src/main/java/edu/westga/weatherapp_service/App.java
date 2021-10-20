@@ -20,6 +20,8 @@ import edu.westga.weatherapp_shared.interfaces.WeatherIconRetriever;
 
 /**
  * Main class for the service provider for Group 6 DevOps Weather App.
+ * 
+ * @author Thomas Morgenstern
  */
 public class App {
     /**
@@ -45,8 +47,8 @@ public class App {
     /**
      * Entry point of the program.
      * 
-     * @param args
-     * @throws RemoteException
+     * @param args - unused (arguments for the program)
+     * @throws RemoteException - exception in the event of an RMI error
      */
     public static void main(String[] args) throws RemoteException {
         LocateRegistry.createRegistry(App.RMI_PORT);

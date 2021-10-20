@@ -10,6 +10,8 @@ import edu.westga.weatherapp_shared.model.WeatherLocation;
 
 /**
  * This class handles saving/loading favorited weather location data.
+ * 
+ * @author Thomas Morgenstern
  */
 public class WeatherLocationSerializer {
 
@@ -22,7 +24,7 @@ public class WeatherLocationSerializer {
      * Saves a collection of weather locations to file through object serialization.
      * 
      * @param locations - the collection of locations
-     * @throws IOException
+     * @throws IOException - exception in the event of a data stream error
      */
     public void saveFavoritedLocationsToFile(Collection<WeatherLocation> locations) throws IOException {
         try (FileOutputStream fileOutStream = new FileOutputStream(WeatherLocationSerializer.FAVORITED_WEATHER_LOCATIONS_FILE_NAME)) {
@@ -36,8 +38,8 @@ public class WeatherLocationSerializer {
      * Loads a collection of weather locations from file through object deserialization.
      * 
      * @return the collection of weather locations, null if there was an issue.
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * @throws IOException - exception in the event of a data stream error
+     * @throws ClassNotFoundException - exception in the event of a cast error
      */
     @SuppressWarnings("unchecked")
     public Collection<WeatherLocation> loadFavoritedLocationsFromFile() throws IOException, ClassNotFoundException {

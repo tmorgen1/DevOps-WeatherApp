@@ -8,12 +8,12 @@ import edu.westga.weatherapp_shared.interfaces.DataRetriever;
 public class MockDataRetriever implements DataRetriever {
 
     @Override
-    public String GetData(URL apiCall) {
+    public String getData(URL apiCall) {
         return "{\"someKey\":\"someValue\"}";
     }
 
     @Override
-    public URL GetServiceAPICallURL(String apiCallCommand, String apiCallBase, String apiKey, MeasurementUnits units) {
+    public URL getServiceAPICallURL(String apiCallCommand, String apiCallBase, String apiKey, MeasurementUnits units) {
         URL url = null;
         try {
             url = new URL("http://localhost");

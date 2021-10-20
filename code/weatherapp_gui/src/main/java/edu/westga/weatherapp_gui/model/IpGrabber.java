@@ -7,6 +7,8 @@ import java.net.URL;
 
 /**
  * Defines the IpGrabber class that handles getting the users ip address
+ * 
+ * @author Michael Pavich
  */
 public class IpGrabber {
 
@@ -15,7 +17,7 @@ public class IpGrabber {
      * 
      * @return the ip address
      */
-    public static String GetCurrentIpAddress() {
+    public static String getCurrentIpAddress() {
         
         try {
             URL whatismyip = new URL("http://checkip.amazonaws.com");

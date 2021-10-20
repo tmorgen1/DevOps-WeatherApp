@@ -12,7 +12,7 @@ public class APIDataRetrieverTests {
     @Test
     public void getDataShouldThrowExceptionOnNullUrl() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new APIDataRetriever().GetData(null);
+            new APIDataRetriever().getData(null);
         });
     }
 
@@ -22,40 +22,40 @@ public class APIDataRetrieverTests {
 
         URL url = getClass().getResource("");
 
-        assertNotNull(data.GetData(url));
+        assertNotNull(data.getData(url));
     }
 
     @Test
     public void getServiceAPICallURLShouldThrowOnAPICallCommandNull() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new APIDataRetriever().GetServiceAPICallURL(null, "apiCallBase", "apiKey", MeasurementUnits.Imperial);
+            new APIDataRetriever().getServiceAPICallURL(null, "apiCallBase", "apiKey", MeasurementUnits.Imperial);
         });
     }
 
     @Test
     public void getServiceAPICallURLShouldThrowOnAPICallBaseNull() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new APIDataRetriever().GetServiceAPICallURL("apiCallCommand", null, "apiKey", MeasurementUnits.Imperial);
+            new APIDataRetriever().getServiceAPICallURL("apiCallCommand", null, "apiKey", MeasurementUnits.Imperial);
         });
     }
 
     @Test
     public void getServiceAPICallURLShouldThrowOnAPIKeyCommandNull() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new APIDataRetriever().GetServiceAPICallURL("apiCallCommand", "apiCallBase", null, MeasurementUnits.Imperial);
+            new APIDataRetriever().getServiceAPICallURL("apiCallCommand", "apiCallBase", null, MeasurementUnits.Imperial);
         });
     }
 
     @Test
     public void getServiceAPICallURLShouldThrowOnUnitsNull() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new APIDataRetriever().GetServiceAPICallURL("apiCallCommand", "apiCallBase", "apiKey", null);
+            new APIDataRetriever().getServiceAPICallURL("apiCallCommand", "apiCallBase", "apiKey", null);
         });
     }
 
     @Test
     public void getServiceAPICallURLSuccessfully() {
-        assertNotNull(new APIDataRetriever().GetServiceAPICallURL("", "http://localhost:80/blah=blah", "", MeasurementUnits.Imperial));
+        assertNotNull(new APIDataRetriever().getServiceAPICallURL("", "http://localhost:80/blah=blah", "", MeasurementUnits.Imperial));
     }
 
 }

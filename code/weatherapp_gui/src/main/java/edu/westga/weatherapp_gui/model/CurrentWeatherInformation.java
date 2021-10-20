@@ -11,18 +11,20 @@ import edu.westga.weatherapp_shared.model.WeatherLocation;
 
 /**
  * Class to hold weather information for use across multiple pages.
+ * 
+ * @author Michael Pavich
  */
 public class CurrentWeatherInformation {
 
     /**
      * The most recently searched city
      */
-    private static WeatherLocation WeatherLocation = null;
+    private static WeatherLocation weatherLocation = null;
 
     /**
      * The most recently fetched weather data
      */
-    private static JSONObject WeatherData = null;
+    private static JSONObject weatherData = null;
 
     /**
      * The current measurement units
@@ -104,7 +106,7 @@ public class CurrentWeatherInformation {
      * @return the weather location
      */
     public static WeatherLocation getWeatherLocation() {
-        return CurrentWeatherInformation.WeatherLocation;
+        return CurrentWeatherInformation.weatherLocation;
     }
 
     /**
@@ -117,7 +119,7 @@ public class CurrentWeatherInformation {
             throw new IllegalArgumentException("City cannot be null");
         }
 
-        CurrentWeatherInformation.WeatherLocation = weatherLocation;
+        CurrentWeatherInformation.weatherLocation = weatherLocation;
     }
 
     /**
@@ -126,7 +128,7 @@ public class CurrentWeatherInformation {
      * @return the weather data
      */
     public static JSONObject getWeatherData() {
-        return CurrentWeatherInformation.WeatherData;
+        return CurrentWeatherInformation.weatherData;
     }
 
     /**
@@ -135,7 +137,7 @@ public class CurrentWeatherInformation {
      * @param data - the new weather data
      */
     public static void setWeatherData(JSONObject data) {
-        CurrentWeatherInformation.WeatherData = data;
+        CurrentWeatherInformation.weatherData = data;
     }
 
     /**

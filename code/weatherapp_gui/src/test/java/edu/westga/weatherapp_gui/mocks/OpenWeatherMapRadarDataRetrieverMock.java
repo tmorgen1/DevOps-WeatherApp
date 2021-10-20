@@ -7,7 +7,7 @@ import edu.westga.weatherapp_shared.interfaces.MapRadarDataRetriever;
 public class OpenWeatherMapRadarDataRetrieverMock implements MapRadarDataRetriever {
 
     @Override
-    public String GetMapRadarHTML() throws RemoteException {
+    public String getMapRadarHTML() throws RemoteException {
         return "test";
     }
     

@@ -12,6 +12,8 @@ import edu.westga.weatherapp_shared.model.WeatherLocation;
 
 /**
  * Defines the weather radar page view model
+ * 
+ * @author Michael Pavich
  */
 public class WeatherRadarPageViewModel {
 
@@ -47,14 +49,16 @@ public class WeatherRadarPageViewModel {
 
     /**
      * Fetches the weather radar map html and loads it in the weather radar web view
+     * 
+     * @return the html for the weather radar map
      */
-    public String LoadWeatherRadarMap() {
+    public String loadWeatherRadarMap() {
         try {
-            WeatherLocation currentLocation = this.GetCurrentLocation();
+            WeatherLocation currentLocation = this.getCurrentLocation();
             double latitude = currentLocation.getLatitude();
             double longitude = currentLocation.getLongitude();
             String latLonString = latitude + ", " + longitude;
-            return this.mapRadarDataRetriever.GetMapRadarHTML().replace("{lat}, {lon}", latLonString);
+            return this.mapRadarDataRetriever.getMapRadarHTML().replace("{lat}, {lon}", latLonString);
         } catch (RemoteException e) {
             return null;
         }
@@ -65,9 +69,9 @@ public class WeatherRadarPageViewModel {
      * 
      * @return a weather location of the user's current location
      */
-    private WeatherLocation GetCurrentLocation() {
+    private WeatherLocation getCurrentLocation() {
         try {
-            String ip = IpGrabber.GetCurrentIpAddress();
+            String ip = IpGrabber.getCurrentIpAddress();
             WeatherLocation currentLocation = this.locationSearcher.getLocationByIP(ip);
             
             return currentLocation;

@@ -9,6 +9,8 @@ import javafx.stage.Stage;
 
 /**
  * Utility class to manage switching scenes.
+ * 
+ * @author Michael Pavich
  */
 public class WindowGenerator {
 

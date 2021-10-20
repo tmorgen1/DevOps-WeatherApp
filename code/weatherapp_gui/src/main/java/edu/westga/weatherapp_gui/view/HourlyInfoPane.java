@@ -11,6 +11,8 @@ import javafx.scene.image.ImageView;
 
 /**
  * The custom hourly forecast pane component
+ * 
+ * @author Michael Pavich
  */
 public class HourlyInfoPane extends Pane {
 
@@ -46,9 +48,9 @@ public class HourlyInfoPane extends Pane {
 
         try {
             loader.load();
-            this.SetTemperatureLabel(temperature);
-            this.SetTimeLabel(time);
-            this.SetIconImageView(weatherIconUrl);
+            this.setTemperatureLabel(temperature);
+            this.setTimeLabel(time);
+            this.setIconImageView(weatherIconUrl);
         } catch (IOException exception) {
             System.err.println("IO Exception: Error loading hourly forecast pane component");
         }
@@ -59,7 +61,7 @@ public class HourlyInfoPane extends Pane {
      * 
      * @param url - the new image url
      */
-    public void SetIconImageView(String url) {
+    public void setIconImageView(String url) {
         Image image = new Image(url);
         this.iconImageView.setImage(image);
     }
@@ -69,7 +71,7 @@ public class HourlyInfoPane extends Pane {
      * 
      * @param temperature - the new temperature
      */
-    public void SetTemperatureLabel(String temperature) {
+    public void setTemperatureLabel(String temperature) {
         this.temperatureLabel.setText(temperature);
     }
 
@@ -78,7 +80,7 @@ public class HourlyInfoPane extends Pane {
      * 
      * @param time - the new time
      */
-    public void SetTimeLabel(String time) {
+    public void setTimeLabel(String time) {
         this.timeLabel.setText(time);
     }
 }

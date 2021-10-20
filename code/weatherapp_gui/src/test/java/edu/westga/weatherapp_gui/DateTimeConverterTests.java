@@ -16,7 +16,7 @@ public class DateTimeConverterTests {
     public void convertUtcToDayOfWeek() {
         Long utcDate = 1631552400L;
         Long timezone = -14400L;
-        String result = DateTimeConverter.ConvertUtcToDayOfWeek(utcDate, timezone);
+        String result = DateTimeConverter.convertUtcToDayOfWeek(utcDate, timezone);
         assertEquals("Monday", result);
     }
 
@@ -24,21 +24,21 @@ public class DateTimeConverterTests {
     public void convertUtcToShortDate() {
         Long utcDate = 1631552400L;
         Long timezone = -14400L;
-        String result = DateTimeConverter.ConvertUtcToShortDate(utcDate, timezone);
+        String result = DateTimeConverter.convertUtcToShortDate(utcDate, timezone);
         assertEquals("September 13", result);
     }
 
     @Test
     public void formatDateThrowsExceptionWithNullFormat() {
         assertThrows(IllegalArgumentException.class, () -> {
-            DateTimeConverter.FormatDate(new Date(), null);
+            DateTimeConverter.formatDate(new Date(), null);
         });
     }
 
     @Test
     public void formatDateThrowsExceptionWithEmptyFormat() {
         assertThrows(IllegalArgumentException.class, () -> {
-            DateTimeConverter.FormatDate(new Date(), "");
+            DateTimeConverter.formatDate(new Date(), "");
         });
     }
 
@@ -46,7 +46,7 @@ public class DateTimeConverterTests {
     public void formatDateValid() {
         Date testDate = new Date(1631552400L);
         String format = "EEEE";
-        String formattedDate = DateTimeConverter.FormatDate(testDate, format);
+        String formattedDate = DateTimeConverter.formatDate(testDate, format);
         assertEquals("Monday", formattedDate);
     }
 
@@ -54,7 +54,7 @@ public class DateTimeConverterTests {
     public void convertUtcToDateValid() {
         Long utcDate = 1631552400L;
         Long timezone = -14400L;
-        Date result = DateTimeConverter.ConvertUtcToDate(utcDate, timezone);
+        Date result = DateTimeConverter.convertUtcToDate(utcDate, timezone);
         Date expected = Date.from(Instant.ofEpochMilli(1631538000000L));
         assertEquals(expected, result);
     }
@@ -63,7 +63,7 @@ public class DateTimeConverterTests {
     public void convertUtcToHourValid() {
         Long utcDate = 1631552400L;
         Long timezone = -14400L;
-        String result = DateTimeConverter.ConvertUtcToHour(utcDate, timezone);
+        String result = DateTimeConverter.convertUtcToHour(utcDate, timezone);
         String expected = "1:00 PM";
         assertEquals(expected, result);
     }

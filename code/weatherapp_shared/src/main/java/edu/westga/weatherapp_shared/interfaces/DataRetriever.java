@@ -2,6 +2,11 @@ package edu.westga.weatherapp_shared.interfaces;
 import java.net.URL;
 import edu.westga.weatherapp_shared.enums.MeasurementUnits;
 
+/**
+ * Handles the data streams for grabbing data from service api calls.
+ * 
+ * @author Thomas Morgenstern
+ */
 public interface DataRetriever {
 
     /**
@@ -12,7 +17,7 @@ public interface DataRetriever {
      * @param apiCall - URL for the api call
      * @return a String containing the api call data
      */
-    public String GetData(URL apiCall);
+    String getData(URL apiCall);
 
     /**
      * Concatinates the api call command and unit of meaurement into a URL. If there
@@ -24,6 +29,6 @@ public interface DataRetriever {
      * @param units - the unit of measurement for the call
      * @return URL for the api call
      */
-    public URL GetServiceAPICallURL(String apiCallCommand, String apiCallBase, String apiKey, MeasurementUnits units);
+    URL getServiceAPICallURL(String apiCallCommand, String apiCallBase, String apiKey, MeasurementUnits units);
 
 }

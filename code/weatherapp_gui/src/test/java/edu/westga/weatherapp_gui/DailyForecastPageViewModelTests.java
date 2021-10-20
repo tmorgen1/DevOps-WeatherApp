@@ -45,7 +45,7 @@ public class DailyForecastPageViewModelTests {
         WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
         DailyForecastPageViewModel viewModel = new DailyForecastPageViewModel(dailyWeatherRetriever, iconRetriever);
         assertThrows(IllegalArgumentException.class, () -> {
-            viewModel.GetWeatherDataByWeatherLocation(null, 1);
+            viewModel.getWeatherDataByWeatherLocation(null, 1);
         });
     }
 
@@ -54,7 +54,7 @@ public class DailyForecastPageViewModelTests {
         DailyWeatherDataRetriever dailyWeatherRetriever = new OpenWeatherDailyDataRetrieverMock(new MockDataRetriever());
         WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
         DailyForecastPageViewModel viewModel = new DailyForecastPageViewModel(dailyWeatherRetriever, iconRetriever);
-        JSONObject result = viewModel.GetWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 30.40), 1);
+        JSONObject result = viewModel.getWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 30.40), 1);
         assertEquals(5, result.getJSONObject("wind").getDouble("speed"));
     }
 
@@ -63,7 +63,7 @@ public class DailyForecastPageViewModelTests {
         DailyWeatherDataRetriever dailyWeatherRetriever = new OpenWeatherDailyDataRetrieverMock(new MockDataRetriever());
         WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
         DailyForecastPageViewModel viewModel = new DailyForecastPageViewModel(dailyWeatherRetriever, iconRetriever);
-        JSONObject result = viewModel.GetWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "N/A", 30.40, 30.40), 1);
+        JSONObject result = viewModel.getWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "N/A", 30.40, 30.40), 1);
         assertEquals(5, result.getJSONObject("wind").getDouble("speed"));
     }
 
@@ -73,7 +73,7 @@ public class DailyForecastPageViewModelTests {
         WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
         DailyForecastPageViewModel viewModel = new DailyForecastPageViewModel(dailyWeatherRetriever, iconRetriever);
         assertThrows(IllegalArgumentException.class, () -> {
-            viewModel.GetDayWeatherIcon(0);
+            viewModel.getDayWeatherIcon(0);
         });
     }
 
@@ -82,8 +82,8 @@ public class DailyForecastPageViewModelTests {
         DailyWeatherDataRetriever dailyWeatherRetriever = new OpenWeatherDailyDataRetrieverMock(new MockDataRetriever());
         WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
         DailyForecastPageViewModel viewModel = new DailyForecastPageViewModel(dailyWeatherRetriever, iconRetriever);
-        viewModel.GetWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 30.40), 1);
-        String result = viewModel.GetDayWeatherIcon(0);
+        viewModel.getWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 30.40), 1);
+        String result = viewModel.getDayWeatherIcon(0);
         assertEquals("http://openweathermap.org/img/wn/fake-url@4x.png", result);
     }
 
@@ -93,7 +93,7 @@ public class DailyForecastPageViewModelTests {
         WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
         DailyForecastPageViewModel viewModel = new DailyForecastPageViewModel(dailyWeatherRetriever, iconRetriever);
         assertThrows(IllegalArgumentException.class, () -> {
-            viewModel.GetDayMaxTemperature(1);
+            viewModel.getDayMaxTemperature(1);
         });
     }
 
@@ -102,8 +102,8 @@ public class DailyForecastPageViewModelTests {
         DailyWeatherDataRetriever dailyWeatherRetriever = new OpenWeatherDailyDataRetrieverMock(new MockDataRetriever());
         WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
         DailyForecastPageViewModel viewModel = new DailyForecastPageViewModel(dailyWeatherRetriever, iconRetriever);
-        viewModel.GetWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 30.40), 1);
-        String result = viewModel.GetDayMaxTemperature(0);
+        viewModel.getWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 30.40), 1);
+        String result = viewModel.getDayMaxTemperature(0);
         assertEquals("98", result);
     }
 
@@ -113,7 +113,7 @@ public class DailyForecastPageViewModelTests {
         WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
         DailyForecastPageViewModel viewModel = new DailyForecastPageViewModel(dailyWeatherRetriever, iconRetriever);
         assertThrows(IllegalArgumentException.class, () -> {
-            viewModel.GetDayMinTemperature(0);
+            viewModel.getDayMinTemperature(0);
         });
     }
 
@@ -122,8 +122,8 @@ public class DailyForecastPageViewModelTests {
         DailyWeatherDataRetriever dailyWeatherRetriever = new OpenWeatherDailyDataRetrieverMock(new MockDataRetriever());
         WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
         DailyForecastPageViewModel viewModel = new DailyForecastPageViewModel(dailyWeatherRetriever, iconRetriever);
-        viewModel.GetWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 30.40), 1);
-        String result = viewModel.GetDayMinTemperature(0);
+        viewModel.getWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 30.40), 1);
+        String result = viewModel.getDayMinTemperature(0);
         assertEquals("90", result);
     }
 
@@ -133,7 +133,7 @@ public class DailyForecastPageViewModelTests {
         WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
         DailyForecastPageViewModel viewModel = new DailyForecastPageViewModel(dailyWeatherRetriever, iconRetriever);
         assertThrows(IllegalArgumentException.class, () -> {
-            viewModel.GetDayUtcDateTime(0);
+            viewModel.getDayUtcDateTime(0);
         });
     }
 
@@ -142,8 +142,8 @@ public class DailyForecastPageViewModelTests {
         DailyWeatherDataRetriever dailyWeatherRetriever = new OpenWeatherDailyDataRetrieverMock(new MockDataRetriever());
         WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
         DailyForecastPageViewModel viewModel = new DailyForecastPageViewModel(dailyWeatherRetriever, iconRetriever);
-        viewModel.GetWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 30.40), 1);
-        Long utcTime = viewModel.GetDayUtcDateTime(0);
+        viewModel.getWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 30.40), 1);
+        Long utcTime = viewModel.getDayUtcDateTime(0);
         assertEquals(500, utcTime);
     }
 
@@ -153,7 +153,7 @@ public class DailyForecastPageViewModelTests {
         WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
         DailyForecastPageViewModel viewModel = new DailyForecastPageViewModel(dailyWeatherRetriever, iconRetriever);
         assertThrows(IllegalArgumentException.class, () -> {
-            viewModel.GetTimezone();
+            viewModel.getTimezone();
         });
     }
 
@@ -162,8 +162,8 @@ public class DailyForecastPageViewModelTests {
         DailyWeatherDataRetriever dailyWeatherRetriever = new OpenWeatherDailyDataRetrieverMock(new MockDataRetriever());
         WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
         DailyForecastPageViewModel viewModel = new DailyForecastPageViewModel(dailyWeatherRetriever, iconRetriever);
-        viewModel.GetWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 30.40), 1);
-        Long timezone = viewModel.GetTimezone();
+        viewModel.getWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 30.40), 1);
+        Long timezone = viewModel.getTimezone();
         assertEquals(100, timezone);
     }
 }

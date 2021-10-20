@@ -71,7 +71,6 @@ public class SevereWeatherWarning {
      * @param endingDate   the end date of the warning's period of effect
      * @param details      a description of the warning
      * @param timezone     the timezone of the warning
-     * @param rawData      the raw data of the warning
      */
     public SevereWeatherWarning(String warningName, String startingDate, String endingDate, String details,
             String timezone) {
@@ -157,7 +156,7 @@ public class SevereWeatherWarning {
         if (startingDate == null || startingDate.isBlank()) {
             this.startingDate = SevereWeatherWarning.UNDETERMINED_START;
         } else {
-            this.startingDate = DateTimeConverter.ConvertUtcToShortDate(Long.parseLong(startingDate),
+            this.startingDate = DateTimeConverter.convertUtcToShortDate(Long.parseLong(startingDate),
                     Long.parseLong(this.timezone));
         }
     }
@@ -171,7 +170,7 @@ public class SevereWeatherWarning {
         if (endingDate == null || endingDate.isBlank()) {
             this.endingDate = SevereWeatherWarning.UNDETERMINED_END;
         } else {
-            this.endingDate = DateTimeConverter.ConvertUtcToShortDate(Long.parseLong(endingDate),
+            this.endingDate = DateTimeConverter.convertUtcToShortDate(Long.parseLong(endingDate),
                     Long.parseLong(this.timezone));
         }
     }

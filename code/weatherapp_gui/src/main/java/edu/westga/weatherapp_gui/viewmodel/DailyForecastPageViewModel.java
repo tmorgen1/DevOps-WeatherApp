@@ -13,8 +13,15 @@ import edu.westga.weatherapp_shared.model.WeatherLocation;
 /**
  * Defines the daily forecast page view model class and contains all
  * functionality for the daily forecast page view
+ * 
+ * @author Michael Pavich
  */
 public class DailyForecastPageViewModel {
+
+    /**
+     * No daily weather data error message
+     */
+    private static final String NO_DAILY_WEATHER_DATA_ERROR_MESSAGE = "No daily weather data";
 
     /**
      * The daily weather data retreiver
@@ -57,11 +64,11 @@ public class DailyForecastPageViewModel {
      * Gets the daily weather data for the given amount of days from the weather
      * data retriever by city name
      * 
-     * @param city - the name of the city
+     * @param weatherLocation - the weather location
      * @param days - the number of days to retrieve
      * @return the daily weather json data
      */
-    public JSONObject GetWeatherDataByWeatherLocation(WeatherLocation weatherLocation, int days) {
+    public JSONObject getWeatherDataByWeatherLocation(WeatherLocation weatherLocation, int days) {
         if (weatherLocation == null) {
             throw new IllegalArgumentException("City cannot be null");
         }
@@ -72,9 +79,9 @@ public class DailyForecastPageViewModel {
         try {
             this.dailyWeatherDataRetriever.setUnitsOfMeasurement(CurrentWeatherInformation.getMeasurementUnits());
             if (state.equals("N/A")) {
-                this.dailyWeatherData = new JSONObject(this.dailyWeatherDataRetriever.GetDataByCityAndCountryCode(city, country, days));
+                this.dailyWeatherData = new JSONObject(this.dailyWeatherDataRetriever.getDataByCityAndCountryCode(city, country, days));
             } else {
-                this.dailyWeatherData = new JSONObject(this.dailyWeatherDataRetriever.GetDataByCityAndStateCodeAndCountryCode(city, state, country, days));
+                this.dailyWeatherData = new JSONObject(this.dailyWeatherDataRetriever.getDataByCityAndStateCodeAndCountryCode(city, state, country, days));
             }
             return this.dailyWeatherData;
         } catch (Exception exception) {
@@ -88,9 +95,9 @@ public class DailyForecastPageViewModel {
      * @param day - the day index
      * @return the weather icon
      */
-    public String GetDayWeatherIcon(int day) {
+    public String getDayWeatherIcon(int day) {
         if (this.dailyWeatherData == null) {
-            throw new IllegalArgumentException("No daily weather data");
+            throw new IllegalArgumentException(NO_DAILY_WEATHER_DATA_ERROR_MESSAGE);
         }
 
         try {
@@ -98,7 +105,7 @@ public class DailyForecastPageViewModel {
                     .getJSONObject(0).get("icon");
             String iconString = String.valueOf(icon);
 
-            return this.weatherIconRetriever.GetWeatherIconUrlByIconId(iconString);
+            return this.weatherIconRetriever.getWeatherIconUrlByIconId(iconString);
         } catch (RemoteException exception) {
             System.err.println("Remote Exception: Error retrieving weather icon url by icon id");
             return null;
@@ -111,9 +118,9 @@ public class DailyForecastPageViewModel {
      * @param day - the day index
      * @return the max temperature
      */
-    public String GetDayMaxTemperature(int day) {
+    public String getDayMaxTemperature(int day) {
         if (this.dailyWeatherData == null) {
-            throw new IllegalArgumentException("No daily weather data");
+            throw new IllegalArgumentException(NO_DAILY_WEATHER_DATA_ERROR_MESSAGE);
         }
 
         Long temperature = Math.round(
@@ -127,9 +134,9 @@ public class DailyForecastPageViewModel {
      * @param day - the day index
      * @return the min temperature
      */
-    public String GetDayMinTemperature(int day) {
+    public String getDayMinTemperature(int day) {
         if (this.dailyWeatherData == null) {
-            throw new IllegalArgumentException("No daily weather data");
+            throw new IllegalArgumentException(NO_DAILY_WEATHER_DATA_ERROR_MESSAGE);
         }
 
         Long temperature = Math.round(
@@ -143,9 +150,9 @@ public class DailyForecastPageViewModel {
      * @param day - the day index
      * @return the day utc time
      */
-    public Long GetDayUtcDateTime(int day) {
+    public Long getDayUtcDateTime(int day) {
         if (this.dailyWeatherData == null) {
-            throw new IllegalArgumentException("No daily weather data");
+            throw new IllegalArgumentException(NO_DAILY_WEATHER_DATA_ERROR_MESSAGE);
         }
 
         return Math.round(this.dailyWeatherData.getJSONArray("list").getJSONObject(day).getDouble("dt"));
@@ -156,9 +163,9 @@ public class DailyForecastPageViewModel {
      * 
      * @return the timezone
      */
-    public Long GetTimezone() {
+    public Long getTimezone() {
         if (this.dailyWeatherData == null) {
-            throw new IllegalArgumentException("No daily weather data");
+            throw new IllegalArgumentException(NO_DAILY_WEATHER_DATA_ERROR_MESSAGE);
         }
 
         return Math.round(this.dailyWeatherData.getJSONObject("city").getDouble("timezone"));

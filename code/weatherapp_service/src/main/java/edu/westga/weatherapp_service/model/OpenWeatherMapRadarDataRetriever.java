@@ -14,6 +14,8 @@ import edu.westga.weatherapp_shared.interfaces.MapRadarDataRetriever;
  * This weather data retriever uses the OpenWeather API, Leaflet JS, and OpenStreetMap to obtain
  * and display a map/radar of weather data.
  * Also extends the UnicastRemoteObject to allow for Remote Method Invocation.
+ * 
+ * @author Thomas Morgenstern
  */
 public class OpenWeatherMapRadarDataRetriever extends UnicastRemoteObject implements MapRadarDataRetriever {
 
@@ -27,7 +29,7 @@ public class OpenWeatherMapRadarDataRetriever extends UnicastRemoteObject implem
      * the radar/map.
      * 
      * @param radarMapHTMLFileName - the name or file path to the html page
-     * @throws RemoteException
+     * @throws RemoteException - exception in the event of an RMI error
      */
     public OpenWeatherMapRadarDataRetriever(String radarMapHTMLFileName) throws RemoteException {
         super();
@@ -60,7 +62,7 @@ public class OpenWeatherMapRadarDataRetriever extends UnicastRemoteObject implem
     }
 
     @Override
-    public String GetMapRadarHTML() throws RemoteException {
+    public String getMapRadarHTML() throws RemoteException {
         return this.radarMapHtml;
     }
     

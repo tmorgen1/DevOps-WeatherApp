@@ -66,7 +66,7 @@ public class OpenWeatherCurrentDataRetrieverTests {
             OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever(),
                     MeasurementUnits.Kelvin);
             assertThrows(IllegalArgumentException.class, () -> {
-                retriever.GetDataByCity(null);
+                retriever.getDataByCity(null);
             });
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -79,7 +79,7 @@ public class OpenWeatherCurrentDataRetrieverTests {
         try {
             OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
             assertThrows(IllegalArgumentException.class, () -> {
-                retriever.GetDataByCity("");
+                retriever.getDataByCity("");
             });
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -92,7 +92,7 @@ public class OpenWeatherCurrentDataRetrieverTests {
         try {
             OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
             assertThrows(IllegalArgumentException.class, () -> {
-                retriever.GetDataByCityAndStateCode(null, "GA");
+                retriever.getDataByCityAndStateCode(null, "GA");
             });
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -105,7 +105,7 @@ public class OpenWeatherCurrentDataRetrieverTests {
         try {
             OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
             assertThrows(IllegalArgumentException.class, () -> {
-                retriever.GetDataByCityAndStateCode("", "GA");
+                retriever.getDataByCityAndStateCode("", "GA");
             });
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -118,7 +118,7 @@ public class OpenWeatherCurrentDataRetrieverTests {
         try {
             OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
             assertThrows(IllegalArgumentException.class, () -> {
-                retriever.GetDataByCityAndStateCode("Newnan", null);
+                retriever.getDataByCityAndStateCode("Newnan", null);
             });
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -131,7 +131,7 @@ public class OpenWeatherCurrentDataRetrieverTests {
         try {
             OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
             assertThrows(IllegalArgumentException.class, () -> {
-                retriever.GetDataByCityAndStateCode("Newnan", "");
+                retriever.getDataByCityAndStateCode("Newnan", "");
             });
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -144,7 +144,7 @@ public class OpenWeatherCurrentDataRetrieverTests {
         try {
             OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
             assertThrows(IllegalArgumentException.class, () -> {
-                retriever.GetDataByCityAndStateCodeAndCountryCode(null, "GA", "US");
+                retriever.getDataByCityAndStateCodeAndCountryCode(null, "GA", "US");
             });
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -157,7 +157,7 @@ public class OpenWeatherCurrentDataRetrieverTests {
         try {
             OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
             assertThrows(IllegalArgumentException.class, () -> {
-                retriever.GetDataByCityAndStateCodeAndCountryCode("", "GA", "US");
+                retriever.getDataByCityAndStateCodeAndCountryCode("", "GA", "US");
             });
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -170,7 +170,7 @@ public class OpenWeatherCurrentDataRetrieverTests {
         try {
             OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
             assertThrows(IllegalArgumentException.class, () -> {
-                retriever.GetDataByCityAndStateCodeAndCountryCode("Newnan", null, "US");
+                retriever.getDataByCityAndStateCodeAndCountryCode("Newnan", null, "US");
             });
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -183,7 +183,7 @@ public class OpenWeatherCurrentDataRetrieverTests {
         try {
             OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
             assertThrows(IllegalArgumentException.class, () -> {
-                retriever.GetDataByCityAndStateCodeAndCountryCode("Newnan", "", "US");
+                retriever.getDataByCityAndStateCodeAndCountryCode("Newnan", "", "US");
             });
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -196,7 +196,7 @@ public class OpenWeatherCurrentDataRetrieverTests {
         try {
             OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
             assertThrows(IllegalArgumentException.class, () -> {
-                retriever.GetDataByCityAndStateCodeAndCountryCode("Newnan", "GA", null);
+                retriever.getDataByCityAndStateCodeAndCountryCode("Newnan", "GA", null);
             });
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -209,7 +209,7 @@ public class OpenWeatherCurrentDataRetrieverTests {
         try {
             OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
             assertThrows(IllegalArgumentException.class, () -> {
-                retriever.GetDataByCityAndStateCodeAndCountryCode("Newnan", "GA", "");
+                retriever.getDataByCityAndStateCodeAndCountryCode("Newnan", "GA", "");
             });
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -221,7 +221,7 @@ public class OpenWeatherCurrentDataRetrieverTests {
     public void getDataByCitySuccessfully() {
         try {
             OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
-            assertNotNull(retriever.GetDataByCity("newnan"));
+            assertNotNull(retriever.getDataByCity("newnan"));
         } catch (RemoteException e) {
             e.printStackTrace();
             fail("Remote Exception while testing");
@@ -232,7 +232,7 @@ public class OpenWeatherCurrentDataRetrieverTests {
     public void getDataByCityAndStateCodeSuccessfully() {
         try {
             OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
-            assertNotNull(retriever.GetDataByCityAndStateCode("newnan", "GA"));
+            assertNotNull(retriever.getDataByCityAndStateCode("newnan", "GA"));
         } catch (RemoteException e) {
             e.printStackTrace();
             fail("Remote Exception while testing");
@@ -243,7 +243,7 @@ public class OpenWeatherCurrentDataRetrieverTests {
     public void getDataByCityAndStateCodeAndCountryCodeSuccessfully() {
         try {
             OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
-            assertNotNull(retriever.GetDataByCityAndStateCodeAndCountryCode("newnan", "GA", "USA"));
+            assertNotNull(retriever.getDataByCityAndStateCodeAndCountryCode("newnan", "GA", "USA"));
         } catch (RemoteException e) {
             e.printStackTrace();
             fail("Remote Exception while testing");
@@ -274,7 +274,7 @@ public class OpenWeatherCurrentDataRetrieverTests {
         try {
             OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
             assertThrows(IllegalArgumentException.class, () -> {
-                retriever.GetDataByCityAndCountryCode(null, "countryCode");
+                retriever.getDataByCityAndCountryCode(null, "countryCode");
             });
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -287,7 +287,7 @@ public class OpenWeatherCurrentDataRetrieverTests {
         try {
             OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
             assertThrows(IllegalArgumentException.class, () -> {
-                retriever.GetDataByCityAndCountryCode("cityName", null);
+                retriever.getDataByCityAndCountryCode("cityName", null);
             });
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -300,7 +300,7 @@ public class OpenWeatherCurrentDataRetrieverTests {
         try {
             OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
             assertThrows(IllegalArgumentException.class, () -> {
-                retriever.GetDataByCityAndCountryCode("", "countryCode");
+                retriever.getDataByCityAndCountryCode("", "countryCode");
             });
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -313,7 +313,7 @@ public class OpenWeatherCurrentDataRetrieverTests {
         try {
             OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
             assertThrows(IllegalArgumentException.class, () -> {
-                retriever.GetDataByCityAndCountryCode("cityName", "");
+                retriever.getDataByCityAndCountryCode("cityName", "");
             });
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -325,7 +325,7 @@ public class OpenWeatherCurrentDataRetrieverTests {
     public void getDataByCityAndCountryCodeSuccessfully() {
         try {
             OpenWeatherCurrentDataRetriever retriever = new OpenWeatherCurrentDataRetriever(new MockDataRetriever());
-            assertNotNull(retriever.GetDataByCityAndCountryCode("newnan", "US"));
+            assertNotNull(retriever.getDataByCityAndCountryCode("newnan", "US"));
         } catch (RemoteException e) {
             e.printStackTrace();
             fail("Remote Exception while testing");

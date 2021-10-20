@@ -29,8 +29,25 @@ import javafx.scene.control.ScrollPane;
 
 /**
  * Defines the daily forecast page view.
+ * 
+ * @author Michael Pavich
  */
 public class DailyForecastPage {
+
+    /**
+     * Kelvin suffix
+     */
+    private static final String KELVIN_SUFFIX = " K";
+
+    /**
+     * Celsius suffix
+     */
+    private static final String CELSIUS_SUFFIX = " °C";
+
+    /**
+     * Farenheit suffix
+     */
+    private static final String FARENHEIT_SUFFIX = " °F";
 
     /**
      * The number of days for the forecast to load
@@ -110,7 +127,7 @@ public class DailyForecastPage {
     /**
      * The current temperature suffix
      */
-    private String TemperatureSuffix = " °F";
+    private String temperatureSuffix = FARENHEIT_SUFFIX;
 
     /**
      * Initializes after all FXML fields are loaded. Sets the measurement settings
@@ -134,7 +151,7 @@ public class DailyForecastPage {
      */
     @FXML
     void onCelsiusSelected(ActionEvent event) {
-        this.TemperatureSuffix = " °C";
+        this.temperatureSuffix = CELSIUS_SUFFIX;
         this.setAllCheckMenuItemsFalse();
         CurrentWeatherInformation.setWeatherData(null);
         this.celsiusCheckMenuItem.setSelected(true);
@@ -152,7 +169,7 @@ public class DailyForecastPage {
      */
     @FXML
     void onFahrenheitSelected(ActionEvent event) {
-        this.TemperatureSuffix = " °F";
+        this.temperatureSuffix = FARENHEIT_SUFFIX;
         this.setAllCheckMenuItemsFalse();
         CurrentWeatherInformation.setWeatherData(null);
         this.fahrenheitCheckMenuItem.setSelected(true);
@@ -170,7 +187,7 @@ public class DailyForecastPage {
      */
     @FXML
     void onKelvinSelected(ActionEvent event) {
-        this.TemperatureSuffix = " K";
+        this.temperatureSuffix = KELVIN_SUFFIX;
         this.setAllCheckMenuItemsFalse();
         CurrentWeatherInformation.setWeatherData(null);
         this.kelvinCheckMenuItem.setSelected(true);
@@ -204,12 +221,12 @@ public class DailyForecastPage {
         this.setAllCheckMenuItemsFalse();
         if (CurrentWeatherInformation.getMeasurementUnits() == MeasurementUnits.Imperial) {
             this.fahrenheitCheckMenuItem.setSelected(true);
-            this.TemperatureSuffix = " °F";
+            this.temperatureSuffix = FARENHEIT_SUFFIX;
         } else if (CurrentWeatherInformation.getMeasurementUnits() == MeasurementUnits.Metric) {
-            this.TemperatureSuffix = " °C";
+            this.temperatureSuffix = CELSIUS_SUFFIX;
             this.celsiusCheckMenuItem.setSelected(true);
         } else {
-            this.TemperatureSuffix = " K";
+            this.temperatureSuffix = KELVIN_SUFFIX;
             this.kelvinCheckMenuItem.setSelected(true);
         }
     }
@@ -220,7 +237,7 @@ public class DailyForecastPage {
      * @param days - the number of days for the forecast
      */
     private void loadDayForecastComponents() {
-        this.viewModel.GetWeatherDataByWeatherLocation(CurrentWeatherInformation.getWeatherLocation(), DAYS);
+        this.viewModel.getWeatherDataByWeatherLocation(CurrentWeatherInformation.getWeatherLocation(), DAYS);
         this.dailyForecastVBox.getChildren().clear();
 
         if (CurrentWeatherInformation.getDayForecastPanes() != null) {
@@ -248,11 +265,11 @@ public class DailyForecastPage {
                     String maxTemp = DailyForecastPage.this.getDayMaxTemperature(index);
                     String minTemp = DailyForecastPage.this.getDayMinTemperature(index);
 
-                    previousPanes.get(index).SetDayOfTheWeekLabel(dayOfWeek);
-                    previousPanes.get(index).SetWeatherIconImageView(dayIconUrl);
-                    previousPanes.get(index).SetDateLabel(date);
-                    previousPanes.get(index).SetMaxTemperatureLabel(maxTemp);
-                    previousPanes.get(index).SetMinTemperatureLabel(minTemp);
+                    previousPanes.get(index).setDayOfTheWeekLabel(dayOfWeek);
+                    previousPanes.get(index).setWeatherIconImageView(dayIconUrl);
+                    previousPanes.get(index).setDateLabel(date);
+                    previousPanes.get(index).setMaxTemperatureLabel(maxTemp);
+                    previousPanes.get(index).setMinTemperatureLabel(minTemp);
                 }
                 return previousPanes;
             }
@@ -296,9 +313,9 @@ public class DailyForecastPage {
      * @return the day of the week
      */
     private String getDayOfWeek(int dayIndex) {
-        Long timezone = this.viewModel.GetTimezone();
-        Long utcDateTime = this.viewModel.GetDayUtcDateTime(dayIndex);
-        return DateTimeConverter.ConvertUtcToDayOfWeek(utcDateTime, timezone);
+        Long timezone = this.viewModel.getTimezone();
+        Long utcDateTime = this.viewModel.getDayUtcDateTime(dayIndex);
+        return DateTimeConverter.convertUtcToDayOfWeek(utcDateTime, timezone);
     }
 
     /**
@@ -308,7 +325,7 @@ public class DailyForecastPage {
      * @return the icon url
      */
     private String getDayIconUrl(int dayIndex) {
-        return this.viewModel.GetDayWeatherIcon(dayIndex);
+        return this.viewModel.getDayWeatherIcon(dayIndex);
     }
 
     /**
@@ -318,9 +335,9 @@ public class DailyForecastPage {
      * @return the date
      */
     private String getDayDate(int dayIndex) {
-        Long timezone = this.viewModel.GetTimezone();
-        Long utcDateTime = this.viewModel.GetDayUtcDateTime(dayIndex);
-        return DateTimeConverter.ConvertUtcToShortDate(utcDateTime, timezone);
+        Long timezone = this.viewModel.getTimezone();
+        Long utcDateTime = this.viewModel.getDayUtcDateTime(dayIndex);
+        return DateTimeConverter.convertUtcToShortDate(utcDateTime, timezone);
     }
 
     /**
@@ -330,8 +347,8 @@ public class DailyForecastPage {
      * @return the max temp
      */
     private String getDayMaxTemperature(int dayIndex) {
-        String maxTemperature = this.viewModel.GetDayMaxTemperature(dayIndex);
-        return maxTemperature + this.TemperatureSuffix;
+        String maxTemperature = this.viewModel.getDayMaxTemperature(dayIndex);
+        return maxTemperature + this.temperatureSuffix;
     }
 
     /**
@@ -341,8 +358,8 @@ public class DailyForecastPage {
      * @return the min temp
      */
     private String getDayMinTemperature(int dayIndex) {
-        String minTemperature = this.viewModel.GetDayMinTemperature(dayIndex);
-        return minTemperature + this.TemperatureSuffix;
+        String minTemperature = this.viewModel.getDayMinTemperature(dayIndex);
+        return minTemperature + this.temperatureSuffix;
     }
 
     /**

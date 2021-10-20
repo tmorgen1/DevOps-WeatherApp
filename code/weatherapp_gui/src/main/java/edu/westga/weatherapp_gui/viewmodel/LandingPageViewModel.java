@@ -19,8 +19,30 @@ import edu.westga.weatherapp_shared.interfaces.WeatherIconRetriever;
 /**
  * Defines the landing page view model class and contains all functionality for
  * the landing page view
+ * 
+ * @author Michael Pavich
  */
 public class LandingPageViewModel {
+
+    /**
+     * No hourly weather data error message
+     */
+    private static final String NO_HOURLY_WEATHER_DATA_ERROR_MESSAGE = "No hourly weather data";
+
+    /**
+     * Weather location cannot be null error message
+     */
+    private static final String WEATHER_LOCATION_CANNOT_BE_NULL_ERROR_MESSAGE = "Weather location cannot be null";
+
+    /**
+     * No current weather data error message
+     */
+    private static final String NO_CURRENT_WEATHER_DATA_ERROR_MESSAGE = "No current weather data";
+
+    /**
+     * City cannot be null error message
+     */
+    private static final String CITY_CANNOT_BE_NULL_ERROR_MESSAGE = "City cannot be null";
 
     /**
      * The current weather data retriever
@@ -64,6 +86,7 @@ public class LandingPageViewModel {
      * @param weatherDataRetriver - the weather data retriever
      * @param iconRetriever - the icon retriever
      * @param locationSearcher - the location searcher
+     * @param hourlyWeatherDataRetriever - the hourly weather data retriever
      */
     public LandingPageViewModel(CurrentWeatherDataRetriever weatherDataRetriver, WeatherIconRetriever iconRetriever, LocationSearcher locationSearcher, HourlyWeatherDataRetriever hourlyWeatherDataRetriever) {
         if (weatherDataRetriver != null && iconRetriever != null && locationSearcher != null && hourlyWeatherDataRetriever != null) {
@@ -83,7 +106,7 @@ public class LandingPageViewModel {
             }
         }
 
-        this.LoadFavoritedLocations();
+        this.loadFavoritedLocations();
     }
 
     /**
@@ -92,9 +115,9 @@ public class LandingPageViewModel {
      * @param weatherLocation - the name of the city
      * @return the current weather data json object
      */
-    public JSONObject GetWeatherDataByWeatherLocation(WeatherLocation weatherLocation) {
+    public JSONObject getWeatherDataByWeatherLocation(WeatherLocation weatherLocation) {
         if (weatherLocation == null) {
-            throw new IllegalArgumentException("City cannot be null");
+            throw new IllegalArgumentException(CITY_CANNOT_BE_NULL_ERROR_MESSAGE);
         }
         String state = weatherLocation.getState();
         String city = weatherLocation.getCity();
@@ -103,9 +126,9 @@ public class LandingPageViewModel {
         try {
             this.weatherDataRetriever.setUnitsOfMeasurement(CurrentWeatherInformation.getMeasurementUnits());
             if (state.equals("N/A")) {
-                this.currentWeatherData = new JSONObject(this.weatherDataRetriever.GetDataByCityAndCountryCode(city, country));
+                this.currentWeatherData = new JSONObject(this.weatherDataRetriever.getDataByCityAndCountryCode(city, country));
             } else {
-                this.currentWeatherData = new JSONObject(this.weatherDataRetriever.GetDataByCityAndStateCodeAndCountryCode(city, state, country));
+                this.currentWeatherData = new JSONObject(this.weatherDataRetriever.getDataByCityAndStateCodeAndCountryCode(city, state, country));
             }
             CurrentWeatherInformation.setWeatherData(this.currentWeatherData);
             return this.currentWeatherData;
@@ -121,9 +144,9 @@ public class LandingPageViewModel {
      * @param hours - the number of hours to gather data for
      * @return the hourly weather data json object
      */
-    public JSONObject GetHourlyForecastDataByWeatherLocation(WeatherLocation weatherLocation, int hours) {
+    public JSONObject getHourlyForecastDataByWeatherLocation(WeatherLocation weatherLocation, int hours) {
         if (weatherLocation == null) {
-            throw new IllegalArgumentException("City cannot be null");
+            throw new IllegalArgumentException(CITY_CANNOT_BE_NULL_ERROR_MESSAGE);
         }
         String state = weatherLocation.getState();
         String city = weatherLocation.getCity();
@@ -132,9 +155,9 @@ public class LandingPageViewModel {
         try {
             this.hourlyWeatherDataRetriever.setUnitsOfMeasurement(CurrentWeatherInformation.getMeasurementUnits());
             if (state.equals("N/A")) {
-                this.currentHourlyData = new JSONObject(this.hourlyWeatherDataRetriever.GetDataByCityAndCountryCode(city, country, hours));
+                this.currentHourlyData = new JSONObject(this.hourlyWeatherDataRetriever.getDataByCityAndCountryCode(city, country, hours));
             } else {
-                this.currentHourlyData = new JSONObject(this.hourlyWeatherDataRetriever.GetDataByCityAndStateCodeAndCountryCode(city, state, country, hours));
+                this.currentHourlyData = new JSONObject(this.hourlyWeatherDataRetriever.getDataByCityAndStateCodeAndCountryCode(city, state, country, hours));
             }
             return this.currentHourlyData;
         } catch (Exception e) {
@@ -147,9 +170,9 @@ public class LandingPageViewModel {
      * 
      * @return a weather location of the user's current location
      */
-    public WeatherLocation GetCurrentLocation() {
+    public WeatherLocation getCurrentLocation() {
         try {
-            String ip = IpGrabber.GetCurrentIpAddress();
+            String ip = IpGrabber.getCurrentIpAddress();
             WeatherLocation currentLocation = this.weatherLocationSearcher.getLocationByIP(ip);
             
             return currentLocation;
@@ -164,16 +187,16 @@ public class LandingPageViewModel {
      * @param city - the city name
      * @return a collection of weather locations
      */
-    public Collection<WeatherLocation> GetLocationSearchResults(String city) {
+    public Collection<WeatherLocation> getLocationSearchResults(String city) {
         if (city == null) {
-            throw new IllegalArgumentException("City cannot be null");
+            throw new IllegalArgumentException(CITY_CANNOT_BE_NULL_ERROR_MESSAGE);
         }
         if (city.isEmpty()) {
             throw new IllegalArgumentException("City cannot be empty");
         }
 
         try {
-            String ip = IpGrabber.GetCurrentIpAddress();
+            String ip = IpGrabber.getCurrentIpAddress();
             WeatherLocation currentLocation = this.weatherLocationSearcher.getLocationByIP(ip);
             Collection<WeatherLocation> locations = this.weatherLocationSearcher.searchLocations(city, 10, currentLocation.getLatitude(), currentLocation.getLongitude());
             
@@ -189,16 +212,16 @@ public class LandingPageViewModel {
      * 
      * @return String - Current weather icon url
      */
-    public String GetCurrentWeatherIcon() {
+    public String getCurrentWeatherIcon() {
         if (this.currentWeatherData == null) {
-            throw new IllegalArgumentException("No current weather data");
+            throw new IllegalArgumentException(NO_CURRENT_WEATHER_DATA_ERROR_MESSAGE);
         }
 
         try {
             Object icon = this.currentWeatherData.getJSONArray("weather").getJSONObject(0).get("icon");
             String iconString = String.valueOf(icon);
 
-            return this.weatherIconRetriever.GetWeatherIconUrlByIconId(iconString);
+            return this.weatherIconRetriever.getWeatherIconUrlByIconId(iconString);
         } catch (RemoteException exception) {
             System.err.println("Remote Exception: Error retrieving weather icon url by icon id");
             return null;
@@ -211,9 +234,9 @@ public class LandingPageViewModel {
      * 
      * @return String - Current temperature
      */
-    public String GetCurrentTemperature() {
+    public String getCurrentTemperature() {
         if (this.currentWeatherData == null) {
-            throw new IllegalArgumentException("No current weather data");
+            throw new IllegalArgumentException(NO_CURRENT_WEATHER_DATA_ERROR_MESSAGE);
         }
 
         Long temperature = Math.round(this.currentWeatherData.getJSONObject("main").getDouble("temp"));
@@ -226,9 +249,9 @@ public class LandingPageViewModel {
      * 
      * @return String - Current wind speed
      */
-    public String GetCurrentWindSpeed() {
+    public String getCurrentWindSpeed() {
         if (this.currentWeatherData == null) {
-            throw new IllegalArgumentException("No current weather data");
+            throw new IllegalArgumentException(NO_CURRENT_WEATHER_DATA_ERROR_MESSAGE);
         }
 
         Long windSpeed = Math.round(this.currentWeatherData.getJSONObject("wind").getDouble("speed"));
@@ -241,9 +264,9 @@ public class LandingPageViewModel {
      * 
      * @return String - Current humidity
      */
-    public String GetCurrentHumidity() {
+    public String getCurrentHumidity() {
         if (this.currentWeatherData == null) {
-            throw new IllegalArgumentException("No current weather data");
+            throw new IllegalArgumentException(NO_CURRENT_WEATHER_DATA_ERROR_MESSAGE);
         }
 
         Long humidity = Math.round(this.currentWeatherData.getJSONObject("main").getDouble("humidity"));
@@ -256,9 +279,9 @@ public class LandingPageViewModel {
      * 
      * @return String - Current weather description
      */
-    public String GetCurrentWeatherDescription() {
+    public String getCurrentWeatherDescription() {
         if (this.currentWeatherData == null) {
-            throw new IllegalArgumentException("No current weather data");
+            throw new IllegalArgumentException(NO_CURRENT_WEATHER_DATA_ERROR_MESSAGE);
         }
 
         Object descriptionObject = this.currentWeatherData.getJSONArray("weather").getJSONObject(0).get("main");
@@ -270,7 +293,7 @@ public class LandingPageViewModel {
      * 
      * @param weatherData - the new weather data
      */
-    public void SetCurrentWeatherData(JSONObject weatherData) {
+    public void setCurrentWeatherData(JSONObject weatherData) {
         if (weatherData == null) {
             throw new IllegalArgumentException("Weather data cannot be null");
         }
@@ -282,13 +305,13 @@ public class LandingPageViewModel {
      * 
      * @param weatherLocation - the favorited location to remove
      */
-    public void RemoveFavoritedLocation(WeatherLocation weatherLocation) {
+    public void removeFavoritedLocation(WeatherLocation weatherLocation) {
         if (weatherLocation == null) {
-            throw new IllegalArgumentException("Weather location cannot be null");
+            throw new IllegalArgumentException(WEATHER_LOCATION_CANNOT_BE_NULL_ERROR_MESSAGE);
         }
 
         this.favoritedWeatherLocations.remove(weatherLocation);
-        this.SaveFavoritedLocations();
+        this.saveFavoritedLocations();
     }
 
     /**
@@ -296,13 +319,13 @@ public class LandingPageViewModel {
      * 
      * @param weatherLocation - the favorited location to add
      */
-    public void AddFavoritedLocation(WeatherLocation weatherLocation) {
+    public void addFavoritedLocation(WeatherLocation weatherLocation) {
         if (weatherLocation == null) {
-            throw new IllegalArgumentException("Weather location cannot be null");
+            throw new IllegalArgumentException(WEATHER_LOCATION_CANNOT_BE_NULL_ERROR_MESSAGE);
         }
 
         this.favoritedWeatherLocations.add(weatherLocation);
-        this.SaveFavoritedLocations();
+        this.saveFavoritedLocations();
     }
 
     /**
@@ -310,7 +333,7 @@ public class LandingPageViewModel {
      * 
      * @return the favorited weather locations
      */
-    public Collection<WeatherLocation> GetFavoritedWeatherLocations() {
+    public Collection<WeatherLocation> getFavoritedWeatherLocations() {
         return this.favoritedWeatherLocations;
     }
 
@@ -320,8 +343,8 @@ public class LandingPageViewModel {
      * @param weatherLocation - the given weather location
      * @return True if it is contained, false otherwise
      */
-    public boolean FavoritesContainsWeatherLocation(WeatherLocation weatherLocation) {
-        for (WeatherLocation currentLocation : favoritedWeatherLocations) {
+    public boolean favoritesContainsWeatherLocation(WeatherLocation weatherLocation) {
+        for (WeatherLocation currentLocation : this.favoritedWeatherLocations) {
             if (currentLocation.equals(weatherLocation)) {
                 return true;
             }
@@ -334,9 +357,9 @@ public class LandingPageViewModel {
      * 
      * @return the timezone
      */
-    public Long GetTimezone() {
+    public Long getTimezone() {
         if (this.currentHourlyData == null) {
-            throw new IllegalArgumentException("No hourly weather data");
+            throw new IllegalArgumentException(NO_HOURLY_WEATHER_DATA_ERROR_MESSAGE);
         }
 
         return Math.round(this.currentHourlyData.getJSONObject("city").getDouble("timezone"));
@@ -348,9 +371,9 @@ public class LandingPageViewModel {
      * @param hour - the hour index
      * @return the hour utc time
      */
-    public Long GetHourUtcDateTime(int hour) {
+    public Long getHourUtcDateTime(int hour) {
         if (this.currentHourlyData == null) {
-            throw new IllegalArgumentException("No hourly weather data");
+            throw new IllegalArgumentException(NO_HOURLY_WEATHER_DATA_ERROR_MESSAGE);
         }
 
         return Math.round(this.currentHourlyData.getJSONArray("list").getJSONObject(hour).getDouble("dt"));
@@ -362,9 +385,9 @@ public class LandingPageViewModel {
      * @param hour - the hour index
      * @return the max temperature
      */
-    public String GetHourTemperature(int hour) {
+    public String getHourTemperature(int hour) {
         if (this.currentHourlyData == null) {
-            throw new IllegalArgumentException("No hourly weather data");
+            throw new IllegalArgumentException(NO_HOURLY_WEATHER_DATA_ERROR_MESSAGE);
         }
 
         Long temperature = Math.round(
@@ -378,9 +401,9 @@ public class LandingPageViewModel {
      * @param hour - the hour index
      * @return the weather icon
      */
-    public String GetDayWeatherIcon(int hour) {
+    public String getDayWeatherIcon(int hour) {
         if (this.currentHourlyData == null) {
-            throw new IllegalArgumentException("No hourly weather data");
+            throw new IllegalArgumentException(NO_HOURLY_WEATHER_DATA_ERROR_MESSAGE);
         }
 
         try {
@@ -388,7 +411,7 @@ public class LandingPageViewModel {
                     .getJSONObject(0).get("icon");
             String iconString = String.valueOf(icon);
 
-            return this.weatherIconRetriever.GetWeatherIconUrlByIconId(iconString);
+            return this.weatherIconRetriever.getWeatherIconUrlByIconId(iconString);
         } catch (RemoteException exception) {
             System.err.println("Remote Exception: Error retrieving weather icon url by icon id");
             return null;
@@ -398,7 +421,7 @@ public class LandingPageViewModel {
     /**
      * Saves the collection of favorited weather locations to a file
      */
-    private void SaveFavoritedLocations() {
+    private void saveFavoritedLocations() {
         try {
             WeatherLocationSerializer weatherLocationSerializer = new WeatherLocationSerializer();
             weatherLocationSerializer.saveFavoritedLocationsToFile(this.favoritedWeatherLocations);
@@ -410,7 +433,7 @@ public class LandingPageViewModel {
     /**
      * Loads the favorited locations from a file
      */
-    private void LoadFavoritedLocations() {
+    private void loadFavoritedLocations() {
         try {
             WeatherLocationSerializer weatherLocationSerializer = new WeatherLocationSerializer();
             this.favoritedWeatherLocations = weatherLocationSerializer.loadFavoritedLocationsFromFile();

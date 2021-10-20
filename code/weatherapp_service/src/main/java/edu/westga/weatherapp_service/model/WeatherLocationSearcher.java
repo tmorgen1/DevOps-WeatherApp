@@ -27,6 +27,8 @@ import edu.westga.weatherapp_shared.model.WeatherLocation;
  * Class that handles checking the database of locations that the OpenWeather
  * api can grab data from. Handles autocomplete logic, essentially, by polling
  * the entries with given search strings.
+ * 
+ * @author Thomas Morgenstern
  */
 public class WeatherLocationSearcher extends UnicastRemoteObject implements LocationSearcher {
 
@@ -64,7 +66,7 @@ public class WeatherLocationSearcher extends UnicastRemoteObject implements Loca
      * 
      * @param searchLocationFileName    - filename/path to the .json file
      * @param geoIpLocationDatabaseName - filename/path to the .mmdb file
-     * @throws RemoteException
+     * @throws RemoteException - exception in the event of an RMI error
      */
     public WeatherLocationSearcher(String searchLocationFileName, String geoIpLocationDatabaseName)
             throws RemoteException {
@@ -230,11 +232,15 @@ public class WeatherLocationSearcher extends UnicastRemoteObject implements Loca
      * @param longitude - the longitude to sort by
      */
     private void sortSearchLocationsByClosestDistance(List<WeatherLocation> locations, double latitude, double longitude) {
-        Collections.sort(locations, new Comparator<WeatherLocation>(){
+        Collections.sort(locations, new Comparator<WeatherLocation>() {
             @Override
             public int compare(WeatherLocation weatherLocation, WeatherLocation otherWeatherLocation) {
-                return (int) (calculateDistanceBetweenCoordinates(latitude, longitude, weatherLocation.getLatitude(), weatherLocation.getLongitude())
-                    - calculateDistanceBetweenCoordinates(latitude, longitude, otherWeatherLocation.getLatitude(), otherWeatherLocation.getLongitude()));
+                double firstDistance = WeatherLocationSearcher.this.calculateDistanceBetweenCoordinates(latitude, longitude, 
+                    weatherLocation.getLatitude(), weatherLocation.getLongitude());
+                double secondDistance = WeatherLocationSearcher.this.calculateDistanceBetweenCoordinates(latitude, longitude,
+                    otherWeatherLocation.getLatitude(), otherWeatherLocation.getLongitude());
+                
+                return (int) (firstDistance - secondDistance);
             }
         });
     }

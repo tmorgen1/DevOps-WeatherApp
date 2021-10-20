@@ -18,7 +18,7 @@ public class OpenWeatherIconRetrieverTests {
     public void getWeatherIconWhenIconIdIsNull() {
         assertThrows(IllegalArgumentException.class, () -> {
             OpenWeatherIconRetriever retriever = new OpenWeatherIconRetriever();
-            retriever.GetWeatherIconUrlByIconId(null);
+            retriever.getWeatherIconUrlByIconId(null);
         });
     }
 
@@ -26,7 +26,7 @@ public class OpenWeatherIconRetrieverTests {
     public void getWeatherIconWhenIconIdIsEmpty() {
         assertThrows(IllegalArgumentException.class, () -> {
             OpenWeatherIconRetriever retriever = new OpenWeatherIconRetriever();
-            retriever.GetWeatherIconUrlByIconId("");
+            retriever.getWeatherIconUrlByIconId("");
         });
     }
 
@@ -34,7 +34,7 @@ public class OpenWeatherIconRetrieverTests {
     public void getWeatherIconUrl() {
         assertDoesNotThrow(() -> {
             OpenWeatherIconRetriever retriever = new OpenWeatherIconRetriever();
-            retriever.GetWeatherIconUrlByIconId("04d");
+            retriever.getWeatherIconUrlByIconId("04d");
         });
     }
 }

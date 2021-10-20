@@ -112,9 +112,9 @@ public class SevereWeatherWarningsPageViewModelTests {
         }, () -> {
             assertEquals("Air Quality Alert", warning.getWarningName());
         }, () -> {
-            assertEquals(DateTimeConverter.ConvertUtcToShortDate(1631722620L, timezone), warning.getStartingDate());
+            assertEquals(DateTimeConverter.convertUtcToShortDate(1631722620L, timezone), warning.getStartingDate());
         }, () -> {
-            assertEquals(DateTimeConverter.ConvertUtcToShortDate(1631856600L, timezone), warning.getEndingDate());
+            assertEquals(DateTimeConverter.convertUtcToShortDate(1631856600L, timezone), warning.getEndingDate());
         }, () -> {
             assertEquals(" Ozone High Pollution Advisory for the Greater Phoenix Area through.", warning.getDetails());
         }, () -> {
@@ -145,17 +145,17 @@ public class SevereWeatherWarningsPageViewModelTests {
         }, () -> {
             assertEquals("Air Quality Alert", warning1.getWarningName());
         }, () -> {
-            assertEquals(DateTimeConverter.ConvertUtcToShortDate(1631722620L, timezone1), warning1.getStartingDate());
+            assertEquals(DateTimeConverter.convertUtcToShortDate(1631722620L, timezone1), warning1.getStartingDate());
         }, () -> {
-            assertEquals(DateTimeConverter.ConvertUtcToShortDate(1631856600L, timezone1), warning1.getEndingDate());
+            assertEquals(DateTimeConverter.convertUtcToShortDate(1631856600L, timezone1), warning1.getEndingDate());
         }, () -> {
             assertEquals(" Ozone High Pollution Advisory for the Greater Phoenix Area through.", warning1.getDetails());
         }, () -> {
             assertEquals("Flash Flood Watch", warning2.getWarningName());
         }, () -> {
-            assertEquals(DateTimeConverter.ConvertUtcToShortDate(1632164880L, timezone2), warning2.getStartingDate());
+            assertEquals(DateTimeConverter.convertUtcToShortDate(1632164880L, timezone2), warning2.getStartingDate());
         }, () -> {
-            assertEquals(DateTimeConverter.ConvertUtcToShortDate(1632182400L, timezone2), warning2.getEndingDate());
+            assertEquals(DateTimeConverter.convertUtcToShortDate(1632182400L, timezone2), warning2.getEndingDate());
         }, () -> {
             assertEquals(" The sky is green. Its raining in Pheonix.", warning2.getDetails());
         });
@@ -184,26 +184,26 @@ public class SevereWeatherWarningsPageViewModelTests {
         }, () -> {
             assertEquals("Air Quality Alert", warning1.getWarningName());
         }, () -> {
-            assertEquals(DateTimeConverter.ConvertUtcToShortDate(1631722620L, timezone1), warning1.getStartingDate());
+            assertEquals(DateTimeConverter.convertUtcToShortDate(1631722620L, timezone1), warning1.getStartingDate());
         }, () -> {
-            assertEquals(DateTimeConverter.ConvertUtcToShortDate(1631856600L, timezone1), warning1.getEndingDate());
+            assertEquals(DateTimeConverter.convertUtcToShortDate(1631856600L, timezone1), warning1.getEndingDate());
         }, () -> {
             assertEquals(" Ozone High Pollution Advisory for the Greater Phoenix Area through.", warning1.getDetails());
         }, () -> {
             assertEquals("Flash Flood Watch", warning2.getWarningName());
         }, () -> {
-            assertEquals(DateTimeConverter.ConvertUtcToShortDate(1632164880L, timezone2), warning2.getStartingDate());
+            assertEquals(DateTimeConverter.convertUtcToShortDate(1632164880L, timezone2), warning2.getStartingDate());
         }, () -> {
-            assertEquals(DateTimeConverter.ConvertUtcToShortDate(1632182400L, timezone2), warning2.getEndingDate());
+            assertEquals(DateTimeConverter.convertUtcToShortDate(1632182400L, timezone2), warning2.getEndingDate());
         }, () -> {
             assertEquals(" The sky is green. Its raining in Pheonix.", warning2.getDetails());
         }, () -> {
             assertEquals("Ozone is forecast to reach 108 AQI - Unhealthy for Sensitive Groups on Tue 09/21/2021.",
                     warning3.getWarningName());
         }, () -> {
-            assertEquals(DateTimeConverter.ConvertUtcToShortDate(1632124800L,  timezone3), warning3.getStartingDate());
+            assertEquals(DateTimeConverter.convertUtcToShortDate(1632124800L,  timezone3), warning3.getStartingDate());
         }, () -> {
-            assertEquals(DateTimeConverter.ConvertUtcToShortDate(1632211200L, timezone3), warning3.getEndingDate());
+            assertEquals(DateTimeConverter.convertUtcToShortDate(1632211200L, timezone3), warning3.getEndingDate());
         }, () -> {
             assertEquals(" Bad air everywhere.", warning3.getDetails());
         });

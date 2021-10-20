@@ -38,7 +38,7 @@ public class OpenWeatherSevereWarningsRetriever extends UnicastRemoteObject impl
      * 
      * @precondition dataRetriever != null
      * @postcondition none
-     * @throws RemoteException
+     * @throws RemoteException - exception in the event of an RMI error
      */
     public OpenWeatherSevereWarningsRetriever(DataRetriever dataRetriever) throws RemoteException {
         super();
@@ -71,8 +71,8 @@ public class OpenWeatherSevereWarningsRetriever extends UnicastRemoteObject impl
         MeasurementUnits unit = Enum.valueOf(MeasurementUnits.class, units.name());
         String paramLatitude = "&lat=" + latitude;
         String paramLongitude = "&lon=" + longitude;
-        URL apiCall = this.dataRetriever.GetServiceAPICallURL(paramLatitude + paramLongitude,
+        URL apiCall = this.dataRetriever.getServiceAPICallURL(paramLatitude + paramLongitude,
                 OpenWeatherSevereWarningsRetriever.SEVERE_WARNING_BASE_URL, ServiceConstants.API_KEY, unit);
-        return this.dataRetriever.GetData(apiCall);
+        return this.dataRetriever.getData(apiCall);
     }
 }

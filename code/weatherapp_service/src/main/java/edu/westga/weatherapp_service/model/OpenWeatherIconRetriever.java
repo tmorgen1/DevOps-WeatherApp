@@ -7,6 +7,8 @@ import edu.westga.weatherapp_shared.interfaces.WeatherIconRetriever;
 /**
  * This weather icon retriever uses the OpenWeather API to obtain weather icons.  Also extends the UnicastRemoteObject
  * to allow for Remote Method Invocation.
+ * 
+ * @author Thomas Morgenstern
  */
 public class OpenWeatherIconRetriever extends UnicastRemoteObject implements WeatherIconRetriever {
     
@@ -23,14 +25,14 @@ public class OpenWeatherIconRetriever extends UnicastRemoteObject implements Wea
     /**
      * Creates an OpenWeather icon retriever.
      * 
-     * @throws RemoteException
+     * @throws RemoteException - exception in the event of an RMI error
      */
     public OpenWeatherIconRetriever() throws RemoteException {
         super();
     }
 
     @Override
-    public String GetWeatherIconUrlByIconId(String iconId) throws RemoteException {
+    public String getWeatherIconUrlByIconId(String iconId) throws RemoteException {
         if (iconId == null) {
             throw new IllegalArgumentException("Icon Id cannot be null");
         }

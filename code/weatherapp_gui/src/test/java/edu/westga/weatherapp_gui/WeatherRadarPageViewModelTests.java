@@ -41,7 +41,7 @@ public class WeatherRadarPageViewModelTests {
         LocationSearcher locationSearcher = new LocationSearcherMock();
         WeatherRadarPageViewModel viewModel = new WeatherRadarPageViewModel(mapRadarDataRetriever, locationSearcher);
         String expected = "test";
-        String result = viewModel.LoadWeatherRadarMap();
+        String result = viewModel.loadWeatherRadarMap();
         assertEquals(expected, result);
     }
 }

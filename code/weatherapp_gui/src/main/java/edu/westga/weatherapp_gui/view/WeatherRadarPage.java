@@ -14,6 +14,8 @@ import javafx.scene.Node;
 
 /**
  * Defines the weather radar page view
+ * 
+ * @author Michael Pavich
  */
 public class WeatherRadarPage {
 
@@ -62,7 +64,7 @@ public class WeatherRadarPage {
      * Fetches the weather radar map html and loads it in the weather radar web view
      */
     private void loadWeatherRadarMap() {
-        String weatherRadarHtmlString = this.viewModel.LoadWeatherRadarMap();
+        String weatherRadarHtmlString = this.viewModel.loadWeatherRadarMap();
         this.weatherRadarWebView.getEngine().loadContent(weatherRadarHtmlString);
     }
 

@@ -8,11 +8,11 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * Hello world!
+ * Program entry point.
  *
+ * @author Michael Pavich
  */
-public class App extends Application
-{
+public class App extends Application {
     public static final String LANDING_PAGE_TITLE = "Weather App - Home";
 	public static final String LANDING_PAGE_VIEW = "/edu/westga/weatherapp_gui/view/LandingPage.fxml";
 

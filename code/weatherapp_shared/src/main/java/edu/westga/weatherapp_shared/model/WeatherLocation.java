@@ -6,6 +6,8 @@ import java.io.Serializable;
  * This class wraps information regarding a weather location. Each data member
  * should be allowed to be null, because a user may only provide so much
  * information; however, no String can be empty.
+ * 
+ * @author Thomas Morgenstern
  */
 public class WeatherLocation implements Serializable {
 

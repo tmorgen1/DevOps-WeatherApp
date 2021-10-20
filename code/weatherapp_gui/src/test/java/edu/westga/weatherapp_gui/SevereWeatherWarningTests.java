@@ -49,9 +49,9 @@ public class SevereWeatherWarningTests {
         assertAll(() -> {
             assertEquals("Heat Advisory", warning.getWarningName());
         }, () -> {
-            assertEquals(DateTimeConverter.ConvertUtcToShortDate(1631722620L, timezone), warning.getStartingDate());
+            assertEquals(DateTimeConverter.convertUtcToShortDate(1631722620L, timezone), warning.getStartingDate());
         }, () -> {
-            assertEquals(DateTimeConverter.ConvertUtcToShortDate(1631856600L, timezone), warning.getEndingDate());
+            assertEquals(DateTimeConverter.convertUtcToShortDate(1631856600L, timezone), warning.getEndingDate());
         }, () -> {
             assertEquals("Its hot.", warning.getDetails());
         }, () -> {

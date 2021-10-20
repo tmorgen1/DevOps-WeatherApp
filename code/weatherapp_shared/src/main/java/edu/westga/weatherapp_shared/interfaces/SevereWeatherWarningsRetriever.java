@@ -24,7 +24,8 @@ public interface SevereWeatherWarningsRetriever extends Remote {
      * @postconditon none
      * 
      * @return a string array of the severe weather warnings for the given location
-     * @throws RemoteException
+     * @throws RemoteException - exception in the event of an RMI error
+     * @throws IllegalArgumentException - in the case of incorrect object usage
      */
     String getSevereWeatherWarningsForLocation(double latitude, double longitude,
             Enum<?> unit) throws RemoteException, IllegalArgumentException;

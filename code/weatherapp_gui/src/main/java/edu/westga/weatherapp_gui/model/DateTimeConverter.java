@@ -6,6 +6,8 @@ import java.util.Date;
 
 /**
  * UTC date time converter
+ * 
+ * @author Michael Pavich
  */
 public class DateTimeConverter {
 
@@ -16,9 +18,9 @@ public class DateTimeConverter {
      * @param timezone - the specified timezone
      * @return the day of the week name
      */
-    public static String ConvertUtcToDayOfWeek(Long utcDateTime, Long timezone) {
-        Date date = DateTimeConverter.ConvertUtcToDate(utcDateTime, timezone);
-        return DateTimeConverter.FormatDate(date, "EEEE");
+    public static String convertUtcToDayOfWeek(Long utcDateTime, Long timezone) {
+        Date date = DateTimeConverter.convertUtcToDate(utcDateTime, timezone);
+        return DateTimeConverter.formatDate(date, "EEEE");
     }
 
     /**
@@ -28,10 +30,10 @@ public class DateTimeConverter {
      * @param timezone - the specified timezone
      * @return the hour
      */
-    public static String ConvertUtcToHour(Long utcDateTime, Long timezone) {
-        Date date = DateTimeConverter.ConvertUtcToDate(utcDateTime, timezone);
+    public static String convertUtcToHour(Long utcDateTime, Long timezone) {
+        Date date = DateTimeConverter.convertUtcToDate(utcDateTime, timezone);
         long hour = (date.getTime() % 86400000) / 3600000;
-        String formattedHour = (hour == 0) ? "12:00 AM" : (hour % 12 == 0) ? "12:00 PM" : hour % 12 + ":00 " +((hour >= 12) ? "PM" : "AM");
+        String formattedHour = (hour == 0) ? "12:00 AM" : (hour % 12 == 0) ? "12:00 PM" : hour % 12 + ":00 " + ((hour >= 12) ? "PM" : "AM");
         return formattedHour;
     }
 
@@ -42,9 +44,9 @@ public class DateTimeConverter {
      * @param timezone - the timezone number
      * @return - the shorthand date
      */
-    public static String ConvertUtcToShortDate(Long utcDateTime, Long timezone) {
-        Date date = DateTimeConverter.ConvertUtcToDate(utcDateTime, timezone);
-        return DateTimeConverter.FormatDate(date, "MMMM d");
+    public static String convertUtcToShortDate(Long utcDateTime, Long timezone) {
+        Date date = DateTimeConverter.convertUtcToDate(utcDateTime, timezone);
+        return DateTimeConverter.formatDate(date, "MMMM d");
     }
 
     /**
@@ -54,7 +56,7 @@ public class DateTimeConverter {
      * @param format - the date format
      * @return - the formatted date
      */
-    public static String FormatDate(Date date, String format) {
+    public static String formatDate(Date date, String format) {
         if (format == null) {
             throw new IllegalArgumentException("Format cannot be null");
         }
@@ -73,7 +75,7 @@ public class DateTimeConverter {
      * @param timezone - the timezone
      * @return - the date object
      */
-    public static Date ConvertUtcToDate(Long utcDateTime, Long timezone) {
+    public static Date convertUtcToDate(Long utcDateTime, Long timezone) {
         return new Date(utcDateTime * 1000 + (timezone * 1000));
     }
 }

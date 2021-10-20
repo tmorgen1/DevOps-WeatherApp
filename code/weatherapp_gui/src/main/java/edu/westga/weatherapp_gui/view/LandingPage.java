@@ -53,8 +53,35 @@ import edu.westga.weatherapp_shared.enums.MeasurementUnits;
 
 /**
  * Defines the landing page view.
+ * 
+ * @author Michael Pavich
  */
 public class LandingPage {
+
+    /**
+     * Kelvin suffix
+     */
+    private static final String KELVIN_SUFFIX = " K";
+
+    /**
+     * Kilometers per hour symbol
+     */
+    private static final String KILOMETERS_PER_HOUR_SYMBOL = " km/h";
+
+    /**
+     * Celsius suffix
+     */
+    private static final String CELSIUS_SUFFIX = " °C";
+
+    /**
+     * Miles per hour symbol
+     */
+    private static final String MILES_PER_HOUR_SYMBOL = " mi/h";
+
+    /**
+     * Farenheit suffix
+     */
+    private static final String FARENHEIT_SUFFIX = " °F";
 
     /**
      * The landing page view model
@@ -214,12 +241,12 @@ public class LandingPage {
     /**
      * The temperature suffix
      */
-    private String TemperatureSuffix = " °F";
+    private String temperatureSuffix = FARENHEIT_SUFFIX;
 
     /**
      * The wind speed suffix
      */
-    private String WindSpeedSuffix = " mi/h";
+    private String windSpeedSuffix = MILES_PER_HOUR_SYMBOL;
 
     /**
      * The array list of hourly forecast panes
@@ -257,7 +284,7 @@ public class LandingPage {
         if (CurrentWeatherInformation.getWeatherLocation() == null && CurrentWeatherInformation.isFinishedFirstLoadIpGrab()) {
             return;
         } else if (CurrentWeatherInformation.getWeatherLocation() == null && !CurrentWeatherInformation.isFinishedFirstLoadIpGrab()) {
-            WeatherLocation currentLocation = this.viewModel.GetCurrentLocation();
+            WeatherLocation currentLocation = this.viewModel.getCurrentLocation();
             CurrentWeatherInformation.setWeatherLocation(currentLocation);
             this.updateSelectedWeatherLocation(currentLocation);
         }
@@ -265,7 +292,7 @@ public class LandingPage {
         this.hideNoWeatherInformation();
         this.showLoadingIndication();
         WeatherLocation weatherLocation = CurrentWeatherInformation.getWeatherLocation();
-        this.viewModel.GetHourlyForecastDataByWeatherLocation(weatherLocation, HOURS);
+        this.viewModel.getHourlyForecastDataByWeatherLocation(weatherLocation, HOURS);
         this.hourlyForecastHBox.getChildren().clear();
 
         if (CurrentWeatherInformation.getHourlyInfoPanes() != null) {
@@ -316,9 +343,9 @@ public class LandingPage {
                     String hour = LandingPage.this.getHour(index);
                     String temp = LandingPage.this.getTemperature(index);
         
-                    previousPanes.get(index).SetIconImageView(dayIconUrl);
-                    previousPanes.get(index).SetTemperatureLabel(temp);
-                    previousPanes.get(index).SetTimeLabel(hour);
+                    previousPanes.get(index).setIconImageView(dayIconUrl);
+                    previousPanes.get(index).setTemperatureLabel(temp);
+                    previousPanes.get(index).setTimeLabel(hour);
                 }
 
                 return previousPanes;
@@ -336,9 +363,9 @@ public class LandingPage {
      * @return the hour
      */
     private String getHour(int index) {
-        Long timezone = this.viewModel.GetTimezone();
-        Long utcDateTime = this.viewModel.GetHourUtcDateTime(index);
-        return DateTimeConverter.ConvertUtcToHour(utcDateTime, timezone);
+        Long timezone = this.viewModel.getTimezone();
+        Long utcDateTime = this.viewModel.getHourUtcDateTime(index);
+        return DateTimeConverter.convertUtcToHour(utcDateTime, timezone);
     }
 
     /**
@@ -347,8 +374,8 @@ public class LandingPage {
      * @return the temperature
      */
     private String getTemperature(int index) {
-        String maxTemperature = this.viewModel.GetHourTemperature(index);
-        return maxTemperature + this.TemperatureSuffix;
+        String maxTemperature = this.viewModel.getHourTemperature(index);
+        return maxTemperature + this.temperatureSuffix;
     }
 
     /**
@@ -357,7 +384,7 @@ public class LandingPage {
      * @return the weather icon url
      */
     private String getDayIconUrl(int index) {
-        return this.viewModel.GetDayWeatherIcon(index);
+        return this.viewModel.getDayWeatherIcon(index);
     }
 
     /**
@@ -449,7 +476,7 @@ public class LandingPage {
      */
     @FXML
     void hourlyInfoOnScroll(ScrollEvent event) {
-        if(event.getDeltaX() == 0 && event.getDeltaY() != 0) {
+        if (event.getDeltaX() == 0 && event.getDeltaY() != 0) {
             this.hourlyInfoScrollPane.setHvalue(this.hourlyInfoScrollPane.getHvalue() - event.getDeltaY() / this.hourlyForecastHBox.getWidth());
         }
     }
@@ -460,7 +487,7 @@ public class LandingPage {
     private void checkForSavedCurrentWeatherData() {
         if (CurrentWeatherInformation.getWeatherLocation() != null
                 && CurrentWeatherInformation.getWeatherData() != null) {
-            this.viewModel.SetCurrentWeatherData(CurrentWeatherInformation.getWeatherData());
+            this.viewModel.setCurrentWeatherData(CurrentWeatherInformation.getWeatherData());
             this.locationSearchTextField.setText(CurrentWeatherInformation.getWeatherLocation().getCity());
             this.updateAllWeatherInformation();
         } else if (CurrentWeatherInformation.getWeatherLocation() != null
@@ -477,7 +504,7 @@ public class LandingPage {
      */
     private void setSearchedLocationsListItems(String city) {
         if (city != null && !city.isEmpty()) {
-            Collection<WeatherLocation> result = this.viewModel.GetLocationSearchResults(city);
+            Collection<WeatherLocation> result = this.viewModel.getLocationSearchResults(city);
             if (result != null) {
                 ObservableList<WeatherLocation> searchItems = FXCollections.observableArrayList(result);
                 this.searchResultsListView.setItems(searchItems);
@@ -537,7 +564,7 @@ public class LandingPage {
      * Sets the favorited list view to fake data.
      */
     private void setFavoritedLocationsListItems() {
-        ObservableList<WeatherLocation> favoritedItems = FXCollections.observableArrayList(this.viewModel.GetFavoritedWeatherLocations());
+        ObservableList<WeatherLocation> favoritedItems = FXCollections.observableArrayList(this.viewModel.getFavoritedWeatherLocations());
         this.favoritedListView.setItems(favoritedItems);
     }
 
@@ -548,7 +575,7 @@ public class LandingPage {
     private void tryGetAndUpdateWeatherData() {
         try {
             WeatherLocation location = CurrentWeatherInformation.getWeatherLocation();
-            JSONObject result = this.viewModel.GetWeatherDataByWeatherLocation(location);
+            JSONObject result = this.viewModel.getWeatherDataByWeatherLocation(location);
             if (!this.checkWeatherData(result)) {
                 return;
             }
@@ -567,7 +594,7 @@ public class LandingPage {
      */
     private void updateFavoriteIcon() {
         if (CurrentWeatherInformation.getWeatherLocation() != null) {
-            if (this.viewModel.FavoritesContainsWeatherLocation(CurrentWeatherInformation.getWeatherLocation())) {
+            if (this.viewModel.favoritesContainsWeatherLocation(CurrentWeatherInformation.getWeatherLocation())) {
                 this.switchToFilledFavoriteIcon();
             } else {
                 this.switchToOutlineFavoriteIcon();
@@ -585,8 +612,8 @@ public class LandingPage {
      */
     @FXML
     void onCelsiusSelected(ActionEvent event) {
-        this.TemperatureSuffix = " °C";
-        this.WindSpeedSuffix = " km/h";
+        this.temperatureSuffix = CELSIUS_SUFFIX;
+        this.windSpeedSuffix = KILOMETERS_PER_HOUR_SYMBOL;
         this.setAllCheckMenuItemsFalse();
         this.celsiusCheckMenuItem.setSelected(true);
         CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Metric);
@@ -603,8 +630,8 @@ public class LandingPage {
      */
     @FXML
     void onFahrenheitSelected(ActionEvent event) {
-        this.TemperatureSuffix = " °F";
-        this.WindSpeedSuffix = " mi/h";
+        this.temperatureSuffix = FARENHEIT_SUFFIX;
+        this.windSpeedSuffix = MILES_PER_HOUR_SYMBOL;
         this.setAllCheckMenuItemsFalse();
         this.fahrenheitCheckMenuItem.setSelected(true);
         CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Imperial);
@@ -621,8 +648,8 @@ public class LandingPage {
      */
     @FXML
     void onKelvinSelected(ActionEvent event) {
-        this.TemperatureSuffix = " K";
-        this.WindSpeedSuffix = " km/h";
+        this.temperatureSuffix = KELVIN_SUFFIX;
+        this.windSpeedSuffix = KILOMETERS_PER_HOUR_SYMBOL;
         this.setAllCheckMenuItemsFalse();
         this.kelvinCheckMenuItem.setSelected(true);
         CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Kelvin);
@@ -636,12 +663,12 @@ public class LandingPage {
         this.setAllCheckMenuItemsFalse();
         if (CurrentWeatherInformation.getMeasurementUnits() == MeasurementUnits.Imperial) {
             this.fahrenheitCheckMenuItem.setSelected(true);
-            this.TemperatureSuffix = " °F";
+            this.temperatureSuffix = FARENHEIT_SUFFIX;
         } else if (CurrentWeatherInformation.getMeasurementUnits() == MeasurementUnits.Metric) {
-            this.TemperatureSuffix = " °C";
+            this.temperatureSuffix = CELSIUS_SUFFIX;
             this.celsiusCheckMenuItem.setSelected(true);
         } else {
-            this.TemperatureSuffix = " K";
+            this.temperatureSuffix = KELVIN_SUFFIX;
             this.kelvinCheckMenuItem.setSelected(true);
         }
     }
@@ -671,7 +698,7 @@ public class LandingPage {
     @FXML
     void onFavoriteFilledClicked(MouseEvent event) {
         if (CurrentWeatherInformation.getWeatherLocation() != null) {
-            this.viewModel.RemoveFavoritedLocation(CurrentWeatherInformation.getWeatherLocation());
+            this.viewModel.removeFavoritedLocation(CurrentWeatherInformation.getWeatherLocation());
             this.switchToOutlineFavoriteIcon();
             this.setFavoritedLocationsListItems();
         }
@@ -691,7 +718,7 @@ public class LandingPage {
     @FXML
     void onFavoriteOutlineClicked(MouseEvent event) {
         if (CurrentWeatherInformation.getWeatherLocation() != null) {
-            this.viewModel.AddFavoritedLocation(CurrentWeatherInformation.getWeatherLocation());
+            this.viewModel.addFavoritedLocation(CurrentWeatherInformation.getWeatherLocation());
             this.switchToFilledFavoriteIcon();
             this.setFavoritedLocationsListItems();
         }
@@ -829,15 +856,15 @@ public class LandingPage {
      * Updates the current temperature label
      */
     private void updateCurrentTemperature() {
-        String temperature = this.viewModel.GetCurrentTemperature();
-        this.currentTemperatureLabel.setText(temperature + this.TemperatureSuffix);
+        String temperature = this.viewModel.getCurrentTemperature();
+        this.currentTemperatureLabel.setText(temperature + this.temperatureSuffix);
     }
 
     /**
      * Updates the current weather description label
      */
     private void updateCurrentWeatherDescription() {
-        String description = this.viewModel.GetCurrentWeatherDescription();
+        String description = this.viewModel.getCurrentWeatherDescription();
         this.weatherDescriptionLabel.setText(description);
     }
 
@@ -845,7 +872,7 @@ public class LandingPage {
      * Updates the current weather icon
      */
     private void updateCurrentWeatherIcon() {
-        String iconURL = this.viewModel.GetCurrentWeatherIcon();
+        String iconURL = this.viewModel.getCurrentWeatherIcon();
         Image iconImage = new Image(iconURL);
         this.weatherIconImageView.setImage(iconImage);
     }
@@ -854,15 +881,15 @@ public class LandingPage {
      * Updates the current wind speed label
      */
     private void updateCurrentWindSpeed() {
-        String windSpeed = this.viewModel.GetCurrentWindSpeed();
-        this.windSpeedLabel.setText(windSpeed + this.WindSpeedSuffix);
+        String windSpeed = this.viewModel.getCurrentWindSpeed();
+        this.windSpeedLabel.setText(windSpeed + this.windSpeedSuffix);
     }
 
     /**
      * Updates the current humidity label
      */
     private void updateCurrentHumidity() {
-        String humidity = this.viewModel.GetCurrentHumidity();
+        String humidity = this.viewModel.getCurrentHumidity();
         String humiditySuffix = "%";
         this.humidityLabel.setText(humidity + humiditySuffix);
     }

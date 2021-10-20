@@ -94,7 +94,7 @@ public class LandingPageViewModelTests {
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
         assertThrows(IllegalArgumentException.class, () -> {
-            viewModel.GetWeatherDataByWeatherLocation(null);
+            viewModel.getWeatherDataByWeatherLocation(null);
         });
     }
 
@@ -106,7 +106,7 @@ public class LandingPageViewModelTests {
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
         assertThrows(IllegalArgumentException.class, () -> {
-            viewModel.GetHourlyForecastDataByWeatherLocation(null, 1);
+            viewModel.getHourlyForecastDataByWeatherLocation(null, 1);
         });
     }
 
@@ -117,7 +117,7 @@ public class LandingPageViewModelTests {
         WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
-        JSONObject result = viewModel.GetWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 32.40));
+        JSONObject result = viewModel.getWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 32.40));
         assertEquals(5, result.getJSONObject("wind").getDouble("speed"));
     }
 
@@ -128,7 +128,7 @@ public class LandingPageViewModelTests {
         WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
-        JSONObject result = viewModel.GetHourlyForecastDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 32.40), 1);
+        JSONObject result = viewModel.getHourlyForecastDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 32.40), 1);
         assertEquals(5, result.getJSONObject("wind").getDouble("speed"));
     }
 
@@ -139,7 +139,7 @@ public class LandingPageViewModelTests {
         WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
-        JSONObject result = viewModel.GetWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "N/A", 30.40, 32.40));
+        JSONObject result = viewModel.getWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "N/A", 30.40, 32.40));
         assertEquals(5, result.getJSONObject("wind").getDouble("speed"));
     }
 
@@ -150,7 +150,7 @@ public class LandingPageViewModelTests {
         WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
-        JSONObject result = viewModel.GetHourlyForecastDataByWeatherLocation(new WeatherLocation("city", "country", "N/A", 30.40, 32.40), 1);
+        JSONObject result = viewModel.getHourlyForecastDataByWeatherLocation(new WeatherLocation("city", "country", "N/A", 30.40, 32.40), 1);
         assertEquals(5, result.getJSONObject("wind").getDouble("speed"));
     }
 
@@ -162,7 +162,7 @@ public class LandingPageViewModelTests {
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
         assertThrows(IllegalArgumentException.class, () -> {
-            viewModel.GetCurrentTemperature();
+            viewModel.getCurrentTemperature();
         });
     }
 
@@ -173,8 +173,8 @@ public class LandingPageViewModelTests {
         WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
-        viewModel.GetWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 32.40));
-        String result = viewModel.GetCurrentTemperature();
+        viewModel.getWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 32.40));
+        String result = viewModel.getCurrentTemperature();
         assertEquals("70", result);
     }
 
@@ -186,7 +186,7 @@ public class LandingPageViewModelTests {
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
         assertThrows(IllegalArgumentException.class, () -> {
-            viewModel.GetCurrentHumidity();
+            viewModel.getCurrentHumidity();
         });
     }
 
@@ -197,8 +197,8 @@ public class LandingPageViewModelTests {
         WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
-        viewModel.GetWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 32.40));
-        String result = viewModel.GetCurrentHumidity();
+        viewModel.getWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 32.40));
+        String result = viewModel.getCurrentHumidity();
         assertEquals("80", result);
     }
 
@@ -210,7 +210,7 @@ public class LandingPageViewModelTests {
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
         assertThrows(IllegalArgumentException.class, () -> {
-            viewModel.GetCurrentWeatherDescription();
+            viewModel.getCurrentWeatherDescription();
         });
     }
 
@@ -221,8 +221,8 @@ public class LandingPageViewModelTests {
         WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
-        viewModel.GetWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 32.40));
-        String result = viewModel.GetCurrentWeatherDescription();
+        viewModel.getWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 32.40));
+        String result = viewModel.getCurrentWeatherDescription();
         assertEquals("Cloudy", result);
     }
 
@@ -234,7 +234,7 @@ public class LandingPageViewModelTests {
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
         assertThrows(IllegalArgumentException.class, () -> {
-            viewModel.GetCurrentWindSpeed();
+            viewModel.getCurrentWindSpeed();
         });
     }
 
@@ -245,8 +245,8 @@ public class LandingPageViewModelTests {
         WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
-            viewModel.GetWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 32.40));
-        String result = viewModel.GetCurrentWindSpeed();
+            viewModel.getWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 32.40));
+        String result = viewModel.getCurrentWindSpeed();
         assertEquals("5", result);
     }
 
@@ -258,7 +258,7 @@ public class LandingPageViewModelTests {
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
         assertThrows(IllegalArgumentException.class, () -> {
-            viewModel.GetCurrentWeatherIcon();
+            viewModel.getCurrentWeatherIcon();
         });
     }
 
@@ -269,8 +269,8 @@ public class LandingPageViewModelTests {
         WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
-        viewModel.GetWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 32.40));
-        String result = viewModel.GetCurrentWeatherIcon();
+        viewModel.getWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 32.40));
+        String result = viewModel.getCurrentWeatherIcon();
         assertEquals("http://openweathermap.org/img/wn/test@4x.png", result);
     }
 
@@ -282,7 +282,7 @@ public class LandingPageViewModelTests {
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
         assertThrows(IllegalArgumentException.class, () -> {
-            viewModel.SetCurrentWeatherData(null);
+            viewModel.setCurrentWeatherData(null);
         });
     }
 
@@ -294,7 +294,7 @@ public class LandingPageViewModelTests {
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
         JSONObject testObject = new JSONObject().put("test", 1);
-        viewModel.SetCurrentWeatherData(testObject);
+        viewModel.setCurrentWeatherData(testObject);
         assertNotNull(viewModel);
     }
 
@@ -306,7 +306,7 @@ public class LandingPageViewModelTests {
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
         assertThrows(IllegalArgumentException.class, () -> {
-            viewModel.GetLocationSearchResults(null);
+            viewModel.getLocationSearchResults(null);
         });
     }
 
@@ -318,7 +318,7 @@ public class LandingPageViewModelTests {
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
         assertThrows(IllegalArgumentException.class, () -> {
-            viewModel.GetLocationSearchResults("");
+            viewModel.getLocationSearchResults("");
         });
     }
 
@@ -329,7 +329,7 @@ public class LandingPageViewModelTests {
         WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
-        Collection<WeatherLocation> locations = viewModel.GetLocationSearchResults("Newnan");
+        Collection<WeatherLocation> locations = viewModel.getLocationSearchResults("Newnan");
         assertEquals(1, locations.size());
     }
 
@@ -341,7 +341,7 @@ public class LandingPageViewModelTests {
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
         assertThrows(IllegalArgumentException.class, () -> {
-            viewModel.RemoveFavoritedLocation(null);
+            viewModel.removeFavoritedLocation(null);
         });
     }
 
@@ -353,9 +353,9 @@ public class LandingPageViewModelTests {
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
         WeatherLocation location = new WeatherLocation("city", "country", "state", 30.4, 30.4);
-        viewModel.AddFavoritedLocation(location);
-        viewModel.RemoveFavoritedLocation(location);
-        assertEquals(0, viewModel.GetFavoritedWeatherLocations().size());
+        viewModel.addFavoritedLocation(location);
+        viewModel.removeFavoritedLocation(location);
+        assertEquals(0, viewModel.getFavoritedWeatherLocations().size());
     }
 
     @Test
@@ -366,7 +366,7 @@ public class LandingPageViewModelTests {
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
         assertThrows(IllegalArgumentException.class, () -> {
-            viewModel.AddFavoritedLocation(null);
+            viewModel.addFavoritedLocation(null);
         });
     }
 
@@ -378,8 +378,8 @@ public class LandingPageViewModelTests {
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
         WeatherLocation location = new WeatherLocation("city", "country", "state", 30.4, 30.4);
-        viewModel.AddFavoritedLocation(location);
-        assertEquals(1, viewModel.GetFavoritedWeatherLocations().size());
+        viewModel.addFavoritedLocation(location);
+        assertEquals(1, viewModel.getFavoritedWeatherLocations().size());
     }
 
     @Test
@@ -390,9 +390,9 @@ public class LandingPageViewModelTests {
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
         WeatherLocation location = new WeatherLocation("city", "country", "state", 30.4, 30.4);
-        viewModel.AddFavoritedLocation(location);
+        viewModel.addFavoritedLocation(location);
         Collection<WeatherLocation> locations = List.of(location);
-        Collection<WeatherLocation> result = viewModel.GetFavoritedWeatherLocations();
+        Collection<WeatherLocation> result = viewModel.getFavoritedWeatherLocations();
         assertEquals(locations, result);
     }
 
@@ -404,8 +404,8 @@ public class LandingPageViewModelTests {
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
         WeatherLocation location = new WeatherLocation("city", "country", "state", 30.4, 30.4);
-        viewModel.AddFavoritedLocation(location);
-        boolean result = viewModel.FavoritesContainsWeatherLocation(location);
+        viewModel.addFavoritedLocation(location);
+        boolean result = viewModel.favoritesContainsWeatherLocation(location);
         assertTrue(result);
     }
 
@@ -418,8 +418,8 @@ public class LandingPageViewModelTests {
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
         WeatherLocation location = new WeatherLocation("city", "country", "state", 30.4, 30.4);
         WeatherLocation otherLocation = new WeatherLocation("otherCity", "country", "state", 30.4, 30.4);
-        viewModel.AddFavoritedLocation(location);
-        boolean result = viewModel.FavoritesContainsWeatherLocation(otherLocation);
+        viewModel.addFavoritedLocation(location);
+        boolean result = viewModel.favoritesContainsWeatherLocation(otherLocation);
         assertFalse(result);
     }
 
@@ -431,7 +431,7 @@ public class LandingPageViewModelTests {
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
         WeatherLocation location = new WeatherLocation("city", "country", "state", 30.4, 30.4);
-        boolean result = viewModel.FavoritesContainsWeatherLocation(location);
+        boolean result = viewModel.favoritesContainsWeatherLocation(location);
         assertFalse(result);
     }
 
@@ -459,7 +459,7 @@ public class LandingPageViewModelTests {
             LocationSearcher locationSearcher = new LocationSearcherMock();
             LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
         assertThrows(IllegalArgumentException.class, () -> {
-            viewModel.GetTimezone();
+            viewModel.getTimezone();
         });
     }
 
@@ -470,8 +470,8 @@ public class LandingPageViewModelTests {
         WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
-        viewModel.GetHourlyForecastDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 30.40), 1);
-        Long timezone = viewModel.GetTimezone();
+        viewModel.getHourlyForecastDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 30.40), 1);
+        Long timezone = viewModel.getTimezone();
         assertEquals(100, timezone);
     }
 
@@ -483,7 +483,7 @@ public class LandingPageViewModelTests {
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
         assertThrows(IllegalArgumentException.class, () -> {
-            viewModel.GetHourTemperature(0);
+            viewModel.getHourTemperature(0);
         });
     }
 
@@ -494,8 +494,8 @@ public class LandingPageViewModelTests {
         WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
-        viewModel.GetHourlyForecastDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 30.40), 1);
-        String result = viewModel.GetHourTemperature(0);
+        viewModel.getHourlyForecastDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 30.40), 1);
+        String result = viewModel.getHourTemperature(0);
         assertEquals("98", result);
     }
 
@@ -507,7 +507,7 @@ public class LandingPageViewModelTests {
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
         assertThrows(IllegalArgumentException.class, () -> {
-            viewModel.GetDayWeatherIcon(0);
+            viewModel.getDayWeatherIcon(0);
         });
     }
 
@@ -518,8 +518,8 @@ public class LandingPageViewModelTests {
         WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
-        viewModel.GetHourlyForecastDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 30.40), 1);
-        String result = viewModel.GetDayWeatherIcon(0);
+        viewModel.getHourlyForecastDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 30.40), 1);
+        String result = viewModel.getDayWeatherIcon(0);
         assertEquals("http://openweathermap.org/img/wn/fake-url@4x.png", result);
     }
 
@@ -531,7 +531,7 @@ public class LandingPageViewModelTests {
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
         assertThrows(IllegalArgumentException.class, () -> {
-            viewModel.GetHourUtcDateTime(0);
+            viewModel.getHourUtcDateTime(0);
         });
     }
 
@@ -542,8 +542,8 @@ public class LandingPageViewModelTests {
         WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
-        viewModel.GetHourlyForecastDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 30.40), 1);
-        Long utcTime = viewModel.GetHourUtcDateTime(0);
+        viewModel.getHourlyForecastDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 30.40), 1);
+        Long utcTime = viewModel.getHourUtcDateTime(0);
         assertEquals(500, utcTime);
     }
 
@@ -555,7 +555,7 @@ public class LandingPageViewModelTests {
         LocationSearcher locationSearcher = new LocationSearcherMock();
         LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
         WeatherLocation expected = new WeatherLocation("city", "country", "state", 30.40, 30.40);
-        WeatherLocation result = viewModel.GetCurrentLocation();
+        WeatherLocation result = viewModel.getCurrentLocation();
 
         assertEquals(expected, result);
     }

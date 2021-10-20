@@ -11,6 +11,8 @@ import javafx.scene.layout.Pane;
 
 /**
  * The custom day forecast pane component
+ * 
+ * @author Michael Pavich
  */
 public class DayForecastPane extends Pane {
 
@@ -60,11 +62,11 @@ public class DayForecastPane extends Pane {
         
         try {
             loader.load();
-            this.SetDayOfTheWeekLabel(dayOfWeek);
-            this.SetDateLabel(date);
-            this.SetMaxTemperatureLabel(maxTemp);
-            this.SetMinTemperatureLabel(minTemp);
-            this.SetWeatherIconImageView(weatherIconUrl);
+            this.setDayOfTheWeekLabel(dayOfWeek);
+            this.setDateLabel(date);
+            this.setMaxTemperatureLabel(maxTemp);
+            this.setMinTemperatureLabel(minTemp);
+            this.setWeatherIconImageView(weatherIconUrl);
         } catch (IOException exception) {
             System.err.println("IO Exception: Error loading day forecast pane component");
         }
@@ -75,7 +77,7 @@ public class DayForecastPane extends Pane {
      * 
      * @param dayOfWeek - the new day of the week
      */
-    public void SetDayOfTheWeekLabel(String dayOfWeek) {
+    public void setDayOfTheWeekLabel(String dayOfWeek) {
         this.dayOfWeekLabel.setText(dayOfWeek);
     }
 
@@ -84,7 +86,7 @@ public class DayForecastPane extends Pane {
      * 
      * @param date - the new date
      */
-    public void SetDateLabel(String date) {
+    public void setDateLabel(String date) {
         this.dateLabel.setText(date);
     }
 
@@ -93,7 +95,7 @@ public class DayForecastPane extends Pane {
      * 
      * @param temperature - the new temperature
      */
-    public void SetMaxTemperatureLabel(String temperature) {
+    public void setMaxTemperatureLabel(String temperature) {
         this.maxTemperatureLabel.setText(temperature);
     }
 
@@ -102,7 +104,7 @@ public class DayForecastPane extends Pane {
      * 
      * @param temperature - the new temperature
      */
-    public void SetMinTemperatureLabel(String temperature) {
+    public void setMinTemperatureLabel(String temperature) {
         this.minTemperatureLabel.setText(temperature);
     }
 
@@ -111,7 +113,7 @@ public class DayForecastPane extends Pane {
      * 
      * @param url - the new image url
      */
-    public void SetWeatherIconImageView(String url) {
+    public void setWeatherIconImageView(String url) {
         Image image = new Image(url);
         this.weatherIconImageView.setImage(image);
     }

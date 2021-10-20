@@ -7,6 +7,8 @@ import java.rmi.RemoteException;
  * Weather Icon Retriever interface.  Extends the remote class to allow for
  * Remote Method Invocation.  Objects that implement this interface should be able to
  * obtain weather icon urls given icon ids.
+ * 
+ * @author Thomas Morgenstern
  */
 public interface WeatherIconRetriever extends Remote {
 
@@ -15,8 +17,8 @@ public interface WeatherIconRetriever extends Remote {
      * 
      * @param iconId - the weather icon id
      * @return the url to the weather icon
-     * @throws RemoteException
+     * @throws RemoteException - exception in the event of an RMI error
      */
-    public String GetWeatherIconUrlByIconId(String iconId) throws RemoteException;
+    String getWeatherIconUrlByIconId(String iconId) throws RemoteException;
     
 }

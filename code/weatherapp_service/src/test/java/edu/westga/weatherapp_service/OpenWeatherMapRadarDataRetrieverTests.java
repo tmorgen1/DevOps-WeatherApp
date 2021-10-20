@@ -31,7 +31,7 @@ public class OpenWeatherMapRadarDataRetrieverTests {
     @Test
     public void getMapRadarHTMLReturnsNonNullStringAfterRead() {
         try {
-            assertNotNull(new OpenWeatherMapRadarDataRetriever("web_radar_index.html").GetMapRadarHTML());
+            assertNotNull(new OpenWeatherMapRadarDataRetriever("web_radar_index.html").getMapRadarHTML());
         } catch (RemoteException e) {
             e.printStackTrace();
             fail("Remote exception while testing");

@@ -11,7 +11,7 @@ public class IpGrabberTests {
 
     @Test
     public void getCurrentIpAddress() {
-        String result = IpGrabber.GetCurrentIpAddress();
+        String result = IpGrabber.getCurrentIpAddress();
         assertNotNull(result);
     }
 }

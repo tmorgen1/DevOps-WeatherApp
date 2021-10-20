@@ -9,10 +9,15 @@ import java.util.Scanner;
 import edu.westga.weatherapp_shared.enums.MeasurementUnits;
 import edu.westga.weatherapp_shared.interfaces.DataRetriever;
 
+/**
+ * Implements the DataRetriever interface.  Handles streaming data response from OpenWeather API calls.
+ * 
+ * @author Thomas Morgenstern
+ */
 public class APIDataRetriever implements DataRetriever {
 
     @Override
-    public String GetData(URL apiCall) {
+    public String getData(URL apiCall) {
         if (apiCall == null) {
             throw new IllegalArgumentException("apiCall should not be null");
         }
@@ -35,7 +40,7 @@ public class APIDataRetriever implements DataRetriever {
     }
 
     @Override
-    public URL GetServiceAPICallURL(String apiCallCommand, String apiCallBase, String apiKey, MeasurementUnits units) {
+    public URL getServiceAPICallURL(String apiCallCommand, String apiCallBase, String apiKey, MeasurementUnits units) {
         if (apiCallCommand == null) {
             throw new IllegalArgumentException("apiCallCommand should not be null");
         }
