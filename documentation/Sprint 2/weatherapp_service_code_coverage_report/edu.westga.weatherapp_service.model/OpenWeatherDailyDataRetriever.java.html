@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OpenWeatherDailyDataRetriever.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">weatherapp_service</a> &gt; <a href="index.source.html" class="el_package">edu.westga.weatherapp_service.model</a> &gt; <span class="el_source">OpenWeatherDailyDataRetriever.java</span></div><h1>OpenWeatherDailyDataRetriever.java</h1><pre class="source lang-java linenums">package edu.westga.weatherapp_service.model;
+
+import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
+import edu.westga.weatherapp_service.resources.ServiceConstants;
+import edu.westga.weatherapp_shared.enums.MeasurementUnits;
+import edu.westga.weatherapp_shared.interfaces.DataRetriever;
+import edu.westga.weatherapp_shared.interfaces.DailyWeatherDataRetriever;
+
+/**
+ * This weather data retriever uses the OpenWeather API to obtain daily weather
+ * data. Also extends the UnicastRemoteObject to allow for Remote Method
+ * Invocation.
+ */
+public class OpenWeatherDailyDataRetriever extends UnicastRemoteObject implements DailyWeatherDataRetriever {
+
+    /**
+     * OpenWeather API Base call.
+     */
+    private static final String OPEN_WEATHER_API_CALL_BASE = &quot;https://pro.openweathermap.org/data/2.5/forecast/daily?appid=&quot;;
+
+    /**
+     * The unit of measurement for api calls.
+     */
+    private MeasurementUnits units;
+
+    /**
+     * The object that handles data retrieval from the web calls.
+     */
+    private DataRetriever dataRetriever;
+
+    /**
+     * Creates an OpenWeather data retriever. Provides a daily forecast. Defaults to
+     * imperial units.
+     * 
+     * @param retriever - the object to handle web url calls
+     * @throws RemoteException
+     */
+    public OpenWeatherDailyDataRetriever(DataRetriever retriever) throws RemoteException {
+<span class="fc" id="L44">        super();</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">        if (retriever == null) {</span>
+<span class="fc" id="L46">            throw new IllegalArgumentException(&quot;APIDataRetriever should not be null&quot;);</span>
+        }
+
+<span class="fc" id="L49">        this.dataRetriever = retriever;</span>
+<span class="fc" id="L50">        this.units = MeasurementUnits.Imperial;</span>
+<span class="fc" id="L51">    }</span>
+
+    /**
+     * Creates an OpenWeather data retriever. Provides a daily forecast. Sets the
+     * units of measurement to what is provided.
+     * 
+     * @param retriever - the object to handle web url calls
+     * @param units     - the units of measurement
+     * @throws RemoteException
+     */
+    public OpenWeatherDailyDataRetriever(DataRetriever retriever, MeasurementUnits units) throws RemoteException {
+<span class="fc" id="L62">        super();</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        if (retriever == null) {</span>
+<span class="fc" id="L64">            throw new IllegalArgumentException(&quot;APIDataRetriever should not be null&quot;);</span>
+        }
+<span class="fc bfc" id="L66" title="All 2 branches covered.">        if (units == null) {</span>
+<span class="fc" id="L67">            throw new IllegalArgumentException(&quot;units should not be null&quot;);</span>
+        }
+
+<span class="fc" id="L70">        this.dataRetriever = retriever;</span>
+<span class="fc" id="L71">        this.units = units;</span>
+<span class="fc" id="L72">    }</span>
+
+    @Override
+    public String GetDataByCity(String cityName, int numOfDays) throws RemoteException {
+<span class="fc bfc" id="L76" title="All 2 branches covered.">        if (cityName == null) {</span>
+<span class="fc" id="L77">            throw new IllegalArgumentException(&quot;cityName should not be null&quot;);</span>
+        }
+<span class="fc bfc" id="L79" title="All 2 branches covered.">        if (cityName.isEmpty()) {</span>
+<span class="fc" id="L80">            throw new IllegalArgumentException(&quot;cityName should not be empty&quot;);</span>
+        }
+<span class="fc bfc" id="L82" title="All 4 branches covered.">        if (numOfDays &lt; 1 || numOfDays &gt; 16) {</span>
+<span class="fc" id="L83">            throw new IllegalArgumentException(&quot;numOfDays should be between 1 and 16, inclusive&quot;);</span>
+        }
+
+<span class="fc" id="L86">        cityName = URLEncoder.encode(cityName, StandardCharsets.UTF_8);</span>
+
+<span class="fc" id="L88">        URL apiCall = this.dataRetriever.GetServiceAPICallURL(&quot;&amp;q=&quot; + cityName + &quot;&amp;cnt=&quot; + numOfDays,</span>
+                OpenWeatherDailyDataRetriever.OPEN_WEATHER_API_CALL_BASE, ServiceConstants.API_KEY, this.units);
+<span class="fc" id="L90">        return this.dataRetriever.GetData(apiCall);</span>
+    }
+
+    @Override
+    public String GetDataByCityAndStateCode(String cityName, String stateCode, int numOfDays) throws RemoteException {
+<span class="fc bfc" id="L95" title="All 2 branches covered.">        if (cityName == null) {</span>
+<span class="fc" id="L96">            throw new IllegalArgumentException(&quot;cityName should not be null&quot;);</span>
+        }
+<span class="fc bfc" id="L98" title="All 2 branches covered.">        if (stateCode == null) {</span>
+<span class="fc" id="L99">            throw new IllegalArgumentException(&quot;stateCode should not be null&quot;);</span>
+        }
+<span class="fc bfc" id="L101" title="All 2 branches covered.">        if (cityName.isEmpty()) {</span>
+<span class="fc" id="L102">            throw new IllegalArgumentException(&quot;cityName should not be empty&quot;);</span>
+        }
+<span class="fc bfc" id="L104" title="All 2 branches covered.">        if (stateCode.isEmpty()) {</span>
+<span class="fc" id="L105">            throw new IllegalArgumentException(&quot;stateCode should not be empty&quot;);</span>
+        }
+<span class="fc bfc" id="L107" title="All 4 branches covered.">        if (numOfDays &lt; 1 || numOfDays &gt; 16) {</span>
+<span class="fc" id="L108">            throw new IllegalArgumentException(&quot;numOfDays should be between 1 and 16, inclusive&quot;);</span>
+        }
+
+<span class="fc" id="L111">        cityName = URLEncoder.encode(cityName, StandardCharsets.UTF_8);</span>
+
+<span class="fc" id="L113">        URL apiCall = this.dataRetriever.GetServiceAPICallURL(&quot;&amp;q=&quot; + cityName + &quot;,&quot; + stateCode + &quot;&amp;cnt=&quot; + numOfDays,</span>
+                OpenWeatherDailyDataRetriever.OPEN_WEATHER_API_CALL_BASE, ServiceConstants.API_KEY, this.units);
+<span class="fc" id="L115">        return this.dataRetriever.GetData(apiCall);</span>
+    }
+
+    @Override
+    public String GetDataByCityAndCountryCode(String cityName, String countryCode, int numOfDays)
+            throws RemoteException {
+<span class="fc bfc" id="L121" title="All 2 branches covered.">        if (cityName == null) {</span>
+<span class="fc" id="L122">            throw new IllegalArgumentException(&quot;cityName should not be null&quot;);</span>
+        }
+<span class="fc bfc" id="L124" title="All 2 branches covered.">        if (countryCode == null) {</span>
+<span class="fc" id="L125">            throw new IllegalArgumentException(&quot;countryCode should not be null&quot;);</span>
+        }
+<span class="fc bfc" id="L127" title="All 2 branches covered.">        if (cityName.isEmpty()) {</span>
+<span class="fc" id="L128">            throw new IllegalArgumentException(&quot;cityName should not be empty&quot;);</span>
+        }
+<span class="fc bfc" id="L130" title="All 2 branches covered.">        if (countryCode.isEmpty()) {</span>
+<span class="fc" id="L131">            throw new IllegalArgumentException(&quot;countryCode should not be empty&quot;);</span>
+        }
+<span class="fc bfc" id="L133" title="All 4 branches covered.">        if (numOfDays &lt; 1 || numOfDays &gt; 16) {</span>
+<span class="fc" id="L134">            throw new IllegalArgumentException(&quot;numOfDays should be between 1 and 16, inclusive&quot;);</span>
+        }
+
+<span class="fc" id="L137">        cityName = URLEncoder.encode(cityName, StandardCharsets.UTF_8);</span>
+
+<span class="fc" id="L139">        URL apiCall = this.dataRetriever.GetServiceAPICallURL(</span>
+                &quot;&amp;q=&quot; + cityName + &quot;,&quot; + countryCode + &quot;&amp;cnt=&quot; + numOfDays,
+                OpenWeatherDailyDataRetriever.OPEN_WEATHER_API_CALL_BASE, ServiceConstants.API_KEY, this.units);
+<span class="fc" id="L142">        return this.dataRetriever.GetData(apiCall);</span>
+    }
+
+    @Override
+    public String GetDataByCityAndStateCodeAndCountryCode(String cityName, String stateCode, String countryCode,
+            int numOfDays) throws RemoteException {
+<span class="fc bfc" id="L148" title="All 2 branches covered.">        if (cityName == null) {</span>
+<span class="fc" id="L149">            throw new IllegalArgumentException(&quot;cityName should not be null&quot;);</span>
+        }
+<span class="fc bfc" id="L151" title="All 2 branches covered.">        if (stateCode == null) {</span>
+<span class="fc" id="L152">            throw new IllegalArgumentException(&quot;stateCode should not be null&quot;);</span>
+        }
+<span class="fc bfc" id="L154" title="All 2 branches covered.">        if (countryCode == null) {</span>
+<span class="fc" id="L155">            throw new IllegalArgumentException(&quot;countryCode should not be null&quot;);</span>
+        }
+<span class="fc bfc" id="L157" title="All 2 branches covered.">        if (cityName.isEmpty()) {</span>
+<span class="fc" id="L158">            throw new IllegalArgumentException(&quot;cityName should not be empty&quot;);</span>
+        }
+<span class="fc bfc" id="L160" title="All 2 branches covered.">        if (stateCode.isEmpty()) {</span>
+<span class="fc" id="L161">            throw new IllegalArgumentException(&quot;stateCode should not be empty&quot;);</span>
+        }
+<span class="fc bfc" id="L163" title="All 2 branches covered.">        if (countryCode.isEmpty()) {</span>
+<span class="fc" id="L164">            throw new IllegalArgumentException(&quot;countryCode should not be empty&quot;);</span>
+        }
+<span class="fc bfc" id="L166" title="All 4 branches covered.">        if (numOfDays &lt; 1 || numOfDays &gt; 16) {</span>
+<span class="fc" id="L167">            throw new IllegalArgumentException(&quot;numOfDays should be between 1 and 16, inclusive&quot;);</span>
+        }
+
+<span class="fc" id="L170">        cityName = URLEncoder.encode(cityName, StandardCharsets.UTF_8);</span>
+
+<span class="fc" id="L172">        URL apiCall = this.dataRetriever.GetServiceAPICallURL(</span>
+                &quot;&amp;q=&quot; + cityName + &quot;,&quot; + stateCode + &quot;,&quot; + countryCode + &quot;&amp;cnt=&quot; + numOfDays,
+                OpenWeatherDailyDataRetriever.OPEN_WEATHER_API_CALL_BASE, ServiceConstants.API_KEY, this.units);
+<span class="fc" id="L175">        return this.dataRetriever.GetData(apiCall);</span>
+    }
+
+    @Override
+    public MeasurementUnits getUnitsOfMeasurement() throws RemoteException {
+<span class="fc" id="L180">        return this.units;</span>
+    }
+
+    @Override
+    public void setUnitsOfMeasurement(MeasurementUnits units) throws RemoteException {
+<span class="fc bfc" id="L185" title="All 2 branches covered.">        if (units == null) {</span>
+<span class="fc" id="L186">            throw new IllegalArgumentException(&quot;units should not be null&quot;);</span>
+        }
+
+<span class="fc" id="L189">        this.units = units;</span>
+<span class="fc" id="L190">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

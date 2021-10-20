@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SevereWeatherWarningPageViewModel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">weatherapp_gui</a> &gt; <a href="index.source.html" class="el_package">edu.westga.weatherapp_gui.viewmodel</a> &gt; <span class="el_source">SevereWeatherWarningPageViewModel.java</span></div><h1>SevereWeatherWarningPageViewModel.java</h1><pre class="source lang-java linenums">package edu.westga.weatherapp_gui.viewmodel;
+
+import edu.westga.weatherapp_gui.model.SevereWeatherWarning;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
+/**
+ * The view model class for the severe weather warnings titled pane.
+ * 
+ * @author Eboni Walker
+ * @version 1.0
+ */
+public class SevereWeatherWarningPageViewModel {
+
+    /**
+     * the severe weather warining to get information from
+     */
+<span class="fc" id="L22">    private static ObjectProperty&lt;SevereWeatherWarning&gt; severeWeatherWarningObjectProperty = new SimpleObjectProperty&lt;SevereWeatherWarning&gt;();</span>
+
+    /**
+     * the error Text visibility property for use in bindings
+     */
+    private BooleanProperty errorTextVisibilityProperty;
+
+    /**
+     * the error text string property for use in bindings
+     */
+    private StringProperty errorTextStringProperty;
+
+    /**
+     * the warning name text string property for use in bindings
+     */
+    private StringProperty warningNameTextStringProperty;
+
+    /**
+     * the description text string property for use in bindings
+     */
+    private StringProperty descriptionTextStringProperty;
+
+    /**
+     * Creates an instance of the Severe Weather Warning Page View Model
+     */
+<span class="fc" id="L47">    public SevereWeatherWarningPageViewModel() {</span>
+<span class="fc" id="L48">        this.warningNameTextStringProperty = new SimpleStringProperty();</span>
+<span class="fc" id="L49">        this.descriptionTextStringProperty = new SimpleStringProperty();</span>
+<span class="fc" id="L50">        this.errorTextStringProperty = new SimpleStringProperty();</span>
+<span class="fc" id="L51">        this.errorTextVisibilityProperty = new SimpleBooleanProperty();</span>
+        try {
+<span class="fc" id="L53">            this.setWarningNameTextStringPropertyValue();</span>
+<span class="fc" id="L54">            this.setDescriptionTextStringPropertyValue();</span>
+<span class="fc" id="L55">        } catch (Exception ex) {</span>
+<span class="fc" id="L56">            this.setErrorTextStringPropertyValue(ex.getMessage());</span>
+<span class="fc" id="L57">            this.setErrorTextVisibilityProperty(true);</span>
+<span class="fc" id="L58">        }</span>
+<span class="fc" id="L59">    }</span>
+
+    /**
+     * Gets the warning name text string property
+     * 
+     * @return the warningNameTextStringProperty
+     */
+    public StringProperty getWarningNameTextStringProperty() {
+<span class="fc" id="L67">        return this.warningNameTextStringProperty;</span>
+    }
+
+    /**
+     * Sets the warning name text string property value
+     */
+    private void setWarningNameTextStringPropertyValue() {
+<span class="fc" id="L74">        this.warningNameTextStringProperty.setValue(</span>
+<span class="fc" id="L75">                SevereWeatherWarningPageViewModel.severeWeatherWarningObjectProperty.getValue().getWarningName());</span>
+<span class="fc" id="L76">    }</span>
+
+    /**
+     * Gets the description text property
+     * 
+     * @return the descriptionTextStringProperty
+     */
+    public StringProperty getDescriptionTextProperty() {
+<span class="fc" id="L84">        return this.descriptionTextStringProperty;</span>
+    }
+
+    /**
+     * Sets the description text property value
+     */
+    private void setDescriptionTextStringPropertyValue() {
+<span class="fc" id="L91">        String skipLine = System.lineSeparator() + System.lineSeparator();</span>
+<span class="fc" id="L92">        String termSpacer = &quot;\t\t&quot;;</span>
+<span class="fc" id="L93">        String formattedDescription = String.format(</span>
+                &quot;%1$s&quot; + skipLine + &quot;Starting Date: %2$s&quot; + termSpacer + &quot; Ending Date: %3$s&quot; + skipLine + &quot;%4$s&quot;,
+<span class="fc" id="L95">                SevereWeatherWarningPageViewModel.severeWeatherWarningObjectProperty.getValue().getWarningName(),</span>
+<span class="fc" id="L96">                SevereWeatherWarningPageViewModel.severeWeatherWarningObjectProperty.getValue().getStartingDate(),</span>
+<span class="fc" id="L97">                SevereWeatherWarningPageViewModel.severeWeatherWarningObjectProperty.getValue().getEndingDate(),</span>
+<span class="fc" id="L98">                SevereWeatherWarningPageViewModel.severeWeatherWarningObjectProperty.getValue().getDetails());</span>
+<span class="fc" id="L99">        this.descriptionTextStringProperty.setValue(formattedDescription);</span>
+<span class="fc" id="L100">    }</span>
+
+    /**
+     * Sets the severe weather warning object property value
+     * 
+     * @param warning the value to set it to
+     */
+    public static void setSevereWeatherWarningObjectPropertyValue(SevereWeatherWarning warning) {
+<span class="fc" id="L108">        SevereWeatherWarningPageViewModel.severeWeatherWarningObjectProperty.setValue(warning);</span>
+<span class="fc" id="L109">    }</span>
+
+    /**
+     * Gets the severe weather warning object property
+     * 
+     * @return the severeWeatherWarningObjectProperty
+     */
+    public static ObjectProperty&lt;SevereWeatherWarning&gt; getSevereWeatherWarningObjectProperty() {
+<span class="fc" id="L117">        return SevereWeatherWarningPageViewModel.severeWeatherWarningObjectProperty;</span>
+    }
+
+    /**
+     * Gets the error text string property
+     * 
+     * @return the errorTextStringProperty
+     */
+    public StringProperty getErrorTextStringProperty() {
+<span class="fc" id="L126">        return this.errorTextStringProperty;</span>
+    }
+
+    /**
+     * Gets the error text visibility property
+     * 
+     * @return the errorTextVisibilityProperty
+     */
+    public BooleanProperty getErrorTextVisibilityProperty() {
+<span class="fc" id="L135">        return this.errorTextVisibilityProperty;</span>
+    }
+
+    /**
+     * Sets the error text visibility property
+     * 
+     * @param errorTextVisibilityPropertyValue the value to set it to
+     */
+    public void setErrorTextVisibilityProperty(boolean errorTextVisibilityPropertyValue) {
+<span class="fc" id="L144">        this.errorTextVisibilityProperty.setValue(errorTextVisibilityPropertyValue);</span>
+<span class="fc" id="L145">    }</span>
+
+    /**
+     * Sets the error text string property value
+     * 
+     * @param errorTextStringPropertyValue the value to set it to
+     */
+    public void setErrorTextStringPropertyValue(String errorTextStringPropertyValue) {
+<span class="fc" id="L153">        this.errorTextStringProperty.setValue(errorTextStringPropertyValue);</span>
+<span class="fc" id="L154">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SevereWeatherWarningPage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">weatherapp_gui</a> &gt; <a href="index.source.html" class="el_package">edu.westga.weatherapp_gui.view</a> &gt; <span class="el_source">SevereWeatherWarningPage.java</span></div><h1>SevereWeatherWarningPage.java</h1><pre class="source lang-java linenums">package edu.westga.weatherapp_gui.view;
+
+import java.io.IOException;
+
+import edu.westga.weatherapp_gui.App;
+import edu.westga.weatherapp_gui.view.utils.WindowGenerator;
+import edu.westga.weatherapp_gui.viewmodel.SevereWeatherWarningPageViewModel;
+import javafx.scene.Node;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+
+/**
+ * The Severe Weather Warning Page class for representing each weather warning
+ * on its own page
+ * 
+ * @author Eboni Walker
+ * @version 1.0
+ */
+<span class="nc" id="L23">public class SevereWeatherWarningPage {</span>
+
+    /**
+     * this severe weather warning page's scroll pane
+     */
+    @FXML
+    private ScrollPane severeWarningScrollPane;
+
+    /**
+     * this severe weather warning page's warning name label
+     */
+    @FXML
+    private Label warningNameLabel;
+
+    /**
+     * this severe weather warning page's description textbox
+     */
+    @FXML
+    private Text description;
+
+    /**
+     * this severe weather warning page's error textbox
+     */
+    @FXML
+    private Text errorText;
+    /**
+     * the view model for this page
+     */
+    private SevereWeatherWarningPageViewModel viewModel;
+
+    /**
+     * Initializes this page after all FXML fields are loaded
+     * 
+     * @throws IOException
+     */
+    @FXML
+    void initialize() {
+<span class="nc" id="L60">        this.viewModel = new SevereWeatherWarningPageViewModel();</span>
+<span class="nc" id="L61">        this.bindToViewModel();</span>
+<span class="nc" id="L62">    }</span>
+
+    /**
+     * Binds the view's content properties to the view model
+     */
+    private void bindToViewModel() {
+<span class="nc" id="L68">        this.warningNameLabel.textProperty().bind(this.viewModel.getWarningNameTextStringProperty());</span>
+<span class="nc" id="L69">        this.description.textProperty().bind(this.viewModel.getDescriptionTextProperty());</span>
+<span class="nc" id="L70">        this.errorText.textProperty().bindBidirectional(this.viewModel.getErrorTextStringProperty());</span>
+<span class="nc" id="L71">        this.errorText.visibleProperty().bindBidirectional(this.viewModel.getErrorTextVisibilityProperty());</span>
+<span class="nc" id="L72">    }</span>
+
+    /**
+     * Event handler for the back arrow image view. Handles the on click mouse
+     * event. Switches to the landing page scene
+     * 
+     * @param event - the clicked mouse event
+     */
+    @FXML
+    private void onBackArrowClicked(MouseEvent event) {
+        try {
+<span class="nc" id="L83">            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();</span>
+<span class="nc" id="L84">            WindowGenerator.changeScene(currentStage, App.SEVERE_WARNINGS_PAGE_VIEW, App.SEVERE_WARNINGS_PAGE_TITLE);</span>
+<span class="nc" id="L85">        } catch (IOException exception) {</span>
+<span class="nc" id="L86">            this.viewModel.setErrorTextStringPropertyValue(&quot;IO Exception: Error switching scenes&quot;);</span>
+<span class="nc" id="L87">            this.viewModel.setErrorTextVisibilityProperty(true);</span>
+<span class="nc" id="L88">        } </span>
+<span class="nc" id="L89">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

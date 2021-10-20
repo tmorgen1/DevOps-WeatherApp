@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LandingPageViewModel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">weatherapp_gui</a> &gt; <a href="index.source.html" class="el_package">edu.westga.weatherapp_gui.viewmodel</a> &gt; <span class="el_source">LandingPageViewModel.java</span></div><h1>LandingPageViewModel.java</h1><pre class="source lang-java linenums">package edu.westga.weatherapp_gui.viewmodel;
+
+import java.io.IOException;
+import java.rmi.Naming;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.json.JSONObject;
+import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
+import edu.westga.weatherapp_gui.model.IpGrabber;
+import edu.westga.weatherapp_gui.model.WeatherLocationSerializer;
+import edu.westga.weatherapp_shared.model.WeatherLocation;
+import edu.westga.weatherapp_shared.interfaces.CurrentWeatherDataRetriever;
+import edu.westga.weatherapp_shared.interfaces.HourlyWeatherDataRetriever;
+import edu.westga.weatherapp_shared.interfaces.LocationSearcher;
+import edu.westga.weatherapp_shared.interfaces.WeatherIconRetriever;
+
+/**
+ * Defines the landing page view model class and contains all functionality for
+ * the landing page view
+ */
+public class LandingPageViewModel {
+
+    /**
+     * The current weather data retriever
+     */
+    private CurrentWeatherDataRetriever weatherDataRetriever;
+
+    /**
+     * The weather icon retriever
+     */
+    private WeatherIconRetriever weatherIconRetriever;
+
+    /**
+     * The weather location searcher
+     */
+    private LocationSearcher weatherLocationSearcher;
+
+    /**
+     * The hourly weather data retriver
+     */
+    private HourlyWeatherDataRetriever hourlyWeatherDataRetriever;
+
+    /**
+     * The retrieved current weather data
+     */
+    private JSONObject currentWeatherData;
+
+    /**
+     * The retrieved hourly weather data
+     */
+    private JSONObject currentHourlyData;
+
+    /**
+     * The favorited weather locations
+     */
+    private Collection&lt;WeatherLocation&gt; favoritedWeatherLocations;
+
+    /**
+     * Creates an instance of the landing page view model. Binds to java rmi if no
+     * data retrievers specified.
+     * 
+     * @param weatherDataRetriver - the weather data retriever
+     * @param iconRetriever - the icon retriever
+     * @param locationSearcher - the location searcher
+     */
+<span class="fc" id="L68">    public LandingPageViewModel(CurrentWeatherDataRetriever weatherDataRetriver, WeatherIconRetriever iconRetriever, LocationSearcher locationSearcher, HourlyWeatherDataRetriever hourlyWeatherDataRetriever) {</span>
+<span class="fc bfc" id="L69" title="All 8 branches covered.">        if (weatherDataRetriver != null &amp;&amp; iconRetriever != null &amp;&amp; locationSearcher != null &amp;&amp; hourlyWeatherDataRetriever != null) {</span>
+<span class="fc" id="L70">            this.weatherDataRetriever = weatherDataRetriver;</span>
+<span class="fc" id="L71">            this.weatherIconRetriever = iconRetriever;</span>
+<span class="fc" id="L72">            this.weatherLocationSearcher = locationSearcher;</span>
+<span class="fc" id="L73">            this.hourlyWeatherDataRetriever = hourlyWeatherDataRetriever;</span>
+        } else {
+            try {
+<span class="fc" id="L76">                this.weatherDataRetriever = (CurrentWeatherDataRetriever) Naming</span>
+<span class="nc" id="L77">                        .lookup(&quot;rmi://localhost:5000/current-weather&quot;);</span>
+<span class="nc" id="L78">                this.weatherIconRetriever = (WeatherIconRetriever) Naming.lookup(&quot;rmi://localhost:5000/weather-icons&quot;);</span>
+<span class="nc" id="L79">                this.weatherLocationSearcher = (LocationSearcher) Naming.lookup(&quot;rmi://localhost:5000/location-searcher&quot;);</span>
+<span class="nc" id="L80">                this.hourlyWeatherDataRetriever = (HourlyWeatherDataRetriever) Naming.lookup(&quot;rmi://localhost:5000/hourly-weather&quot;);</span>
+<span class="fc" id="L81">            } catch (Exception exception) {</span>
+<span class="fc" id="L82">                System.err.println(&quot;Error looking up java rmi binding&quot;);</span>
+<span class="nc" id="L83">            }</span>
+        }
+
+<span class="fc" id="L86">        this.LoadFavoritedLocations();</span>
+<span class="fc" id="L87">    }</span>
+
+    /**
+     * Gets the current weather data from the weather data retriever by city name
+     * 
+     * @param weatherLocation - the name of the city
+     * @return the current weather data json object
+     */
+    public JSONObject GetWeatherDataByWeatherLocation(WeatherLocation weatherLocation) {
+<span class="fc bfc" id="L96" title="All 2 branches covered.">        if (weatherLocation == null) {</span>
+<span class="fc" id="L97">            throw new IllegalArgumentException(&quot;City cannot be null&quot;);</span>
+        }
+<span class="fc" id="L99">        String state = weatherLocation.getState();</span>
+<span class="fc" id="L100">        String city = weatherLocation.getCity();</span>
+<span class="fc" id="L101">        String country = weatherLocation.getCountry();</span>
+
+        try {
+<span class="fc" id="L104">            this.weatherDataRetriever.setUnitsOfMeasurement(CurrentWeatherInformation.getMeasurementUnits());</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">            if (state.equals(&quot;N/A&quot;)) {</span>
+<span class="fc" id="L106">                this.currentWeatherData = new JSONObject(this.weatherDataRetriever.GetDataByCityAndCountryCode(city, country));</span>
+            } else {
+<span class="fc" id="L108">                this.currentWeatherData = new JSONObject(this.weatherDataRetriever.GetDataByCityAndStateCodeAndCountryCode(city, state, country));</span>
+            }
+<span class="fc" id="L110">            CurrentWeatherInformation.setWeatherData(this.currentWeatherData);</span>
+<span class="fc" id="L111">            return this.currentWeatherData;</span>
+<span class="nc" id="L112">        } catch (Exception exception) {</span>
+<span class="nc" id="L113">            return null;</span>
+        }
+    }
+
+    /**
+     * Gets the current hourly weather forecast from the hourly weather data retriever by city location
+     * 
+     * @param weatherLocation - The location of the city
+     * @param hours - the number of hours to gather data for
+     * @return the hourly weather data json object
+     */
+    public JSONObject GetHourlyForecastDataByWeatherLocation(WeatherLocation weatherLocation, int hours) {
+<span class="fc bfc" id="L125" title="All 2 branches covered.">        if (weatherLocation == null) {</span>
+<span class="fc" id="L126">            throw new IllegalArgumentException(&quot;City cannot be null&quot;);</span>
+        }
+<span class="fc" id="L128">        String state = weatherLocation.getState();</span>
+<span class="fc" id="L129">        String city = weatherLocation.getCity();</span>
+<span class="fc" id="L130">        String country = weatherLocation.getCountry();</span>
+
+        try {
+<span class="fc" id="L133">            this.hourlyWeatherDataRetriever.setUnitsOfMeasurement(CurrentWeatherInformation.getMeasurementUnits());</span>
+<span class="fc bfc" id="L134" title="All 2 branches covered.">            if (state.equals(&quot;N/A&quot;)) {</span>
+<span class="fc" id="L135">                this.currentHourlyData = new JSONObject(this.hourlyWeatherDataRetriever.GetDataByCityAndCountryCode(city, country, hours));</span>
+            } else {
+<span class="fc" id="L137">                this.currentHourlyData = new JSONObject(this.hourlyWeatherDataRetriever.GetDataByCityAndStateCodeAndCountryCode(city, state, country, hours));</span>
+            }
+<span class="fc" id="L139">            return this.currentHourlyData;</span>
+<span class="nc" id="L140">        } catch (Exception e) {</span>
+<span class="nc" id="L141">            return null;</span>
+        }
+    }
+
+    /**
+     * Gets the current location of the user based on their ip address
+     * 
+     * @return a weather location of the user's current location
+     */
+    public WeatherLocation GetCurrentLocation() {
+        try {
+<span class="fc" id="L152">            String ip = IpGrabber.GetCurrentIpAddress();</span>
+<span class="fc" id="L153">            WeatherLocation currentLocation = this.weatherLocationSearcher.getLocationByIP(ip);</span>
+            
+<span class="fc" id="L155">            return currentLocation;</span>
+<span class="nc" id="L156">        } catch (RemoteException e) {</span>
+<span class="nc" id="L157">            return null;</span>
+        }
+    }
+
+    /**
+     * Gets the autocompletion search results based on the given city name
+     * 
+     * @param city - the city name
+     * @return a collection of weather locations
+     */
+    public Collection&lt;WeatherLocation&gt; GetLocationSearchResults(String city) {
+<span class="fc bfc" id="L168" title="All 2 branches covered.">        if (city == null) {</span>
+<span class="fc" id="L169">            throw new IllegalArgumentException(&quot;City cannot be null&quot;);</span>
+        }
+<span class="fc bfc" id="L171" title="All 2 branches covered.">        if (city.isEmpty()) {</span>
+<span class="fc" id="L172">            throw new IllegalArgumentException(&quot;City cannot be empty&quot;);</span>
+        }
+
+        try {
+<span class="fc" id="L176">            String ip = IpGrabber.GetCurrentIpAddress();</span>
+<span class="fc" id="L177">            WeatherLocation currentLocation = this.weatherLocationSearcher.getLocationByIP(ip);</span>
+<span class="fc" id="L178">            Collection&lt;WeatherLocation&gt; locations = this.weatherLocationSearcher.searchLocations(city, 10, currentLocation.getLatitude(), currentLocation.getLongitude());</span>
+            
+<span class="fc" id="L180">            return locations;</span>
+<span class="nc" id="L181">        } catch (Exception e) {</span>
+<span class="nc" id="L182">            return null;</span>
+        }
+    }
+
+    /**
+     * Gets the current weather icon url from the current weather data. Must
+     * retrieve weather data before calling
+     * 
+     * @return String - Current weather icon url
+     */
+    public String GetCurrentWeatherIcon() {
+<span class="fc bfc" id="L193" title="All 2 branches covered.">        if (this.currentWeatherData == null) {</span>
+<span class="fc" id="L194">            throw new IllegalArgumentException(&quot;No current weather data&quot;);</span>
+        }
+
+        try {
+<span class="fc" id="L198">            Object icon = this.currentWeatherData.getJSONArray(&quot;weather&quot;).getJSONObject(0).get(&quot;icon&quot;);</span>
+<span class="fc" id="L199">            String iconString = String.valueOf(icon);</span>
+
+<span class="fc" id="L201">            return this.weatherIconRetriever.GetWeatherIconUrlByIconId(iconString);</span>
+<span class="nc" id="L202">        } catch (RemoteException exception) {</span>
+<span class="nc" id="L203">            System.err.println(&quot;Remote Exception: Error retrieving weather icon url by icon id&quot;);</span>
+<span class="nc" id="L204">            return null;</span>
+        }
+    }
+
+    /**
+     * Gets the current weather temperature from the current weather data. Must
+     * retrieve weather data before calling
+     * 
+     * @return String - Current temperature
+     */
+    public String GetCurrentTemperature() {
+<span class="fc bfc" id="L215" title="All 2 branches covered.">        if (this.currentWeatherData == null) {</span>
+<span class="fc" id="L216">            throw new IllegalArgumentException(&quot;No current weather data&quot;);</span>
+        }
+
+<span class="fc" id="L219">        Long temperature = Math.round(this.currentWeatherData.getJSONObject(&quot;main&quot;).getDouble(&quot;temp&quot;));</span>
+<span class="fc" id="L220">        return String.valueOf(temperature);</span>
+    }
+
+    /**
+     * Gets the current weather wind speed from the current weather data. Must
+     * retrieve weather data before calling
+     * 
+     * @return String - Current wind speed
+     */
+    public String GetCurrentWindSpeed() {
+<span class="fc bfc" id="L230" title="All 2 branches covered.">        if (this.currentWeatherData == null) {</span>
+<span class="fc" id="L231">            throw new IllegalArgumentException(&quot;No current weather data&quot;);</span>
+        }
+
+<span class="fc" id="L234">        Long windSpeed = Math.round(this.currentWeatherData.getJSONObject(&quot;wind&quot;).getDouble(&quot;speed&quot;));</span>
+<span class="fc" id="L235">        return String.valueOf(windSpeed);</span>
+    }
+
+    /**
+     * Gets the current weather humidity from the current weather data. Must
+     * retrieve weather data before calling
+     * 
+     * @return String - Current humidity
+     */
+    public String GetCurrentHumidity() {
+<span class="fc bfc" id="L245" title="All 2 branches covered.">        if (this.currentWeatherData == null) {</span>
+<span class="fc" id="L246">            throw new IllegalArgumentException(&quot;No current weather data&quot;);</span>
+        }
+
+<span class="fc" id="L249">        Long humidity = Math.round(this.currentWeatherData.getJSONObject(&quot;main&quot;).getDouble(&quot;humidity&quot;));</span>
+<span class="fc" id="L250">        return String.valueOf(humidity);</span>
+    }
+
+    /**
+     * Gets the current weather description from the current weather data. Must
+     * retrieve weather data before calling
+     * 
+     * @return String - Current weather description
+     */
+    public String GetCurrentWeatherDescription() {
+<span class="fc bfc" id="L260" title="All 2 branches covered.">        if (this.currentWeatherData == null) {</span>
+<span class="fc" id="L261">            throw new IllegalArgumentException(&quot;No current weather data&quot;);</span>
+        }
+
+<span class="fc" id="L264">        Object descriptionObject = this.currentWeatherData.getJSONArray(&quot;weather&quot;).getJSONObject(0).get(&quot;main&quot;);</span>
+<span class="fc" id="L265">        return String.valueOf(descriptionObject);</span>
+    }
+
+    /**
+     * Updates the current weather data
+     * 
+     * @param weatherData - the new weather data
+     */
+    public void SetCurrentWeatherData(JSONObject weatherData) {
+<span class="fc bfc" id="L274" title="All 2 branches covered.">        if (weatherData == null) {</span>
+<span class="fc" id="L275">            throw new IllegalArgumentException(&quot;Weather data cannot be null&quot;);</span>
+        }
+<span class="fc" id="L277">        this.currentWeatherData = weatherData;</span>
+<span class="fc" id="L278">    }</span>
+
+    /**
+     * Removes the favorited location and saves the favorites to a file.
+     * 
+     * @param weatherLocation - the favorited location to remove
+     */
+    public void RemoveFavoritedLocation(WeatherLocation weatherLocation) {
+<span class="fc bfc" id="L286" title="All 2 branches covered.">        if (weatherLocation == null) {</span>
+<span class="fc" id="L287">            throw new IllegalArgumentException(&quot;Weather location cannot be null&quot;);</span>
+        }
+
+<span class="fc" id="L290">        this.favoritedWeatherLocations.remove(weatherLocation);</span>
+<span class="fc" id="L291">        this.SaveFavoritedLocations();</span>
+<span class="fc" id="L292">    }</span>
+
+    /**
+     * Adds the favorited location and saves the favorites to a file.
+     * 
+     * @param weatherLocation - the favorited location to add
+     */
+    public void AddFavoritedLocation(WeatherLocation weatherLocation) {
+<span class="fc bfc" id="L300" title="All 2 branches covered.">        if (weatherLocation == null) {</span>
+<span class="fc" id="L301">            throw new IllegalArgumentException(&quot;Weather location cannot be null&quot;);</span>
+        }
+
+<span class="fc" id="L304">        this.favoritedWeatherLocations.add(weatherLocation);</span>
+<span class="fc" id="L305">        this.SaveFavoritedLocations();</span>
+<span class="fc" id="L306">    }</span>
+
+    /**
+     * Gets the collection of favorited weather locations
+     * 
+     * @return the favorited weather locations
+     */
+    public Collection&lt;WeatherLocation&gt; GetFavoritedWeatherLocations() {
+<span class="fc" id="L314">        return this.favoritedWeatherLocations;</span>
+    }
+
+    /**
+     * Checks if the given weather location is contained in the favorited locations list
+     * 
+     * @param weatherLocation - the given weather location
+     * @return True if it is contained, false otherwise
+     */
+    public boolean FavoritesContainsWeatherLocation(WeatherLocation weatherLocation) {
+<span class="fc bfc" id="L324" title="All 2 branches covered.">        for (WeatherLocation currentLocation : favoritedWeatherLocations) {</span>
+<span class="fc bfc" id="L325" title="All 2 branches covered.">            if (currentLocation.equals(weatherLocation)) {</span>
+<span class="fc" id="L326">                return true;</span>
+            }
+<span class="fc" id="L328">        }</span>
+<span class="fc" id="L329">        return false;</span>
+    }
+
+    /**
+     * Gets the timezone for the searched location
+     * 
+     * @return the timezone
+     */
+    public Long GetTimezone() {
+<span class="fc bfc" id="L338" title="All 2 branches covered.">        if (this.currentHourlyData == null) {</span>
+<span class="fc" id="L339">            throw new IllegalArgumentException(&quot;No hourly weather data&quot;);</span>
+        }
+
+<span class="fc" id="L342">        return Math.round(this.currentHourlyData.getJSONObject(&quot;city&quot;).getDouble(&quot;timezone&quot;));</span>
+    }
+
+    /**
+     * Gets the day utc time for the specified hour
+     * 
+     * @param hour - the hour index
+     * @return the hour utc time
+     */
+    public Long GetHourUtcDateTime(int hour) {
+<span class="fc bfc" id="L352" title="All 2 branches covered.">        if (this.currentHourlyData == null) {</span>
+<span class="fc" id="L353">            throw new IllegalArgumentException(&quot;No hourly weather data&quot;);</span>
+        }
+
+<span class="fc" id="L356">        return Math.round(this.currentHourlyData.getJSONArray(&quot;list&quot;).getJSONObject(hour).getDouble(&quot;dt&quot;));</span>
+    }
+
+    /**
+     * Gets the max temperature for the specified hour
+     * 
+     * @param hour - the hour index
+     * @return the max temperature
+     */
+    public String GetHourTemperature(int hour) {
+<span class="fc bfc" id="L366" title="All 2 branches covered.">        if (this.currentHourlyData == null) {</span>
+<span class="fc" id="L367">            throw new IllegalArgumentException(&quot;No hourly weather data&quot;);</span>
+        }
+
+<span class="fc" id="L370">        Long temperature = Math.round(</span>
+<span class="fc" id="L371">                this.currentHourlyData.getJSONArray(&quot;list&quot;).getJSONObject(hour).getJSONObject(&quot;main&quot;).getDouble(&quot;temp&quot;));</span>
+<span class="fc" id="L372">        return String.valueOf(temperature);</span>
+    }
+
+    /**
+     * Gets the weather icon for the specified hour
+     * 
+     * @param hour - the hour index
+     * @return the weather icon
+     */
+    public String GetDayWeatherIcon(int hour) {
+<span class="fc bfc" id="L382" title="All 2 branches covered.">        if (this.currentHourlyData == null) {</span>
+<span class="fc" id="L383">            throw new IllegalArgumentException(&quot;No hourly weather data&quot;);</span>
+        }
+
+        try {
+<span class="fc" id="L387">            Object icon = this.currentHourlyData.getJSONArray(&quot;list&quot;).getJSONObject(hour).getJSONArray(&quot;weather&quot;)</span>
+<span class="fc" id="L388">                    .getJSONObject(0).get(&quot;icon&quot;);</span>
+<span class="fc" id="L389">            String iconString = String.valueOf(icon);</span>
+
+<span class="fc" id="L391">            return this.weatherIconRetriever.GetWeatherIconUrlByIconId(iconString);</span>
+<span class="nc" id="L392">        } catch (RemoteException exception) {</span>
+<span class="nc" id="L393">            System.err.println(&quot;Remote Exception: Error retrieving weather icon url by icon id&quot;);</span>
+<span class="nc" id="L394">            return null;</span>
+        }
+    }
+
+    /**
+     * Saves the collection of favorited weather locations to a file
+     */
+    private void SaveFavoritedLocations() {
+        try {
+<span class="fc" id="L403">            WeatherLocationSerializer weatherLocationSerializer = new WeatherLocationSerializer();</span>
+<span class="fc" id="L404">            weatherLocationSerializer.saveFavoritedLocationsToFile(this.favoritedWeatherLocations);</span>
+<span class="nc" id="L405">        } catch (IOException e) {</span>
+<span class="nc" id="L406">            System.err.println(&quot;IOException: Error saving favorited locations&quot;);</span>
+<span class="fc" id="L407">        }</span>
+<span class="fc" id="L408">    }</span>
+
+    /**
+     * Loads the favorited locations from a file
+     */
+    private void LoadFavoritedLocations() {
+        try {
+<span class="fc" id="L415">            WeatherLocationSerializer weatherLocationSerializer = new WeatherLocationSerializer();</span>
+<span class="fc" id="L416">            this.favoritedWeatherLocations = weatherLocationSerializer.loadFavoritedLocationsFromFile();</span>
+<span class="fc" id="L417">        } catch (ClassNotFoundException | IOException e) {</span>
+<span class="fc" id="L418">            this.favoritedWeatherLocations = (Collection&lt;WeatherLocation&gt;) new ArrayList&lt;WeatherLocation&gt;();</span>
+<span class="fc" id="L419">        }</span>
+<span class="fc" id="L420">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

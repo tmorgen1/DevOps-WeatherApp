@@ -1,0 +1,29 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+weatherapp_gui,edu.westga.weatherapp_gui.view,SevereWeatherWarningPage,62,0,0,0,16,0,4,0,4,0
+weatherapp_gui,edu.westga.weatherapp_gui.view,LandingPage,879,0,52,0,267,0,83,0,57,0
+weatherapp_gui,edu.westga.weatherapp_gui.view,HourlyInfoPane,46,0,0,0,18,0,4,0,4,0
+weatherapp_gui,edu.westga.weatherapp_gui.view,LandingPage.new Task() {...},50,0,2,0,9,0,3,0,2,0
+weatherapp_gui,edu.westga.weatherapp_gui.view,LandingPage.new Task() {...},50,0,2,0,10,0,3,0,2,0
+weatherapp_gui,edu.westga.weatherapp_gui.view,LandingPage.new ChangeListener() {...},13,0,2,0,4,0,3,0,2,0
+weatherapp_gui,edu.westga.weatherapp_gui.view,LandingPage.new ChangeListener() {...},13,0,2,0,4,0,3,0,2,0
+weatherapp_gui,edu.westga.weatherapp_gui.view,LandingPage.new ChangeListener() {...},21,0,2,0,5,0,3,0,2,0
+weatherapp_gui,edu.westga.weatherapp_gui.view,WeatherRadarPage,40,0,0,0,13,0,4,0,4,0
+weatherapp_gui,edu.westga.weatherapp_gui.view,DailyForecastPage.new Task() {...},66,0,2,0,12,0,3,0,2,0
+weatherapp_gui,edu.westga.weatherapp_gui.view,DailyForecastPage.new Task() {...},72,0,2,0,14,0,3,0,2,0
+weatherapp_gui,edu.westga.weatherapp_gui.view,SevereWarningViewCell,20,0,4,0,6,0,4,0,2,0
+weatherapp_gui,edu.westga.weatherapp_gui.view,SevereWeatherWarningsPage.new Callback() {...},12,0,0,0,3,0,2,0,2,0
+weatherapp_gui,edu.westga.weatherapp_gui.view,DailyForecastPage,327,0,10,0,98,0,29,0,24,0
+weatherapp_gui,edu.westga.weatherapp_gui.view,SevereWeatherWarningsPage,120,0,2,0,37,0,9,0,8,0
+weatherapp_gui,edu.westga.weatherapp_gui.view,DayForecastPane,62,0,0,0,24,0,6,0,6,0
+weatherapp_gui,edu.westga.weatherapp_gui.model,SevereWeatherWarning,0,117,0,20,0,36,0,22,0,12
+weatherapp_gui,edu.westga.weatherapp_gui.model,DateTimeConverter,8,94,3,7,1,15,4,7,1,5
+weatherapp_gui,edu.westga.weatherapp_gui.model,WeatherLocationSerializer,0,35,0,0,0,10,0,3,0,3
+weatherapp_gui,edu.westga.weatherapp_gui.model,CurrentWeatherInformation,3,44,0,2,1,23,1,14,1,13
+weatherapp_gui,edu.westga.weatherapp_gui.model,IpGrabber,9,19,0,0,4,4,1,1,1,1
+weatherapp_gui,edu.westga.weatherapp_gui.viewmodel,LandingPageViewModel,47,464,0,48,21,111,0,45,0,21
+weatherapp_gui,edu.westga.weatherapp_gui.viewmodel,SevereWeatherWarningPageViewModel,0,144,0,0,0,36,0,12,0,12
+weatherapp_gui,edu.westga.weatherapp_gui.viewmodel,SevereWeatherWarningsPageViewModel,6,227,0,12,2,64,0,21,0,15
+weatherapp_gui,edu.westga.weatherapp_gui.viewmodel,DailyForecastPageViewModel,18,184,0,18,8,40,0,16,0,7
+weatherapp_gui,edu.westga.weatherapp_gui.viewmodel,WeatherRadarPageViewModel,17,56,0,4,7,15,0,5,0,3
+weatherapp_gui,edu.westga.weatherapp_gui.view.utils,WindowGenerator,29,0,0,0,8,0,2,0,2,0
+weatherapp_gui,edu.westga.weatherapp_gui,App,27,0,0,0,9,0,3,0,3,0

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CurrentWeatherInformation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">weatherapp_gui</a> &gt; <a href="index.source.html" class="el_package">edu.westga.weatherapp_gui.model</a> &gt; <span class="el_source">CurrentWeatherInformation.java</span></div><h1>CurrentWeatherInformation.java</h1><pre class="source lang-java linenums">package edu.westga.weatherapp_gui.model;
+
+import java.util.ArrayList;
+
+import org.json.JSONObject;
+
+import edu.westga.weatherapp_gui.view.DayForecastPane;
+import edu.westga.weatherapp_gui.view.HourlyInfoPane;
+import edu.westga.weatherapp_shared.enums.MeasurementUnits;
+import edu.westga.weatherapp_shared.model.WeatherLocation;
+
+/**
+ * Class to hold weather information for use across multiple pages.
+ */
+<span class="nc" id="L15">public class CurrentWeatherInformation {</span>
+
+    /**
+     * The most recently searched city
+     */
+<span class="fc" id="L20">    private static WeatherLocation WeatherLocation = null;</span>
+
+    /**
+     * The most recently fetched weather data
+     */
+<span class="fc" id="L25">    private static JSONObject WeatherData = null;</span>
+
+    /**
+     * The current measurement units
+     */
+<span class="fc" id="L30">    private static MeasurementUnits measurementUnits = MeasurementUnits.Imperial;</span>
+
+    /**
+     * The hourly info panes
+     */
+    private static ArrayList&lt;HourlyInfoPane&gt; hourlyInfoPanes;
+
+    /**
+     * The day forecast panes
+     */
+    private static ArrayList&lt;DayForecastPane&gt; dayForecastPanes;
+
+    /**
+     * Holds whether the app has finished gerabbing the user location
+     */
+    private static boolean finishedFirstLoadIpGrab;
+
+    /**
+     * Gets the finished first load ip grab value
+     * 
+     * @return the finished first load ip grab
+     */
+    public static boolean isFinishedFirstLoadIpGrab() {
+<span class="fc" id="L53">        return CurrentWeatherInformation.finishedFirstLoadIpGrab;</span>
+    }
+
+    /**
+     * Sets the finished first load ip grab value
+     * 
+     * @param value - the new value
+     */
+    public static void setFinishedFirstLoadIpGrab(boolean value) {
+<span class="fc" id="L62">        CurrentWeatherInformation.finishedFirstLoadIpGrab = value;</span>
+<span class="fc" id="L63">    }</span>
+
+    /**
+     * Gets the stored list of day forecast pane components
+     * 
+     * @return the day forecast panes
+     */
+    public static ArrayList&lt;DayForecastPane&gt; getDayForecastPanes() {
+<span class="fc" id="L71">        return CurrentWeatherInformation.dayForecastPanes;</span>
+    }
+
+    /**
+     * Sets the stored list of day forecast pane components
+     * 
+     * @param panes - the new day forecast panes
+     */
+    public static void setDayForecastPanes(ArrayList&lt;DayForecastPane&gt; panes) {
+<span class="fc" id="L80">        CurrentWeatherInformation.dayForecastPanes = panes;</span>
+<span class="fc" id="L81">    }</span>
+    
+    /**
+     * Gets the stored list of hourly info pane components
+     * 
+     * @return the hourly info panes
+     */
+    public static ArrayList&lt;HourlyInfoPane&gt; getHourlyInfoPanes() {
+<span class="fc" id="L89">        return CurrentWeatherInformation.hourlyInfoPanes;</span>
+    }
+
+    /**
+     * Sets the stored list of hourly info panes to the given list
+     * 
+     * @param panes - the new list of panes
+     */
+    public static void setHourlyInfoPanes(ArrayList&lt;HourlyInfoPane&gt; panes) {
+<span class="fc" id="L98">        CurrentWeatherInformation.hourlyInfoPanes = panes;</span>
+<span class="fc" id="L99">    }</span>
+
+    /**
+     * Gets the most recently searched weather location
+     * 
+     * @return the weather location
+     */
+    public static WeatherLocation getWeatherLocation() {
+<span class="fc" id="L107">        return CurrentWeatherInformation.WeatherLocation;</span>
+    }
+
+    /**
+     * Sets the weather location to the specified
+     * 
+     * @param weatherLocation - the new weather location
+     */
+    public static void setWeatherLocation(WeatherLocation weatherLocation) {
+<span class="fc bfc" id="L116" title="All 2 branches covered.">        if (weatherLocation == null) {</span>
+<span class="fc" id="L117">            throw new IllegalArgumentException(&quot;City cannot be null&quot;);</span>
+        }
+
+<span class="fc" id="L120">        CurrentWeatherInformation.WeatherLocation = weatherLocation;</span>
+<span class="fc" id="L121">    }</span>
+
+    /**
+     * Gets the most recently fetched weather data
+     * 
+     * @return the weather data
+     */
+    public static JSONObject getWeatherData() {
+<span class="fc" id="L129">        return CurrentWeatherInformation.WeatherData;</span>
+    }
+
+    /**
+     * Sets the weather data to the specifed weather data
+     * 
+     * @param data - the new weather data
+     */
+    public static void setWeatherData(JSONObject data) {
+<span class="fc" id="L138">        CurrentWeatherInformation.WeatherData = data;</span>
+<span class="fc" id="L139">    }</span>
+
+    /**
+     * Gets the current measurement units
+     * 
+     * @return the measurement units
+     */
+    public static MeasurementUnits getMeasurementUnits() {
+<span class="fc" id="L147">        return CurrentWeatherInformation.measurementUnits;</span>
+    }
+
+    /**
+     * Sets the current measurement units
+     * 
+     * @param units - the new measurement units
+     */
+    public static void setMeasurementUnits(MeasurementUnits units) {
+<span class="fc" id="L156">        CurrentWeatherInformation.measurementUnits = units;</span>
+<span class="fc" id="L157">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
