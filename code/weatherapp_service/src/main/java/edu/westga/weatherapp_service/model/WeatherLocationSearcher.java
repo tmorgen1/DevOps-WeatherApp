@@ -145,6 +145,8 @@ public class WeatherLocationSearcher extends UnicastRemoteObject implements Loca
         this.sortSearchLocationsByClosestDistance(listOfSearchResults, latitude, longitude);
         if (searchResults.size() > 10) {
             searchResults = new ArrayList<WeatherLocation>(listOfSearchResults.subList(0, 10));
+        } else {
+            searchResults = listOfSearchResults;
         }
 
         return searchResults;
@@ -206,7 +208,7 @@ public class WeatherLocationSearcher extends UnicastRemoteObject implements Loca
      * @param longitude2 - the other longitude
      * @return the distance between the two sets coordinates
      */
-    private int calculateDistanceBetweenCoordinates(double latitude1, double longitude1, double latitude2, double longitude2) {
+    private double calculateDistanceBetweenCoordinates(double latitude1, double longitude1, double latitude2, double longitude2) {
         double radiansLatitude1 = Math.PI * latitude1 / HALF_CIRCLE_DEGREES;
         double radiansLatitude2 = Math.PI * latitude2 / HALF_CIRCLE_DEGREES;
         double theta = longitude1 - longitude2;
@@ -217,7 +219,7 @@ public class WeatherLocationSearcher extends UnicastRemoteObject implements Loca
         distance = distance * TOTAL_MINUTES_IN_DEGREE * TOTAL_STATUTE_MILES_IN_NAUTICAL_MILE;
         distance = distance * TOTAL_KILOMETERS_IN_MILE;
 
-        return (int) distance;
+        return distance;
     }
 
     /**
@@ -231,8 +233,8 @@ public class WeatherLocationSearcher extends UnicastRemoteObject implements Loca
         Collections.sort(locations, new Comparator<WeatherLocation>(){
             @Override
             public int compare(WeatherLocation weatherLocation, WeatherLocation otherWeatherLocation) {
-                return calculateDistanceBetweenCoordinates(latitude, longitude, weatherLocation.getLatitude(), weatherLocation.getLongitude())
-                    - calculateDistanceBetweenCoordinates(latitude, longitude, otherWeatherLocation.getLatitude(), otherWeatherLocation.getLongitude());
+                return (int) (calculateDistanceBetweenCoordinates(latitude, longitude, weatherLocation.getLatitude(), weatherLocation.getLongitude())
+                    - calculateDistanceBetweenCoordinates(latitude, longitude, otherWeatherLocation.getLatitude(), otherWeatherLocation.getLongitude()));
             }
         });
     }
