@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 
 import edu.westga.weatherapp_gui.mocks.ExceptionLogicMocks.CurrentDataRetrieverExceptionMock;
 import edu.westga.weatherapp_gui.mocks.ExceptionLogicMocks.HourlyDataRetrieverExceptionMock;
+import edu.westga.weatherapp_gui.mocks.ExceptionLogicMocks.LocationSearcherExceptionMock;
 import edu.westga.weatherapp_gui.mocks.NormalLogicMocks.LocationSearcherMock;
 import edu.westga.weatherapp_gui.mocks.NormalLogicMocks.MockDataRetriever;
 import edu.westga.weatherapp_gui.mocks.NormalLogicMocks.OpenWeatherCurrentDataRetrieverMock;
@@ -568,6 +569,17 @@ public class LandingPageViewModelTests {
         viewModel.getHourlyForecastDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 30.40), 1);
         Long utcTime = viewModel.getHourUtcDateTime(0);
         assertEquals(500, utcTime);
+    }
+
+    @Test
+    public void getCurrentLocationSuccessfullyCatchesException() {
+        HourlyWeatherDataRetriever hourlyWeatherDataRetriever = new OpenWeatherHourlyDataRetrieverMock(new MockDataRetriever());
+        CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetrieverMock(new MockDataRetriever());
+        WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
+        LocationSearcher locationSearcher = new LocationSearcherExceptionMock();
+        LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
+
+        assertNull(viewModel.getCurrentLocation());
     }
 
     @Test
