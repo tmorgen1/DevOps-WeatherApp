@@ -1,0 +1,14 @@
+Change current location
+
+
+Context - User has moved to the set current location page.
+
+Primary Flow - 
+    1. User searches for a location by city.
+    2. System displays search results for that city.
+    3. User selects the city from the search results.
+    4. System updates current location to selected city.
+
+** User selects from favorites instead
+    a1. User selects a favorite location.
+    a2. System updates current location to selected city.

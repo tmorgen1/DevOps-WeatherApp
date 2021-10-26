@@ -1,0 +1,11 @@
+Check historical weather for given location
+
+
+Context - User has moved to the historical location weather page.
+
+Primary Flow - 
+    1. User selects which month they want to see historical data on.
+    2. System displays average weather information for the selected month.
+
+** Unexpected data gathering error
+    a1. Alert the user that the weather information was not obtainable.
