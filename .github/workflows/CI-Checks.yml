@@ -16,7 +16,7 @@ jobs:
     steps:
       # Checkout this branch from github
       - name: Step 1 - Checkout branch from Github
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
       
       # Setup JDK environment, version adopt 16
       - name: Step 2 - Setup JDK
