@@ -24,9 +24,17 @@ jobs:
         with:
           java-version: 16
           distribution: adopt
-          
+      
+      # Run weatherapp_shared clean install to establish dependencies
+      - name: Step 3 - Run Dependency Install
+        run: |
+          echo Running Weather App Shared Install
+          cd code
+          cd weatherapp_shared
+          mvn clean install
+      
       # Run maven's verify with jacoco to ensure 90% model and view code coverage.
-      - name: Step 3 - Test project(s) with Maven
+      - name: Step 4 - Test project(s) with Maven
         run: |
           echo Testing Weather App Gui
           cd code
