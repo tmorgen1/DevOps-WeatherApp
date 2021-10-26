@@ -1,5 +1,6 @@
 package edu.westga.weatherapp_gui;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -16,11 +17,13 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import edu.westga.weatherapp_gui.mocks.LocationSearcherMock;
-import edu.westga.weatherapp_gui.mocks.MockDataRetriever;
-import edu.westga.weatherapp_gui.mocks.OpenWeatherCurrentDataRetrieverMock;
-import edu.westga.weatherapp_gui.mocks.OpenWeatherHourlyDataRetrieverMock;
-import edu.westga.weatherapp_gui.mocks.OpenWeatherIconRetrieverMock;
+import edu.westga.weatherapp_gui.mocks.ExceptionLogicMocks.CurrentDataRetrieverExceptionMock;
+import edu.westga.weatherapp_gui.mocks.ExceptionLogicMocks.HourlyDataRetrieverExceptionMock;
+import edu.westga.weatherapp_gui.mocks.NormalLogicMocks.LocationSearcherMock;
+import edu.westga.weatherapp_gui.mocks.NormalLogicMocks.MockDataRetriever;
+import edu.westga.weatherapp_gui.mocks.NormalLogicMocks.OpenWeatherCurrentDataRetrieverMock;
+import edu.westga.weatherapp_gui.mocks.NormalLogicMocks.OpenWeatherHourlyDataRetrieverMock;
+import edu.westga.weatherapp_gui.mocks.NormalLogicMocks.OpenWeatherIconRetrieverMock;
 import edu.westga.weatherapp_gui.model.WeatherLocationSerializer;
 import edu.westga.weatherapp_gui.viewmodel.LandingPageViewModel;
 import edu.westga.weatherapp_shared.interfaces.CurrentWeatherDataRetriever;
@@ -87,6 +90,16 @@ public class LandingPageViewModelTests {
     }
 
     @Test
+    public void getWeatherDataByWeatherLocationSuccessfullyCatchesRemoteException() {
+        CurrentWeatherDataRetriever currentWeatherRetriever = new CurrentDataRetrieverExceptionMock(new MockDataRetriever());
+        HourlyWeatherDataRetriever hourlyWeatherDataRetriever = new OpenWeatherHourlyDataRetrieverMock(new MockDataRetriever());
+        WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
+        LocationSearcher locationSearcher = new LocationSearcherMock();
+        LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
+        assertNull(viewModel.getWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 32.40)));
+    }
+
+    @Test
     public void getWeatherDataByWeatherLocationThrowsExceptionWithNull() {
         CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetrieverMock(new MockDataRetriever());
         HourlyWeatherDataRetriever hourlyWeatherDataRetriever = new OpenWeatherHourlyDataRetrieverMock(new MockDataRetriever());
@@ -96,6 +109,16 @@ public class LandingPageViewModelTests {
         assertThrows(IllegalArgumentException.class, () -> {
             viewModel.getWeatherDataByWeatherLocation(null);
         });
+    }
+
+    @Test
+    public void getHourlyWeatherDataByWeatherLocationSuccessfullyCatchesException() {
+        CurrentWeatherDataRetriever currentWeatherRetriever = new OpenWeatherCurrentDataRetrieverMock(new MockDataRetriever());
+        HourlyWeatherDataRetriever hourlyWeatherDataRetriever = new HourlyDataRetrieverExceptionMock(new MockDataRetriever());
+        WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
+        LocationSearcher locationSearcher = new LocationSearcherMock();
+        LandingPageViewModel viewModel = new LandingPageViewModel(currentWeatherRetriever, iconRetriever, locationSearcher, hourlyWeatherDataRetriever);
+        assertNull(viewModel.getHourlyForecastDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 32.40), 1));
     }
 
     @Test

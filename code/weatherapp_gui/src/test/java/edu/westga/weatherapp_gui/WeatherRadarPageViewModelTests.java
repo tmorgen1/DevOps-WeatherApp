@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import edu.westga.weatherapp_gui.mocks.LocationSearcherMock;
-import edu.westga.weatherapp_gui.mocks.OpenWeatherMapRadarDataRetrieverMock;
+import edu.westga.weatherapp_gui.mocks.NormalLogicMocks.LocationSearcherMock;
+import edu.westga.weatherapp_gui.mocks.NormalLogicMocks.OpenWeatherMapRadarDataRetrieverMock;
 import edu.westga.weatherapp_gui.viewmodel.WeatherRadarPageViewModel;
 import edu.westga.weatherapp_shared.interfaces.LocationSearcher;
 import edu.westga.weatherapp_shared.interfaces.MapRadarDataRetriever;

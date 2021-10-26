@@ -7,9 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
-import edu.westga.weatherapp_gui.mocks.MockDataRetriever;
-import edu.westga.weatherapp_gui.mocks.OpenWeatherDailyDataRetrieverMock;
-import edu.westga.weatherapp_gui.mocks.OpenWeatherIconRetrieverMock;
+import edu.westga.weatherapp_gui.mocks.NormalLogicMocks.MockDataRetriever;
+import edu.westga.weatherapp_gui.mocks.NormalLogicMocks.OpenWeatherDailyDataRetrieverMock;
+import edu.westga.weatherapp_gui.mocks.NormalLogicMocks.OpenWeatherIconRetrieverMock;
 import edu.westga.weatherapp_gui.viewmodel.DailyForecastPageViewModel;
 import edu.westga.weatherapp_shared.interfaces.DailyWeatherDataRetriever;
 import edu.westga.weatherapp_shared.interfaces.WeatherIconRetriever;

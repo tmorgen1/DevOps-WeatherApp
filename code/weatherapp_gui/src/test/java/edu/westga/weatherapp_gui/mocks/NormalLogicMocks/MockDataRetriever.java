@@ -1,4 +1,4 @@
-package edu.westga.weatherapp_gui.mocks;
+package edu.westga.weatherapp_gui.mocks.NormalLogicMocks;
 
 import java.net.MalformedURLException;
 import java.net.URL;
