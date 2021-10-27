@@ -34,7 +34,7 @@ jobs:
           cd code
           cd weatherapp_shared
           mvn clean install
-          if("%ERRORLEVEL%" -ne "0") {exit 1}
+          if($LASTEXITCODE -ne 0) {exit 1}
       
       # Run maven's verify with jacoco to ensure 90% code coverage.
       - name: Step 4 - Test project(s) with Maven
@@ -43,17 +43,17 @@ jobs:
           cd code
           cd weatherapp_gui
           mvn --batch-mode --update-snapshots clean verify
-          if("%ERRORLEVEL%" -ne "0") {exit 1}
+          if($LASTEXITCODE -ne 0) {exit 1}
           cd ..
           
           echo Testing Weather App Service
           cd weatherapp_service
           mvn --batch-mode --update-snapshots clean verify
-          if("%ERRORLEVEL%" -ne "0") {exit 1}
+          if($LASTEXITCODE -ne 0) {exit 1}
           cd ..
           
           echo Testing Weather App Shared
           cd weatherapp_shared
           mvn --batch-mode --update-snapshots clean verify
-          if("%ERRORLEVEL%" -ne "0") {exit 1}
+          if($LASTEXITCODE -ne 0) {exit 1}
           cd ..
