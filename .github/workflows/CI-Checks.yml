@@ -1,9 +1,12 @@
 name: CI-Checks
 
 on:
-  pull_request:
-    # Ensures pull requests to development meet appropriate code coverage before merge.
+  push:
+    # Ensures features merged to development compile with no errors, have all tests functional, and meet code coverage criteria.
     branches: [ Development ]
+  pull_request:
+    # Ensures repos that are being pull requested to Release compile with no errors, have all tests functional, and meet code coverage criteria.
+    branches: [ Release ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -23,7 +26,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 16
-          distribution: adopt
       
       # Run weatherapp_shared clean install to establish dependencies
       - name: Step 3 - Run Dependency Install
@@ -32,22 +34,26 @@ jobs:
           cd code
           cd weatherapp_shared
           mvn clean install
+          if not "%ERRORLEVEL%" == "0" exit /b
       
-      # Run maven's verify with jacoco to ensure 90% model and view code coverage.
+      # Run maven's verify with jacoco to ensure 90% code coverage.
       - name: Step 4 - Test project(s) with Maven
         run: |
           echo Testing Weather App Gui
           cd code
           cd weatherapp_gui
           mvn --batch-mode --update-snapshots clean verify
+          if not "%ERRORLEVEL%" == "0" exit /b
           cd ..
           
           echo Testing Weather App Service
           cd weatherapp_service
           mvn --batch-mode --update-snapshots clean verify
+          if not "%ERRORLEVEL%" == "0" exit /b
           cd ..
           
           echo Testing Weather App Shared
           cd weatherapp_shared
           mvn --batch-mode --update-snapshots clean verify
+          if not "%ERRORLEVEL%" == "0" exit /b
           cd ..
