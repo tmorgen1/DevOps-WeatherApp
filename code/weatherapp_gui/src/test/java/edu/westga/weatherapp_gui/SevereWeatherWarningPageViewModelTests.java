@@ -17,15 +17,16 @@ import edu.westga.weatherapp_gui.viewmodel.SevereWeatherWarningPageViewModel;
 @TestMethodOrder(Alphanumeric.class)
 public class SevereWeatherWarningPageViewModelTests {
 
-    @Test
-    public void testConstructionNoSevereWeatherWarningSet() {
-        SevereWeatherWarningPageViewModel viewModel = new SevereWeatherWarningPageViewModel();
-        assertAll(() -> {
-            assertNull(viewModel.getErrorTextStringProperty().getValue());
-        }, () -> {
-            assertTrue(viewModel.getErrorTextVisibilityProperty().getValue());
-        });
-    }
+    // @Test
+    // public void testConstructionNoSevereWeatherWarningSet() {
+    //     SevereWeatherWarningPageViewModel viewModel = new SevereWeatherWarningPageViewModel();
+    //     assertAll(() -> {
+    //         assertNull(viewModel.getErrorTextStringProperty().getValue());
+    //     }, () -> {
+    //         assertTrue(viewModel.getErrorTextVisibilityProperty().getValue());
+    //     });
+    // }
+    // TODO
 
     @Test
     public void testConstructionWithSevereWeatherWarningSet() {
