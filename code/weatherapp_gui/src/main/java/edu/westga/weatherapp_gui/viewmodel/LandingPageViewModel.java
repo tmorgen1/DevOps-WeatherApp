@@ -96,8 +96,7 @@ public class LandingPageViewModel {
             this.hourlyWeatherDataRetriever = hourlyWeatherDataRetriever;
         } else {
             try {
-                this.weatherDataRetriever = (CurrentWeatherDataRetriever) Naming
-                        .lookup("rmi://localhost:5000/current-weather");
+                this.weatherDataRetriever = (CurrentWeatherDataRetriever) Naming.lookup("rmi://localhost:5000/current-weather");
                 this.weatherIconRetriever = (WeatherIconRetriever) Naming.lookup("rmi://localhost:5000/weather-icons");
                 this.weatherLocationSearcher = (LocationSearcher) Naming.lookup("rmi://localhost:5000/location-searcher");
                 this.hourlyWeatherDataRetriever = (HourlyWeatherDataRetriever) Naming.lookup("rmi://localhost:5000/hourly-weather");
