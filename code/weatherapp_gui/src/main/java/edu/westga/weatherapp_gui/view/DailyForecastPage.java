@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import edu.westga.weatherapp_gui.App;
 import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
 import edu.westga.weatherapp_gui.model.DateTimeConverter;
+import edu.westga.weatherapp_gui.model.GuiConstants;
 import edu.westga.weatherapp_gui.view.utils.WindowGenerator;
 import edu.westga.weatherapp_gui.viewmodel.DailyForecastPageViewModel;
 import edu.westga.weatherapp_shared.enums.MeasurementUnits;
@@ -33,21 +34,6 @@ import javafx.scene.control.ScrollPane;
  * @author Michael Pavich
  */
 public class DailyForecastPage {
-
-    /**
-     * Kelvin suffix
-     */
-    private static final String KELVIN_SUFFIX = " K";
-
-    /**
-     * Celsius suffix
-     */
-    private static final String CELSIUS_SUFFIX = " °C";
-
-    /**
-     * Farenheit suffix
-     */
-    private static final String FARENHEIT_SUFFIX = " °F";
 
     /**
      * The number of days for the forecast to load
@@ -127,7 +113,7 @@ public class DailyForecastPage {
     /**
      * The current temperature suffix
      */
-    private String temperatureSuffix = FARENHEIT_SUFFIX;
+    private String temperatureSuffix = GuiConstants.FAHRENHEIT_SUFFIX;
 
     /**
      * Initializes after all FXML fields are loaded. Sets the measurement settings
@@ -151,7 +137,7 @@ public class DailyForecastPage {
      */
     @FXML
     void onCelsiusSelected(ActionEvent event) {
-        this.temperatureSuffix = CELSIUS_SUFFIX;
+        this.temperatureSuffix = GuiConstants.CELSIUS_SUFFIX;
         this.setAllCheckMenuItemsFalse();
         CurrentWeatherInformation.setWeatherData(null);
         this.celsiusCheckMenuItem.setSelected(true);
@@ -169,7 +155,7 @@ public class DailyForecastPage {
      */
     @FXML
     void onFahrenheitSelected(ActionEvent event) {
-        this.temperatureSuffix = FARENHEIT_SUFFIX;
+        this.temperatureSuffix = GuiConstants.FAHRENHEIT_SUFFIX;
         this.setAllCheckMenuItemsFalse();
         CurrentWeatherInformation.setWeatherData(null);
         this.fahrenheitCheckMenuItem.setSelected(true);
@@ -187,7 +173,7 @@ public class DailyForecastPage {
      */
     @FXML
     void onKelvinSelected(ActionEvent event) {
-        this.temperatureSuffix = KELVIN_SUFFIX;
+        this.temperatureSuffix = GuiConstants.KELVIN_SUFFIX;
         this.setAllCheckMenuItemsFalse();
         CurrentWeatherInformation.setWeatherData(null);
         this.kelvinCheckMenuItem.setSelected(true);
@@ -221,12 +207,12 @@ public class DailyForecastPage {
         this.setAllCheckMenuItemsFalse();
         if (CurrentWeatherInformation.getMeasurementUnits() == MeasurementUnits.Imperial) {
             this.fahrenheitCheckMenuItem.setSelected(true);
-            this.temperatureSuffix = FARENHEIT_SUFFIX;
+            this.temperatureSuffix = GuiConstants.FAHRENHEIT_SUFFIX;
         } else if (CurrentWeatherInformation.getMeasurementUnits() == MeasurementUnits.Metric) {
-            this.temperatureSuffix = CELSIUS_SUFFIX;
+            this.temperatureSuffix = GuiConstants.CELSIUS_SUFFIX;
             this.celsiusCheckMenuItem.setSelected(true);
         } else {
-            this.temperatureSuffix = KELVIN_SUFFIX;
+            this.temperatureSuffix = GuiConstants.KELVIN_SUFFIX;
             this.kelvinCheckMenuItem.setSelected(true);
         }
     }
