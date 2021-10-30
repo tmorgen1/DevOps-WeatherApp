@@ -215,6 +215,12 @@ public class LandingPage {
     private Menu settingMenu;
 
     /**
+     * The historical weather button
+     */
+    @FXML
+    private JFXButton historicalButton;
+
+    /**
      * The temperature suffix
      */
     private String temperatureSuffix = GuiConstants.FAHRENHEIT_SUFFIX;
@@ -440,6 +446,21 @@ public class LandingPage {
         try {
             Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             WindowGenerator.changeScene(currentStage, App.WEATHER_RADAR_PAGE_VIEW, App.WEATHER_RADAR_PAGE_TITLE);
+        } catch (IOException exception) {
+            this.displayNoLocationSnackbar("Please Enter a Location First");
+        }
+    }
+
+    /**
+     * Handles the mouse click event for the historical weather button clicked. Moves to the month selection page
+     * 
+     * @param event - the mouse click event
+     */
+    @FXML
+    void onHistoricalClicked(ActionEvent event) {
+        try {
+            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            WindowGenerator.changeScene(currentStage, App.MONTH_SELECTION_PAGE_VIEW, App.MONTH_SELECTION_PAGE_TITLE);
         } catch (IOException exception) {
             this.displayNoLocationSnackbar("Please Enter a Location First");
         }

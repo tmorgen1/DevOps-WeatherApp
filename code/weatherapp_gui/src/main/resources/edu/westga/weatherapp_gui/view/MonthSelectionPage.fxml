@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.CheckMenuItem?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane fx:id="dailyForecastPagePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0" prefWidth="401.0" style="-fx-background-color: #2A2E37;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.weatherapp_gui.view.MonthSelectionPage">
+   <children>
+      <Label layoutX="96.0" layoutY="36.0" text="Historical Months" textFill="WHITE">
+         <font>
+            <Font name="Segoe UI Bold" size="25.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="backArrowImageView" fitHeight="32.0" fitWidth="47.0" layoutX="14.0" layoutY="36.0" onMouseClicked="#onBackArrowClicked" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../icons/back-icon.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <MenuBar prefHeight="25.0" prefWidth="401.0">
+         <menus>
+            <Menu fx:id="settingMenu" disable="true" mnemonicParsing="false" text="Settings">
+               <items>
+                  <CheckMenuItem fx:id="fahrenheitCheckMenuItem" mnemonicParsing="false" onAction="#onFahrenheitSelected" selected="true" text="Fahrenheit" />
+                  <CheckMenuItem fx:id="celsiusCheckMenuItem" mnemonicParsing="false" onAction="#onCelsiusSelected" text="Celsius" />
+                  <CheckMenuItem fx:id="kelvinCheckMenuItem" mnemonicParsing="false" onAction="#onKelvinSelected" text="Kelvin" />
+               </items>
+            </Menu>
+         </menus>
+      </MenuBar>
+      <JFXButton fx:id="januaryButton" buttonType="RAISED" layoutX="27.0" layoutY="80.0" onAction="#onJanuaryButtonClicked" prefHeight="106.0" prefWidth="106.0" style="-fx-border-radius: 15; -fx-background-color: #ffffff00; -fx-border-color: #EC6E4C; -fx-background-radius: 15;" text="January" textFill="WHITE">
+         <font>
+            <Font size="16.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </JFXButton>
+      <JFXButton fx:id="februaryButton" buttonType="RAISED" layoutX="148.0" layoutY="80.0" onAction="#onFebruaryButtonClicked" prefHeight="106.0" prefWidth="106.0" style="-fx-border-radius: 15; -fx-background-color: #ffffff00; -fx-border-color: #EC6E4C; -fx-background-radius: 15;" text="February" textFill="WHITE">
+         <font>
+            <Font size="16.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </JFXButton>
+      <JFXButton fx:id="marchButton" buttonType="RAISED" layoutX="269.0" layoutY="80.0" onAction="#onMarchButtonClicked" prefHeight="106.0" prefWidth="106.0" style="-fx-border-radius: 15; -fx-background-color: #ffffff00; -fx-border-color: #EC6E4C; -fx-background-radius: 15;" text="March" textFill="WHITE">
+         <font>
+            <Font size="16.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </JFXButton>
+      <JFXButton fx:id="aprilButton" buttonType="RAISED" layoutX="27.0" layoutY="201.0" onAction="#onAprilButtonClicked" prefHeight="106.0" prefWidth="106.0" style="-fx-border-radius: 15; -fx-background-color: #ffffff00; -fx-border-color: #EC6E4C; -fx-background-radius: 15;" text="April" textFill="WHITE">
+         <font>
+            <Font size="16.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </JFXButton>
+      <JFXButton fx:id="mayButton" buttonType="RAISED" layoutX="148.0" layoutY="201.0" onAction="#onMayButtonClicked" prefHeight="106.0" prefWidth="106.0" style="-fx-border-radius: 15; -fx-background-color: #ffffff00; -fx-border-color: #EC6E4C; -fx-background-radius: 15;" text="May" textFill="WHITE">
+         <font>
+            <Font size="16.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </JFXButton>
+      <JFXButton fx:id="juneButton" buttonType="RAISED" layoutX="269.0" layoutY="201.0" onAction="#onJuneButtonClicked" prefHeight="106.0" prefWidth="106.0" style="-fx-border-radius: 15; -fx-background-color: #ffffff00; -fx-border-color: #EC6E4C; -fx-background-radius: 15;" text="June" textFill="WHITE">
+         <font>
+            <Font size="16.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </JFXButton>
+      <JFXButton fx:id="julyButton" buttonType="RAISED" layoutX="27.0" layoutY="322.0" onAction="#onJulyButtonClicked" prefHeight="106.0" prefWidth="106.0" style="-fx-border-radius: 15; -fx-background-color: #ffffff00; -fx-border-color: #EC6E4C; -fx-background-radius: 15;" text="July" textFill="WHITE">
+         <font>
+            <Font size="16.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </JFXButton>
+      <JFXButton fx:id="augustButton" buttonType="RAISED" layoutX="148.0" layoutY="322.0" onAction="#onAugustButtonClicked" prefHeight="106.0" prefWidth="106.0" style="-fx-border-radius: 15; -fx-background-color: #ffffff00; -fx-border-color: #EC6E4C; -fx-background-radius: 15;" text="August" textFill="WHITE">
+         <font>
+            <Font size="16.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </JFXButton>
+      <JFXButton fx:id="septermberButton" buttonType="RAISED" layoutX="269.0" layoutY="322.0" onAction="#onSeptemberButtonClicked" prefHeight="106.0" prefWidth="106.0" style="-fx-border-radius: 15; -fx-background-color: #ffffff00; -fx-border-color: #EC6E4C; -fx-background-radius: 15;" text="September" textFill="WHITE">
+         <font>
+            <Font size="16.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </JFXButton>
+      <JFXButton fx:id="octoberButton" buttonType="RAISED" layoutX="27.0" layoutY="443.0" onAction="#onOctoberButtonClicked" prefHeight="106.0" prefWidth="106.0" style="-fx-border-radius: 15; -fx-background-color: #ffffff00; -fx-border-color: #EC6E4C; -fx-background-radius: 15;" text="October" textFill="WHITE">
+         <font>
+            <Font size="16.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </JFXButton>
+      <JFXButton fx:id="novemberButton" buttonType="RAISED" layoutX="148.0" layoutY="443.0" onAction="#onNovemberButtonClicked" prefHeight="106.0" prefWidth="106.0" style="-fx-border-radius: 15; -fx-background-color: #ffffff00; -fx-border-color: #EC6E4C; -fx-background-radius: 15;" text="November" textFill="WHITE">
+         <font>
+            <Font size="16.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </JFXButton>
+      <JFXButton fx:id="decemberButton" buttonType="RAISED" layoutX="269.0" layoutY="443.0" onAction="#onDecemberButtonClicked" prefHeight="106.0" prefWidth="106.0" style="-fx-border-radius: 15; -fx-background-color: #ffffff00; -fx-border-color: #EC6E4C; -fx-background-radius: 15;" text="December" textFill="WHITE">
+         <font>
+            <Font size="16.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </JFXButton>
+   </children>
+</Pane>
