@@ -1,5 +1,10 @@
 package edu.westga.weatherapp_gui.model;
 
+/**
+ * The GuiConstants class contains constants used in the GUI.
+ * 
+ * @author Michael Pavich
+ */
 public class GuiConstants {
     
     /**
