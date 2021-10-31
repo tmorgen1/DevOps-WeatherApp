@@ -1,4 +1,4 @@
-package edu.westga.weatherapp_gui;
+package edu.westga.weatherapp_gui.model;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 

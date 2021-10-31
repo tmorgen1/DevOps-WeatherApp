@@ -1,4 +1,4 @@
-package edu.westga.weatherapp_gui;
+package edu.westga.weatherapp_gui.viewmodel;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;

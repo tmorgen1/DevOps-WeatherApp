@@ -1,4 +1,4 @@
-package edu.westga.weatherapp_gui;
+package edu.westga.weatherapp_gui.viewmodel;
 
 import org.junit.jupiter.api.Test;
 
