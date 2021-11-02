@@ -10,6 +10,7 @@ import edu.westga.weatherapp_service.model.OpenWeatherHourlyDataRetriever;
 import edu.westga.weatherapp_service.model.OpenWeatherIconRetriever;
 import edu.westga.weatherapp_service.model.OpenWeatherMapRadarDataRetriever;
 import edu.westga.weatherapp_service.model.OpenWeatherSevereWarningsRetriever;
+import edu.westga.weatherapp_service.model.OpenWeatherStatisticalDataRetriever;
 import edu.westga.weatherapp_service.model.WeatherLocationSearcher;
 import edu.westga.weatherapp_shared.interfaces.CurrentWeatherDataRetriever;
 import edu.westga.weatherapp_shared.interfaces.DailyWeatherDataRetriever;
@@ -78,6 +79,9 @@ public class App {
 
             OpenWeatherMapRadarDataRetriever mapRadarDataRetriever = new OpenWeatherMapRadarDataRetriever(App.WEATHER_RADAR_MAP_SITE_FILE_NAME);
             Naming.rebind("rmi://localhost:" + App.RMI_PORT + "/radar-weather", mapRadarDataRetriever);
+
+            OpenWeatherStatisticalDataRetriever statisticalWeatherSkeleton = new OpenWeatherStatisticalDataRetriever(new APIDataRetriever());
+            Naming.rebind("rmi://localhost:" + App.RMI_PORT + "/statistical-weather", statisticalWeatherSkeleton);
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
         }
