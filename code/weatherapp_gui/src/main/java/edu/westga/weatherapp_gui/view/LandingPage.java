@@ -46,6 +46,7 @@ import org.json.JSONObject;
 import edu.westga.weatherapp_gui.App;
 import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
 import edu.westga.weatherapp_gui.model.DateTimeConverter;
+import edu.westga.weatherapp_gui.model.GuiConstants;
 import edu.westga.weatherapp_shared.model.WeatherLocation;
 import edu.westga.weatherapp_gui.view.utils.WindowGenerator;
 import edu.westga.weatherapp_gui.viewmodel.LandingPageViewModel;
@@ -57,31 +58,6 @@ import edu.westga.weatherapp_shared.enums.MeasurementUnits;
  * @author Michael Pavich
  */
 public class LandingPage {
-
-    /**
-     * Kelvin suffix
-     */
-    private static final String KELVIN_SUFFIX = " K";
-
-    /**
-     * Kilometers per hour symbol
-     */
-    private static final String KILOMETERS_PER_HOUR_SYMBOL = " km/h";
-
-    /**
-     * Celsius suffix
-     */
-    private static final String CELSIUS_SUFFIX = " °C";
-
-    /**
-     * Miles per hour symbol
-     */
-    private static final String MILES_PER_HOUR_SYMBOL = " mi/h";
-
-    /**
-     * Farenheit suffix
-     */
-    private static final String FARENHEIT_SUFFIX = " °F";
 
     /**
      * The landing page view model
@@ -241,12 +217,12 @@ public class LandingPage {
     /**
      * The temperature suffix
      */
-    private String temperatureSuffix = FARENHEIT_SUFFIX;
+    private String temperatureSuffix = GuiConstants.FAHRENHEIT_SUFFIX;
 
     /**
      * The wind speed suffix
      */
-    private String windSpeedSuffix = MILES_PER_HOUR_SYMBOL;
+    private String windSpeedSuffix = GuiConstants.MILES_PER_HOUR_SYMBOL;
 
     /**
      * The array list of hourly forecast panes
@@ -612,8 +588,8 @@ public class LandingPage {
      */
     @FXML
     void onCelsiusSelected(ActionEvent event) {
-        this.temperatureSuffix = CELSIUS_SUFFIX;
-        this.windSpeedSuffix = KILOMETERS_PER_HOUR_SYMBOL;
+        this.temperatureSuffix = GuiConstants.CELSIUS_SUFFIX;
+        this.windSpeedSuffix = GuiConstants.KILOMETERS_PER_HOUR_SYMBOL;
         this.setAllCheckMenuItemsFalse();
         this.celsiusCheckMenuItem.setSelected(true);
         CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Metric);
@@ -630,8 +606,8 @@ public class LandingPage {
      */
     @FXML
     void onFahrenheitSelected(ActionEvent event) {
-        this.temperatureSuffix = FARENHEIT_SUFFIX;
-        this.windSpeedSuffix = MILES_PER_HOUR_SYMBOL;
+        this.temperatureSuffix = GuiConstants.FAHRENHEIT_SUFFIX;
+        this.windSpeedSuffix = GuiConstants.MILES_PER_HOUR_SYMBOL;
         this.setAllCheckMenuItemsFalse();
         this.fahrenheitCheckMenuItem.setSelected(true);
         CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Imperial);
@@ -648,8 +624,8 @@ public class LandingPage {
      */
     @FXML
     void onKelvinSelected(ActionEvent event) {
-        this.temperatureSuffix = KELVIN_SUFFIX;
-        this.windSpeedSuffix = KILOMETERS_PER_HOUR_SYMBOL;
+        this.temperatureSuffix = GuiConstants.KELVIN_SUFFIX;
+        this.windSpeedSuffix = GuiConstants.KILOMETERS_PER_HOUR_SYMBOL;
         this.setAllCheckMenuItemsFalse();
         this.kelvinCheckMenuItem.setSelected(true);
         CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Kelvin);
@@ -663,12 +639,12 @@ public class LandingPage {
         this.setAllCheckMenuItemsFalse();
         if (CurrentWeatherInformation.getMeasurementUnits() == MeasurementUnits.Imperial) {
             this.fahrenheitCheckMenuItem.setSelected(true);
-            this.temperatureSuffix = FARENHEIT_SUFFIX;
+            this.temperatureSuffix = GuiConstants.FAHRENHEIT_SUFFIX;
         } else if (CurrentWeatherInformation.getMeasurementUnits() == MeasurementUnits.Metric) {
-            this.temperatureSuffix = CELSIUS_SUFFIX;
+            this.temperatureSuffix = GuiConstants.CELSIUS_SUFFIX;
             this.celsiusCheckMenuItem.setSelected(true);
         } else {
-            this.temperatureSuffix = KELVIN_SUFFIX;
+            this.temperatureSuffix = GuiConstants.KELVIN_SUFFIX;
             this.kelvinCheckMenuItem.setSelected(true);
         }
     }

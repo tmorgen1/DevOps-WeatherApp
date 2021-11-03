@@ -26,12 +26,13 @@ public class WeatherRadarPageViewModel {
      * The weather location searcher
      */
     private LocationSearcher locationSearcher;
-    
+
     /**
-     * Creates an instance of the weather radar page viewmodel and connects to the java rmi data
+     * Creates an instance of the weather radar page viewmodel and connects to the
+     * java rmi data
      * 
      * @param mapRadarDataRetriever - the map radar data retriever
-     * @param locationSearcher - the location searcher
+     * @param locationSearcher      - the location searcher
      */
     public WeatherRadarPageViewModel(MapRadarDataRetriever mapRadarDataRetriever, LocationSearcher locationSearcher) {
         if (mapRadarDataRetriever != null && locationSearcher != null) {
@@ -39,7 +40,8 @@ public class WeatherRadarPageViewModel {
             this.locationSearcher = locationSearcher;
         } else {
             try {
-                this.mapRadarDataRetriever = (MapRadarDataRetriever) Naming.lookup("rmi://localhost:5000/radar-weather");
+                this.mapRadarDataRetriever = (MapRadarDataRetriever) Naming
+                        .lookup("rmi://localhost:5000/radar-weather");
                 this.locationSearcher = (LocationSearcher) Naming.lookup("rmi://localhost:5000/location-searcher");
             } catch (MalformedURLException | RemoteException | NotBoundException e) {
                 System.err.println("Error looking up java rmi binding");
@@ -67,16 +69,13 @@ public class WeatherRadarPageViewModel {
     /**
      * Gets the current location of the user based on their ip address
      * 
+     * @throws RemoteException - in the event of a RMI exception
      * @return a weather location of the user's current location
      */
-    private WeatherLocation getCurrentLocation() {
-        try {
-            String ip = IpGrabber.getCurrentIpAddress();
-            WeatherLocation currentLocation = this.locationSearcher.getLocationByIP(ip);
-            
-            return currentLocation;
-        } catch (RemoteException e) {
-            return null;
-        }
+    private WeatherLocation getCurrentLocation() throws RemoteException {
+        String ip = IpGrabber.getCurrentIpAddress();
+        WeatherLocation currentLocation = this.locationSearcher.getLocationByIP(ip);
+
+        return currentLocation;
     }
 }

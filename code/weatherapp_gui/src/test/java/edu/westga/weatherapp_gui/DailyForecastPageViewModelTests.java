@@ -1,5 +1,6 @@
 package edu.westga.weatherapp_gui;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -7,9 +8,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
-import edu.westga.weatherapp_gui.mocks.MockDataRetriever;
-import edu.westga.weatherapp_gui.mocks.OpenWeatherDailyDataRetrieverMock;
-import edu.westga.weatherapp_gui.mocks.OpenWeatherIconRetrieverMock;
+import edu.westga.weatherapp_gui.mocks.ExceptionLogicMocks.DailyDataRetrieverExceptionMock;
+import edu.westga.weatherapp_gui.mocks.ExceptionLogicMocks.IconRetrieverExceptionMock;
+import edu.westga.weatherapp_gui.mocks.NormalLogicMocks.MockDataRetriever;
+import edu.westga.weatherapp_gui.mocks.NormalLogicMocks.OpenWeatherDailyDataRetrieverMock;
+import edu.westga.weatherapp_gui.mocks.NormalLogicMocks.OpenWeatherIconRetrieverMock;
 import edu.westga.weatherapp_gui.viewmodel.DailyForecastPageViewModel;
 import edu.westga.weatherapp_shared.interfaces.DailyWeatherDataRetriever;
 import edu.westga.weatherapp_shared.interfaces.WeatherIconRetriever;
@@ -40,6 +43,14 @@ public class DailyForecastPageViewModelTests {
     }
 
     @Test
+    public void getWeatherDataByWeatherLocationSuccessfullyCatchesException() {
+        DailyWeatherDataRetriever dailyWeatherRetriever = new DailyDataRetrieverExceptionMock(new MockDataRetriever());
+        WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
+        DailyForecastPageViewModel viewModel = new DailyForecastPageViewModel(dailyWeatherRetriever, iconRetriever);
+        assertNull(viewModel.getWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "state", 30.40, 30.40), 1));
+    }
+
+    @Test
     public void getWeatherDataByCityThrowsExceptionWithNullCity() {
         DailyWeatherDataRetriever dailyWeatherRetriever = new OpenWeatherDailyDataRetrieverMock(new MockDataRetriever());
         WeatherIconRetriever iconRetriever = new OpenWeatherIconRetrieverMock();
@@ -65,6 +76,15 @@ public class DailyForecastPageViewModelTests {
         DailyForecastPageViewModel viewModel = new DailyForecastPageViewModel(dailyWeatherRetriever, iconRetriever);
         JSONObject result = viewModel.getWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "N/A", 30.40, 30.40), 1);
         assertEquals(5, result.getJSONObject("wind").getDouble("speed"));
+    }
+
+    @Test
+    public void getDayWeatherIconSuccessfullyCatchesRemoteException() {
+        DailyWeatherDataRetriever dailyWeatherRetriever = new OpenWeatherDailyDataRetrieverMock(new MockDataRetriever());
+        WeatherIconRetriever iconRetriever = new IconRetrieverExceptionMock();
+        DailyForecastPageViewModel viewModel = new DailyForecastPageViewModel(dailyWeatherRetriever, iconRetriever);
+        viewModel.getWeatherDataByWeatherLocation(new WeatherLocation("city", "country", "N/A", 30.40, 30.40), 1);
+        assertNull(viewModel.getDayWeatherIcon(0));
     }
 
     @Test

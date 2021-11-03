@@ -1,6 +1,5 @@
 package edu.westga.weatherapp_gui;
 
-import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -21,11 +20,12 @@ public class SevereWeatherWarningPageViewModelTests {
     public void testConstructionNoSevereWeatherWarningSet() {
         SevereWeatherWarningPageViewModel viewModel = new SevereWeatherWarningPageViewModel();
         assertAll(() -> {
-            assertNull(viewModel.getErrorTextStringProperty().getValue());
+            assertFalse(viewModel.getErrorTextStringProperty().getValue().isEmpty());
         }, () -> {
             assertTrue(viewModel.getErrorTextVisibilityProperty().getValue());
         });
     }
+    
 
     @Test
     public void testConstructionWithSevereWeatherWarningSet() {

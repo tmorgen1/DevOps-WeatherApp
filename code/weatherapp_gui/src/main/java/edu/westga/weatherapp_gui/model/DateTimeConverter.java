@@ -12,6 +12,21 @@ import java.util.Date;
 public class DateTimeConverter {
 
     /**
+     * The hour 0
+     */
+    private static final int HOUR_0 = 0;
+
+    /**
+     * The hour 12
+     */
+    private static final int HOUR_12 = 12;
+
+    /**
+     * The hour 12 formatted to a time properly
+     */
+    private static final String NOON_FORMATTED = "12:00 ";
+
+    /**
      * Converts the given utc date time and timezone to the day of the week name
      * 
      * @param utcDateTime - the specified utc date time
@@ -33,7 +48,12 @@ public class DateTimeConverter {
     public static String convertUtcToHour(Long utcDateTime, Long timezone) {
         Date date = DateTimeConverter.convertUtcToDate(utcDateTime, timezone);
         long hour = (date.getTime() % 86400000) / 3600000;
-        String formattedHour = (hour == 0) ? "12:00 AM" : (hour % 12 == 0) ? "12:00 PM" : hour % 12 + ":00 " + ((hour >= 12) ? "PM" : "AM");
+        String formattedHour = (hour == HOUR_0) 
+            ? NOON_FORMATTED + GuiConstants.AM_SUFFIX 
+            : (hour % HOUR_12 == HOUR_0) 
+            ? NOON_FORMATTED + GuiConstants.PM_SUFFIX 
+            : hour % HOUR_12 + ":00 " + ((hour >= HOUR_12) 
+            ? GuiConstants.PM_SUFFIX : GuiConstants.AM_SUFFIX);
         return formattedHour;
     }
 

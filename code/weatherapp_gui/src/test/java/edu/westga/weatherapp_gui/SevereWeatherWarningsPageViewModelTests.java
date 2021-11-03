@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.junit.jupiter.api.Test;
 
-import edu.westga.weatherapp_gui.mocks.OpenWeatherSevereWarningsRetrieverMocks;
+import edu.westga.weatherapp_gui.mocks.NormalLogicMocks.OpenWeatherSevereWarningsRetrieverMocks;
 import edu.westga.weatherapp_gui.model.DateTimeConverter;
 import edu.westga.weatherapp_gui.model.SevereWeatherWarning;
 import edu.westga.weatherapp_gui.viewmodel.SevereWeatherWarningsPageViewModel;
