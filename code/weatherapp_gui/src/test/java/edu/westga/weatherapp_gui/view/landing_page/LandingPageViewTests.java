@@ -144,6 +144,8 @@ public class LandingPageViewTests extends ViewTestWithServer {
             sleep(10);
         }
         this.moveTo("#hourlyForecastHBox");
-        this.scroll(3, VerticalDirection.DOWN);
+        this.press(MouseButton.PRIMARY);
+        this.scroll(20, VerticalDirection.DOWN);
+        this.scroll(20, VerticalDirection.UP);
     }
 }
