@@ -1,4 +1,4 @@
-package edu.westga.weatherapp_gui;
+package edu.westga.weatherapp_gui.model;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -10,7 +10,6 @@ import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import edu.westga.weatherapp_shared.model.WeatherLocation;
-import edu.westga.weatherapp_gui.model.WeatherLocationSerializer;
 
 public class WeatherLocationSerializerTests {
     
