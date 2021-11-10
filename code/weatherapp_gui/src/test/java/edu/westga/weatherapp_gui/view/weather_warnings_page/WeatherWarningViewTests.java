@@ -20,7 +20,7 @@ public class WeatherWarningViewTests extends ViewTestWithServer {
         }
         this.doubleClickOn("#locationSearchTextField");
         this.type(KeyCode.S, KeyCode.E, KeyCode.A, KeyCode.T, KeyCode.T, KeyCode.L, KeyCode.E);
-        sleep(2000);
+        sleep(6000);
         this.moveTo("#searchResultsListView");
         this.moveBy(0, -70);
         this.press(MouseButton.PRIMARY);
@@ -29,6 +29,7 @@ public class WeatherWarningViewTests extends ViewTestWithServer {
             sleep(10);
         }
         this.doubleClickOn("#warningsButton");
+        sleep(4000);
         this.clickOn("#severeWarningsComboBox");
         this.moveBy(0, 40);
         this.press(MouseButton.PRIMARY);
