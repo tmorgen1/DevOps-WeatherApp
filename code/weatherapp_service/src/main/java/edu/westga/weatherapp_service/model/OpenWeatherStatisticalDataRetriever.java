@@ -65,6 +65,16 @@ public class OpenWeatherStatisticalDataRetriever extends UnicastRemoteObject
      */
     private static final String OPEN_WEATHER_API_CALL_BASE = "https://history.openweathermap.org/data/2.5/aggregated/month?appid=";
 
+    /**
+     * Latitude should be between -90 and 90, inclusive error message
+     */
+    private static final String LATITUDE_ERROR_MESSAGE = "latitude should be in between -90 and 90, inclusive";
+
+    /**
+     * Longitude should be between -180 and 180, inclusive error message
+     */
+    private static final String LONGITUDE_ERROR_MESSAGE = "longitude should be in between -180 and 180, inclusive";
+
     private DataRetriever dataRetriever;
 
     /**
@@ -187,6 +197,22 @@ public class OpenWeatherStatisticalDataRetriever extends UnicastRemoteObject
 
         URL apiCall = this.dataRetriever.getServiceAPICallURL(
                 "&q=" + cityName + "," + stateCode + "," + countryCode + "&month=" + numOfTheMonth,
+                OpenWeatherStatisticalDataRetriever.OPEN_WEATHER_API_CALL_BASE, ServiceConstants.API_KEY,
+                MeasurementUnits.Imperial);
+        return this.dataRetriever.getData(apiCall);
+    }
+    
+    @Override
+    public String getDataByCoordinates(double latitude, double longitude, int numOfTheMonth) {
+        if (latitude < -90 || latitude > 90) {
+            throw new IllegalArgumentException(LATITUDE_ERROR_MESSAGE);
+        }
+        if (longitude < -180 || longitude > 180) {
+            throw new IllegalArgumentException(LONGITUDE_ERROR_MESSAGE);
+        }
+        
+        URL apiCall = this.dataRetriever.getServiceAPICallURL(
+                "&lat=" + latitude + "&lon=" + longitude + "&month=" + numOfTheMonth,
                 OpenWeatherStatisticalDataRetriever.OPEN_WEATHER_API_CALL_BASE, ServiceConstants.API_KEY,
                 MeasurementUnits.Imperial);
         return this.dataRetriever.getData(apiCall);

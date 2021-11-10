@@ -32,6 +32,9 @@ public class App extends Application {
 	public static final String MONTH_SELECTION_PAGE_TITLE = "Weather App - Historical Month Selection";
 	public static final String MONTH_SELECTION_PAGE_VIEW = "/edu/westga/weatherapp_gui/view/MonthSelectionPage.fxml";
 
+	public static final String STATISTICAL_WEATHER_PAGE_TITLE = "Weather App - Statistical Weather";
+	public static final String STATISTICAL_WEATHER_PAGE_VIEW = "/edu/westga/weatherapp_gui/view/StatisticalWeatherPage.fxml";
+
 	/**
 	 * JavaFX entry point.
 	 *

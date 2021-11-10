@@ -228,7 +228,7 @@ public class LandingPage {
     /**
      * The wind speed suffix
      */
-    private String windSpeedSuffix = GuiConstants.MILES_PER_HOUR_SYMBOL;
+    private String windSpeedSuffix = GuiConstants.MILES_PER_HOUR_SUFFIX;
 
     /**
      * The array list of hourly forecast panes
@@ -610,7 +610,7 @@ public class LandingPage {
     @FXML
     void onCelsiusSelected(ActionEvent event) {
         this.temperatureSuffix = GuiConstants.CELSIUS_SUFFIX;
-        this.windSpeedSuffix = GuiConstants.KILOMETERS_PER_HOUR_SYMBOL;
+        this.windSpeedSuffix = GuiConstants.KILOMETERS_PER_HOUR_SUFFIX;
         this.setAllCheckMenuItemsFalse();
         this.celsiusCheckMenuItem.setSelected(true);
         CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Metric);
@@ -628,7 +628,7 @@ public class LandingPage {
     @FXML
     void onFahrenheitSelected(ActionEvent event) {
         this.temperatureSuffix = GuiConstants.FAHRENHEIT_SUFFIX;
-        this.windSpeedSuffix = GuiConstants.MILES_PER_HOUR_SYMBOL;
+        this.windSpeedSuffix = GuiConstants.MILES_PER_HOUR_SUFFIX;
         this.setAllCheckMenuItemsFalse();
         this.fahrenheitCheckMenuItem.setSelected(true);
         CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Imperial);
@@ -646,7 +646,7 @@ public class LandingPage {
     @FXML
     void onKelvinSelected(ActionEvent event) {
         this.temperatureSuffix = GuiConstants.KELVIN_SUFFIX;
-        this.windSpeedSuffix = GuiConstants.KILOMETERS_PER_HOUR_SYMBOL;
+        this.windSpeedSuffix = GuiConstants.KILOMETERS_PER_HOUR_SUFFIX;
         this.setAllCheckMenuItemsFalse();
         this.kelvinCheckMenuItem.setSelected(true);
         CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Kelvin);
