@@ -17,7 +17,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="landingPagePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onLandingPagePaneClicked" prefHeight="697.0" prefWidth="401.0" style="-fx-background-color: #2A2E37;" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="edu.westga.weatherapp_gui.view.LandingPage">
+<Pane fx:id="landingPagePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onLandingPagePaneClicked" prefHeight="697.0" prefWidth="401.0" style="-fx-background-color: #2A2E37;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.weatherapp_gui.view.LandingPage">
    <children>
       <ImageView fx:id="weatherIconImageView" fitHeight="232.0" fitWidth="221.0" layoutX="91.0" layoutY="93.0" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
@@ -136,7 +136,7 @@
             <Font name="Segoe UI" size="24.0" />
          </font>
       </Label>
-      <ImageView fitHeight="37.0" fitWidth="37.0" layoutX="313.0" layoutY="507.0" onMouseClicked="#onWeatherRadarClicked" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="mapRadarImageView" fitHeight="37.0" fitWidth="37.0" layoutX="313.0" layoutY="507.0" onMouseClicked="#onWeatherRadarClicked" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../../../icons/weather-radar-icon.png" />
          </image>

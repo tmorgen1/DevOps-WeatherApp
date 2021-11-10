@@ -18,6 +18,7 @@ public class SevereWeatherWarningPageViewModelTests {
 
     @Test
     public void testConstructionNoSevereWeatherWarningSet() {
+        SevereWeatherWarningPageViewModel.setSevereWeatherWarningObjectPropertyValue(null);
         SevereWeatherWarningPageViewModel viewModel = new SevereWeatherWarningPageViewModel();
         assertAll(() -> {
             assertFalse(viewModel.getErrorTextStringProperty().getValue().isEmpty());

@@ -209,6 +209,12 @@ public class LandingPage {
     private ImageView favoriteFilledImageView;
 
     /**
+     * The map radar image view
+     */
+    @FXML
+    private ImageView mapRadarImageView;
+
+    /**
      * The hourly forecast HBox
      */
     @FXML
@@ -285,6 +291,9 @@ public class LandingPage {
             return;
         } else if (CurrentWeatherInformation.getWeatherLocation() == null && !CurrentWeatherInformation.isFinishedFirstLoadIpGrab()) {
             WeatherLocation currentLocation = this.viewModel.getCurrentLocation();
+            if (currentLocation == null) {
+                return;
+            }
             CurrentWeatherInformation.setWeatherLocation(currentLocation);
             this.updateSelectedWeatherLocation(currentLocation);
         }
