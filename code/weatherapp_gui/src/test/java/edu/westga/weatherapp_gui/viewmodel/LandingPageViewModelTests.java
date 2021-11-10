@@ -1,4 +1,4 @@
-package edu.westga.weatherapp_gui;
+package edu.westga.weatherapp_gui.viewmodel;
 
 import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,7 +27,6 @@ import edu.westga.weatherapp_gui.mocks.NormalLogicMocks.OpenWeatherCurrentDataRe
 import edu.westga.weatherapp_gui.mocks.NormalLogicMocks.OpenWeatherHourlyDataRetrieverMock;
 import edu.westga.weatherapp_gui.mocks.NormalLogicMocks.OpenWeatherIconRetrieverMock;
 import edu.westga.weatherapp_gui.model.WeatherLocationSerializer;
-import edu.westga.weatherapp_gui.viewmodel.LandingPageViewModel;
 import edu.westga.weatherapp_shared.interfaces.CurrentWeatherDataRetriever;
 import edu.westga.weatherapp_shared.interfaces.HourlyWeatherDataRetriever;
 import edu.westga.weatherapp_shared.interfaces.LocationSearcher;

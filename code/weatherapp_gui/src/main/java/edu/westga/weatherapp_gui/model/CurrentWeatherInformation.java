@@ -157,4 +157,16 @@ public class CurrentWeatherInformation {
     public static void setMeasurementUnits(MeasurementUnits units) {
         CurrentWeatherInformation.measurementUnits = units;
     }
+
+    /**
+     * Sets the values of this class to default values.
+     */
+    public static void resetInfo() {
+        weatherLocation = null;
+        weatherData = null;
+        measurementUnits = MeasurementUnits.Imperial;
+        hourlyInfoPanes = null;
+        dayForecastPanes = null;
+        finishedFirstLoadIpGrab = false;
+    }
 }
