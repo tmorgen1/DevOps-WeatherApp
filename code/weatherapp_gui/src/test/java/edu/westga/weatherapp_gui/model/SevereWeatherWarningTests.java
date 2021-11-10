@@ -5,9 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-import edu.westga.weatherapp_gui.model.DateTimeConverter;
-import edu.westga.weatherapp_gui.model.SevereWeatherWarning;
-
 public class SevereWeatherWarningTests {
 
     @Test

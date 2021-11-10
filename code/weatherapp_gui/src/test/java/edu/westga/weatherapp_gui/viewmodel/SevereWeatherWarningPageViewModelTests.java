@@ -11,7 +11,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.MethodOrderer.Alphanumeric;
 
 import edu.westga.weatherapp_gui.model.SevereWeatherWarning;
-import edu.westga.weatherapp_gui.viewmodel.SevereWeatherWarningPageViewModel;
 
 @TestMethodOrder(Alphanumeric.class)
 public class SevereWeatherWarningPageViewModelTests {

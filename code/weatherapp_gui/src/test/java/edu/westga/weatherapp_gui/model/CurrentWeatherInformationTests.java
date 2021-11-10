@@ -10,7 +10,6 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
 import edu.westga.weatherapp_gui.view.DayForecastPane;
 import edu.westga.weatherapp_gui.view.HourlyInfoPane;
 import edu.westga.weatherapp_shared.enums.MeasurementUnits;

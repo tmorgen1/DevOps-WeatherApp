@@ -8,8 +8,6 @@ import java.util.Date;
 
 import org.junit.jupiter.api.Test;
 
-import edu.westga.weatherapp_gui.model.DateTimeConverter;
-
 public class DateTimeConverterTests {
     
     @Test

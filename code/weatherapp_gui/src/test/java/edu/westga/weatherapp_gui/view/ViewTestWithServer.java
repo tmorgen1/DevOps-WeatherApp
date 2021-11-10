@@ -38,18 +38,18 @@ public class ViewTestWithServer extends ApplicationTest {
         runWeatherServer();
     }
 
-    private static void runMavenPackageServer() {
-        try {
-            String mavenPath = Paths.get("").toAbsolutePath().getParent().resolve("maven\\bin").toString();
-            ProcessBuilder pb = new ProcessBuilder(mavenPath + "\\mvn.cmd", "--batch-mode", "clean", "package");
-            String filePath = Paths.get("").toAbsolutePath().getParent().resolve("weatherapp_service").toString();
-            pb.directory(new File(filePath));
-            Process p = pb.start();
-            p.waitFor();
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
+    // private static void runMavenPackageServer() {
+    //     try {
+    //         String mavenPath = Paths.get("").toAbsolutePath().getParent().resolve("maven\\bin").toString();
+    //         ProcessBuilder pb = new ProcessBuilder(mavenPath + "\\mvn.cmd", "--batch-mode", "clean", "package");
+    //         String filePath = Paths.get("").toAbsolutePath().getParent().resolve("weatherapp_service").toString();
+    //         pb.directory(new File(filePath));
+    //         Process p = pb.start();
+    //         p.waitFor();
+    //     } catch (IOException | InterruptedException e) {
+    //         e.printStackTrace();
+    //     }
+    // }
 
     private static void runWeatherServer() {
         try {
