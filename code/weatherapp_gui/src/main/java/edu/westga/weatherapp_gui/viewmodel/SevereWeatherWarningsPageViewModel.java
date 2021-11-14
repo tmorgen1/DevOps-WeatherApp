@@ -115,14 +115,6 @@ public class SevereWeatherWarningsPageViewModel {
      * @param units    the unit of measument the warning should come in
      */
     public void setsevereWeatherWarningsPagePropertiesValues(WeatherLocation location, MeasurementUnits units) {
-<<<<<<< HEAD
-=======
-        System.out.println(location);
-        if (location == null) {
-            throw new IllegalArgumentException("The location cannot be null.");
-        }
-        String data;
->>>>>>> origin/Development
         try {
             String data = this.severeWeatherWarningsRetriever.getSevereWeatherWarningsForLocation(location.getLatitude(),
                     location.getLongitude(), units);
