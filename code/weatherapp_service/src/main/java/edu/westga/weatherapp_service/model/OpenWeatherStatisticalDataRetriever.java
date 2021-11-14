@@ -210,6 +210,9 @@ public class OpenWeatherStatisticalDataRetriever extends UnicastRemoteObject
         if (longitude < -180 || longitude > 180) {
             throw new IllegalArgumentException(LONGITUDE_ERROR_MESSAGE);
         }
+        if (numOfTheMonth < 1 || numOfTheMonth > 12) {
+            throw new IllegalArgumentException(NUM_OF_THE_MONTH_SHOULD_BE_IN_BETWEEN_1_AND_12_INCLUSIVE);
+        }
         
         URL apiCall = this.dataRetriever.getServiceAPICallURL(
                 "&lat=" + latitude + "&lon=" + longitude + "&month=" + numOfTheMonth,

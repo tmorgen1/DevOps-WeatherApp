@@ -27,8 +27,14 @@ public class GuiConstants {
      */
     public static final String KILOMETERS_PER_HOUR_SUFFIX = " km/h";
 
+    /**
+     * Meters per second symbol
+     */
     public static final String METERS_PER_SECOND_SUFFIX = " m/s";
 
+    /**
+     * Feet per second symbol
+     */
     public static final String FEET_PER_SECOND_SUFFIX = " ft/s";
 
     /**
@@ -46,15 +52,33 @@ public class GuiConstants {
      */
     public static final String PM_SUFFIX = "PM";
 
+    /**
+     * Percentage symbol
+     */
     public static final String PERCENTAGE_SYMBOL = " %";
 
+    /**
+     * Hectopascal suffix
+     */
     public static final String HECTOPASCAL_SUFFIX = " hPa";
 
+    /**
+     * Pascal suffix
+     */
     public static final String PASCAL_SUFFIX = " Pa";
 
+    /**
+     * Pound per square inch suffix
+     */
     public static final String POUNDS_PER_SQUARE_INCH_SUFFIX = " psi";
 
+    /**
+     * Millimeters suffix
+     */
     public static final String MILLIMETERS_SUFFIX = " mm";
     
+    /**
+     * Inches suffix
+     */
     public static final String INCHES_SUFFIX = " in";
 }

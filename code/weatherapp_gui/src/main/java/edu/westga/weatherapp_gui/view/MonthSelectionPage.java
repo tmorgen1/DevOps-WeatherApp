@@ -69,7 +69,7 @@ public class MonthSelectionPage {
     private JFXButton augustButton;
 
     @FXML
-    private JFXButton septermberButton;
+    private JFXButton septemberButton;
 
     @FXML
     private JFXButton octoberButton;

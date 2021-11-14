@@ -119,6 +119,9 @@
          <image>
             <Image url="@../../../../icons/white-star-filled.png" />
          </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
       </ImageView>
       <TextField fx:id="locationSearchTextField" layoutX="22.0" layoutY="75.0" onKeyPressed="#onEnterPressed" prefHeight="37.0" prefWidth="309.0" promptText="Enter Location">
          <font>

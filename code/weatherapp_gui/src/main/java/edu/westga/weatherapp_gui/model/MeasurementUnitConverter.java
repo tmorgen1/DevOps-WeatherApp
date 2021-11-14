@@ -110,10 +110,12 @@ public class MeasurementUnitConverter {
             return Double.parseDouble(decimalFormat.format(speed));
         }
 
-        if (startingUnit == MeasurementUnits.Metric || startingUnit == MeasurementUnits.Kelvin) {
+        if ((startingUnit == MeasurementUnits.Metric || startingUnit == MeasurementUnits.Kelvin) && endingUnit == MeasurementUnits.Imperial) {
             convertedSpeed = convertMetersToFeet(speed);
-        } else {
+        } else if (startingUnit == MeasurementUnits.Imperial && (endingUnit == MeasurementUnits.Metric || endingUnit == MeasurementUnits.Kelvin)) {
             convertedSpeed = convertFeetToMeters(speed);
+        } else {
+            convertedSpeed = speed;
         }
 
         return Double.parseDouble(decimalFormat.format(convertedSpeed));
@@ -135,10 +137,12 @@ public class MeasurementUnitConverter {
             return Double.parseDouble(decimalFormat.format(volume));
         }
 
-        if (startingUnit == MeasurementUnits.Metric || startingUnit == MeasurementUnits.Kelvin) {
+        if ((startingUnit == MeasurementUnits.Metric || startingUnit == MeasurementUnits.Kelvin) && endingUnit == MeasurementUnits.Imperial) {
             convertedVolume = convertMillimetersToInches(volume);
-        } else {
+        } else if (startingUnit == MeasurementUnits.Imperial && (endingUnit == MeasurementUnits.Metric || endingUnit == MeasurementUnits.Kelvin)) {
             convertedVolume = convertInchesToMillimeters(volume);
+        } else {
+            convertedVolume = volume;
         }
 
         return Double.parseDouble(decimalFormat.format(convertedVolume));
@@ -230,7 +234,7 @@ public class MeasurementUnitConverter {
      * @return the pressure in hpa
      */
     public static double convertPsiToHpa(double pressure) {
-        return pressure * 14.5037738;
+        return pressure * 68.9476;
     }
 
     /**
@@ -250,7 +254,7 @@ public class MeasurementUnitConverter {
      * @return the pressure in hpa
      */
     public static double convertPaToHpa(double pressure) {
-        return pressure * 0.00100;
+        return pressure * 0.01;
     }
 
     /**
