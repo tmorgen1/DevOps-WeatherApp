@@ -20,12 +20,12 @@ public class SevereWeatherWarningPageViewModelTests {
     public void testConstructionNoSevereWeatherWarningSet() {
         SevereWeatherWarningPageViewModel viewModel = new SevereWeatherWarningPageViewModel();
         assertAll(() -> {
-            assertFalse(viewModel.getErrorTextStringProperty().getValue().isEmpty());
+            assertEquals(SevereWeatherWarningPageViewModel.NULL_WARNING_EXCEPTION_THROWN,
+                    viewModel.getErrorTextStringProperty().getValue());
         }, () -> {
             assertTrue(viewModel.getErrorTextVisibilityProperty().getValue());
         });
     }
-    
 
     @Test
     public void testConstructionWithSevereWeatherWarningSet() {
@@ -39,6 +39,8 @@ public class SevereWeatherWarningPageViewModelTests {
             assertFalse(viewModel.getDescriptionTextProperty().getValue().isEmpty());
         }, () -> {
             assertNotNull(SevereWeatherWarningPageViewModel.getSevereWeatherWarningObjectProperty().getValue());
+        }, () -> {
+            assertEquals(warning, SevereWeatherWarningPageViewModel.getSevereWeatherWarningObjectProperty().getValue());
         });
     }
 }
