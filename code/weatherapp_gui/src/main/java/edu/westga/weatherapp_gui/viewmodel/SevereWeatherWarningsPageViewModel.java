@@ -102,6 +102,7 @@ public class SevereWeatherWarningsPageViewModel {
      * @throws RemoteException
      */
     public void setsevereWeatherWarningsPagePropertiesValues(WeatherLocation location, MeasurementUnits units) {
+        System.out.println(location);
         if (location == null) {
             throw new IllegalArgumentException("The location cannot be null.");
         }
