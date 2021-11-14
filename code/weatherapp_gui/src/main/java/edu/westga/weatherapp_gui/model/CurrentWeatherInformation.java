@@ -47,6 +47,29 @@ public class CurrentWeatherInformation {
     private static boolean finishedFirstLoadIpGrab;
 
     /**
+     * Holds the current selected month for the statistical weather data
+     */
+    private static int statisticalMonthSelected;
+
+    /**
+     * Gets the current selected month for the statistical weather data
+     * 
+     * @return the current selected month for the statistical weather data
+     */
+    public static int getStatisticalMonthSelected() {
+        return CurrentWeatherInformation.statisticalMonthSelected;
+    }
+
+    /**
+     * Sets the current selected month for the statistical weather data
+     * 
+     * @param statisticalMonthSelected - the new selected month
+     */
+    public static void setStatisticalMonthSelected(int statisticalMonthSelected) {
+        CurrentWeatherInformation.statisticalMonthSelected = statisticalMonthSelected;
+    }
+
+    /**
      * Gets the finished first load ip grab value
      * 
      * @return the finished first load ip grab
@@ -156,5 +179,17 @@ public class CurrentWeatherInformation {
      */
     public static void setMeasurementUnits(MeasurementUnits units) {
         CurrentWeatherInformation.measurementUnits = units;
+    }
+
+    /**
+     * Sets the values of this class to default values.
+     */
+    public static void resetInfo() {
+        weatherLocation = null;
+        weatherData = null;
+        measurementUnits = MeasurementUnits.Imperial;
+        hourlyInfoPanes = null;
+        dayForecastPanes = null;
+        finishedFirstLoadIpGrab = false;
     }
 }

@@ -1,4 +1,4 @@
-package edu.westga.weatherapp_gui;
+package edu.westga.weatherapp_gui.viewmodel;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import edu.westga.weatherapp_gui.mocks.NormalLogicMocks.OpenWeatherSevereWarningsRetrieverMocks;
 import edu.westga.weatherapp_gui.model.DateTimeConverter;
 import edu.westga.weatherapp_gui.model.SevereWeatherWarning;
-import edu.westga.weatherapp_gui.viewmodel.SevereWeatherWarningsPageViewModel;
 import edu.westga.weatherapp_shared.enums.MeasurementUnits;
 import edu.westga.weatherapp_shared.model.WeatherLocation;
 

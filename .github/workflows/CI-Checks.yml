@@ -36,8 +36,17 @@ jobs:
           mvn clean install
           if($LASTEXITCODE -ne 0) {exit 1}
       
+      # Run weatherapp_service package for view tests
+      - name: Step 4 - Package Service Project
+        run: |
+          echo Packaging Weather App Service
+          cd code
+          cd weatherapp_service
+          mvn clean package
+          if($LASTEXITCODE -ne 0) {exit 1}
+      
       # Run maven's verify with jacoco to ensure 90% code coverage.
-      - name: Step 4 - Test project(s) with Maven
+      - name: Step 5 - Test project(s) with Maven
         run: |
           echo Testing Weather App Gui
           cd code

@@ -132,6 +132,7 @@ public class LandingPageViewModel {
             CurrentWeatherInformation.setWeatherData(this.currentWeatherData);
             return this.currentWeatherData;
         } catch (Exception exception) {
+            System.err.println(exception.getMessage());
             return null;
         }
     }
