@@ -35,6 +35,9 @@ public class App extends Application {
 	public static final String STATISTICAL_WEATHER_PAGE_TITLE = "Weather App - Statistical Weather";
 	public static final String STATISTICAL_WEATHER_PAGE_VIEW = "/edu/westga/weatherapp_gui/view/StatisticalWeatherPage.fxml";
 
+	public static final String CHANGE_LOCATION_PAGE_TITLE = "Weather App - Change Location";
+	public static final String CHANGE_LOCATION_PAGE_VIEW = "/edu/westga/weatherapp_gui/view/ChangeLocationPage.fxml";
+
 	/**
 	 * JavaFX entry point.
 	 *

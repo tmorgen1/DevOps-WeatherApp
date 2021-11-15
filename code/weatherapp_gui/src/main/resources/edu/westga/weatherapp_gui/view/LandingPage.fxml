@@ -17,7 +17,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="landingPagePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onLandingPagePaneClicked" prefHeight="756.0" prefWidth="401.0" style="-fx-background-color: #2A2E37;" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="edu.westga.weatherapp_gui.view.LandingPage">
+<Pane fx:id="landingPagePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onLandingPagePaneClicked" prefHeight="756.0" prefWidth="401.0" style="-fx-background-color: #2A2E37;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.westga.weatherapp_gui.view.LandingPage">
    <children>
       <ImageView fx:id="weatherIconImageView" fitHeight="232.0" fitWidth="221.0" layoutX="91.0" layoutY="93.0" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
@@ -123,7 +123,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </ImageView>
-      <TextField fx:id="locationSearchTextField" layoutX="22.0" layoutY="75.0" onKeyPressed="#onEnterPressed" prefHeight="37.0" prefWidth="309.0" promptText="Enter Location">
+      <TextField fx:id="locationSearchTextField" layoutX="22.0" layoutY="75.0" prefHeight="37.0" prefWidth="309.0" promptText="Enter Location">
          <font>
             <Font size="16.0" />
          </font>
@@ -155,5 +155,13 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </JFXButton>
+      <ImageView fx:id="locationIconImageView" fitHeight="37.0" fitWidth="37.0" layoutX="346.0" layoutY="30.0" onMouseClicked="#onLocationIconClicked" pickOnBounds="true">
+         <image>
+            <Image url="@../../../../icons/location-icon.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
    </children>
 </Pane>

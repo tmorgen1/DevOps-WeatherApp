@@ -22,6 +22,11 @@ public class CurrentWeatherInformation {
     private static WeatherLocation weatherLocation = null;
 
     /**
+     * The location the user is located at
+     */
+    private static WeatherLocation userLocation = null;
+
+    /**
      * The most recently fetched weather data
      */
     private static JSONObject weatherData = null;
@@ -191,5 +196,23 @@ public class CurrentWeatherInformation {
         hourlyInfoPanes = null;
         dayForecastPanes = null;
         finishedFirstLoadIpGrab = false;
+    }
+
+    /**
+     * Gets the user location
+     * 
+     * @return the user location
+     */
+    public static WeatherLocation getUserLocation() {
+        return userLocation;
+    }
+
+    /**
+     * Sets the user location to the specified location
+     * 
+     * @param userLocation - the new user location
+     */
+    public static void setUserLocation(WeatherLocation userLocation) {
+        CurrentWeatherInformation.userLocation = userLocation;
     }
 }

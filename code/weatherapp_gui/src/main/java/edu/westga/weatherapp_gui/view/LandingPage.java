@@ -22,8 +22,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.HBox;
@@ -227,6 +225,12 @@ public class LandingPage {
     private JFXButton historicalButton;
 
     /**
+     * The location icon image view
+     */
+    @FXML
+    private ImageView locationIconImageView;
+
+    /**
      * The temperature suffix
      */
     private String temperatureSuffix = GuiConstants.FAHRENHEIT_SUFFIX;
@@ -276,6 +280,7 @@ public class LandingPage {
             if (currentLocation == null) {
                 return;
             }
+            CurrentWeatherInformation.setUserLocation(currentLocation);
             CurrentWeatherInformation.setWeatherLocation(currentLocation);
             this.updateSelectedWeatherLocation(currentLocation);
         }
@@ -429,23 +434,6 @@ public class LandingPage {
     }
 
     /**
-     * Event handler for the location search text field. Handles the on enter
-     * pressed key event. Updates all current weather data information if
-     * successful.
-     * 
-     * @param event - the enter key event
-     */
-    @FXML
-    void onEnterPressed(KeyEvent event) {
-        if (!event.getCode().equals(KeyCode.ENTER)) {
-            return;
-        }
-
-        this.removeFocusFromSearchBar();
-        this.tryGetAndUpdateWeatherData();
-    }
-
-    /**
      * Handles the mouse click event for the weather radar clicked. Moves to the weather radar page
      * 
      * @param event - the mouse click event
@@ -455,6 +443,21 @@ public class LandingPage {
         try {
             Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             WindowGenerator.changeScene(currentStage, App.WEATHER_RADAR_PAGE_VIEW, App.WEATHER_RADAR_PAGE_TITLE);
+        } catch (IOException exception) {
+            this.displayNoLocationSnackbar("Please Enter a Location First");
+        }
+    }
+
+    /**
+     * Handles the mouse click event for the location icon clicked. Moves to the change location page
+     * 
+     * @param event - the mouse click event
+     */
+    @FXML
+    void onLocationIconClicked(MouseEvent event) {
+        try {
+            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            WindowGenerator.changeScene(currentStage, App.CHANGE_LOCATION_PAGE_VIEW, App.CHANGE_LOCATION_PAGE_TITLE);
         } catch (IOException exception) {
             this.displayNoLocationSnackbar("Please Enter a Location First");
         }

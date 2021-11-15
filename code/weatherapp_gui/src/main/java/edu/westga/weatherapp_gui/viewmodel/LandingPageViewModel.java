@@ -196,8 +196,13 @@ public class LandingPageViewModel {
         }
 
         try {
-            String ip = IpGrabber.getCurrentIpAddress();
-            WeatherLocation currentLocation = this.weatherLocationSearcher.getLocationByIP(ip);
+            WeatherLocation currentLocation = null;
+            if (CurrentWeatherInformation.getUserLocation() == null) {
+                String ip = IpGrabber.getCurrentIpAddress();
+                currentLocation = this.weatherLocationSearcher.getLocationByIP(ip);
+            } else {
+                currentLocation = CurrentWeatherInformation.getUserLocation();
+            }
             Collection<WeatherLocation> locations = this.weatherLocationSearcher.searchLocations(city, 10, currentLocation.getLatitude(), currentLocation.getLongitude());
             
             return locations;
