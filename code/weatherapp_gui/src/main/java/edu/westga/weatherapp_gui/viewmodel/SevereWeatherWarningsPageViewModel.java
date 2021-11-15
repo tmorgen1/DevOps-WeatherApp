@@ -28,6 +28,21 @@ import javafx.collections.FXCollections;
 public class SevereWeatherWarningsPageViewModel {
 
     /**
+     * the section of the json data that contains the Severe Weather Warnings
+     */
+    public static final String DATA_ALERTS_SECTION = "alerts";
+
+    /**
+     * rmi exception thrown text
+     */
+    public static final String  RMI_EXCEPTION_THROWN = "Error looking up java rmi binding";
+
+    /**
+     * location not found
+     */
+    public static final String LOCATION_NOT_FOUND_EXCEPTION_THROWN = "No location found.";
+
+    /**
      * the error text string property for use in bindings
      */
     private StringProperty errorTextStringProperty;
@@ -79,7 +94,7 @@ public class SevereWeatherWarningsPageViewModel {
     }
 
     /**
-     * Initailizes the severeWeatherWarningsRetriever to some value
+     * Initailizes the severeWeatherWarningsRetriever class pointed to by the lookUpUrl
      * 
      * @param lookUpUrl the url for Naming to get the class to link to
      */
@@ -87,7 +102,7 @@ public class SevereWeatherWarningsPageViewModel {
         try {
             this.severeWeatherWarningsRetriever = (SevereWeatherWarningsRetriever) Naming.lookup(lookUpUrl);
         } catch (Exception ex) {
-            this.setErrorTextStringPropertyValue("Error looking up java rmi binding");
+            this.setErrorTextStringPropertyValue(SevereWeatherWarningsPageViewModel.RMI_EXCEPTION_THROWN);
             this.setErrorTextVisibilityProperty(true);
         }
     }
@@ -98,22 +113,16 @@ public class SevereWeatherWarningsPageViewModel {
      * @precondition location != null && units != null
      * @param location the location for the warnings
      * @param units    the unit of measument the warning should come in
-     * @throws IllegalArgumentException
-     * @throws RemoteException
      */
     public void setsevereWeatherWarningsPagePropertiesValues(WeatherLocation location, MeasurementUnits units) {
-        if (location == null) {
-            throw new IllegalArgumentException("The location cannot be null.");
-        }
-        String data;
         try {
-            data = this.severeWeatherWarningsRetriever.getSevereWeatherWarningsForLocation(location.getLatitude(),
+            String data = this.severeWeatherWarningsRetriever.getSevereWeatherWarningsForLocation(location.getLatitude(),
                     location.getLongitude(), units);
             this.setSevereWarningPageComboBoxListProperty(data);
             this.setNoWarningsForLocationVisibilityPropertyValue();
             this.setSevereWarningComboBoxVisibilityPropertyValue();
-        } catch (RemoteException | IllegalArgumentException | NullPointerException ex) {
-            this.setErrorTextStringPropertyValue(ex.getMessage());
+        } catch (RemoteException | NullPointerException ex) {
+            this.setErrorTextStringPropertyValue(SevereWeatherWarningsPageViewModel.LOCATION_NOT_FOUND_EXCEPTION_THROWN);
             this.setErrorTextVisibilityProperty(true);
         }
     }
@@ -126,7 +135,7 @@ public class SevereWeatherWarningsPageViewModel {
      * @param data the raw data from the source
      */
     private void setSevereWarningPageComboBoxListProperty(String data) {
-        if (!data.contains("alerts")) {
+        if (!data.contains(SevereWeatherWarningsPageViewModel.DATA_ALERTS_SECTION)) {
             return;
         }
         JSONObject weatherWarningsData = new JSONObject(data);
@@ -154,7 +163,7 @@ public class SevereWeatherWarningsPageViewModel {
      */
 
     private JSONArray extractWarningDataFromJsonObjectAsAJsonArray(JSONObject data) {
-        JSONArray warningsData = data.optJSONArray("alerts");
+        JSONArray warningsData = data.optJSONArray(SevereWeatherWarningsPageViewModel.DATA_ALERTS_SECTION);
         return warningsData;
     }
 

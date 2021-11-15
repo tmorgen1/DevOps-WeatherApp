@@ -17,6 +17,11 @@ import javafx.beans.property.StringProperty;
 public class SevereWeatherWarningPageViewModel {
 
     /**
+     * null pointer because of no severe weather warning was selected exception thrown
+     */
+    public static final String NULL_WARNING_EXCEPTION_THROWN = "No Severe Weather Warning selected";
+
+    /**
      * the severe weather warining to get information from
      */
     private static ObjectProperty<SevereWeatherWarning> severeWeatherWarningObjectProperty = new SimpleObjectProperty<SevereWeatherWarning>();
@@ -52,8 +57,8 @@ public class SevereWeatherWarningPageViewModel {
         try {
             this.setWarningNameTextStringPropertyValue();
             this.setDescriptionTextStringPropertyValue();
-        } catch (Exception ex) {
-            this.setErrorTextStringPropertyValue(ex.getMessage());
+        } catch (NullPointerException ex) {
+            this.setErrorTextStringPropertyValue(SevereWeatherWarningPageViewModel.NULL_WARNING_EXCEPTION_THROWN);
             this.setErrorTextVisibilityProperty(true);
         }
     }

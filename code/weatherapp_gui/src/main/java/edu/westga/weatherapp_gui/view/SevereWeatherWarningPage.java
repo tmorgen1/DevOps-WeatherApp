@@ -23,6 +23,11 @@ import javafx.stage.Stage;
 public class SevereWeatherWarningPage {
 
     /**
+     * IO Exception thrown when switching scenes
+     */
+    public static final String IO_EXCEPTION_THROWN = "IO Exception: Error switching scenes";
+
+    /**
      * this severe weather warning page's scroll pane
      */
     @FXML
@@ -83,7 +88,7 @@ public class SevereWeatherWarningPage {
             Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             WindowGenerator.changeScene(currentStage, App.SEVERE_WARNINGS_PAGE_VIEW, App.SEVERE_WARNINGS_PAGE_TITLE);
         } catch (IOException exception) {
-            this.viewModel.setErrorTextStringPropertyValue("IO Exception: Error switching scenes");
+            this.viewModel.setErrorTextStringPropertyValue(SevereWeatherWarningPage.IO_EXCEPTION_THROWN);
             this.viewModel.setErrorTextVisibilityProperty(true);
         } 
     }

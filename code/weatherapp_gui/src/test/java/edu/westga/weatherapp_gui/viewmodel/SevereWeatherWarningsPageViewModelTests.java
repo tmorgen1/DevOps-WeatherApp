@@ -1,8 +1,10 @@
 package edu.westga.weatherapp_gui.viewmodel;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,7 +21,8 @@ import edu.westga.weatherapp_shared.model.WeatherLocation;
 public class SevereWeatherWarningsPageViewModelTests {
 
     @Test
-    public void testSevereWeatherWarningsPageViewModelConstructorGivenNullRetiever() {
+    public void testSevereWeatherWarningsPageViewModelValidConstructionGivenNullRetiever()
+            throws NoSuchMethodException, SecurityException {
         SevereWeatherWarningsPageViewModel viewModel = new SevereWeatherWarningsPageViewModel(null);
         assertAll(() -> {
             assertNotNull(viewModel);
@@ -37,7 +40,20 @@ public class SevereWeatherWarningsPageViewModelTests {
     }
 
     @Test
-    public void testSevereWeatherWarningsPageViewModelConstructorGivenRetriever() {
+    public void testSevereWeatherWarningsPageViewModelExceptionThrownDuringConstructionGivenNullRetiever()
+            throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException,
+            InvocationTargetException {
+        SevereWeatherWarningsPageViewModel viewModel = new SevereWeatherWarningsPageViewModel(null);
+        Method namingMethod = viewModel.getClass()
+                .getDeclaredMethod("initializeSevereWeatherWarningsRetrieverUsingNaming", new Class[] { String.class });
+        namingMethod.setAccessible(true);
+        namingMethod.invoke(viewModel, "");
+        assertEquals(SevereWeatherWarningsPageViewModel.RMI_EXCEPTION_THROWN,
+                viewModel.getErrorTextStringProperty().getValue());
+    }
+
+    @Test
+    public void testSevereWeatherWarningsPageViewModelValidConstructionGivenRetriever() {
         SevereWeatherWarningsPageViewModel viewModel = new SevereWeatherWarningsPageViewModel(
                 new OpenWeatherSevereWarningsRetrieverMocks.OpenWeatherSevereWarningRetrieverMockNoAlerts());
         assertAll(() -> {
@@ -60,9 +76,9 @@ public class SevereWeatherWarningsPageViewModelTests {
 
         SevereWeatherWarningsPageViewModel viewModel = new SevereWeatherWarningsPageViewModel(
                 new OpenWeatherSevereWarningsRetrieverMocks.OpenWeatherSevereWarningRetrieverMockOneAlert());
-        assertThrows(IllegalArgumentException.class, () -> {
-            viewModel.setsevereWeatherWarningsPagePropertiesValues(null, MeasurementUnits.Metric);
-        });
+        viewModel.setsevereWeatherWarningsPagePropertiesValues(null, MeasurementUnits.Metric);
+        assertEquals(SevereWeatherWarningsPageViewModel.LOCATION_NOT_FOUND_EXCEPTION_THROWN,
+                viewModel.getErrorTextStringProperty().getValue());
     }
 
     @Test
@@ -200,7 +216,7 @@ public class SevereWeatherWarningsPageViewModelTests {
             assertEquals("Ozone is forecast to reach 108 AQI - Unhealthy for Sensitive Groups on Tue 09/21/2021.",
                     warning3.getWarningName());
         }, () -> {
-            assertEquals(DateTimeConverter.convertUtcToShortDate(1632124800L,  timezone3), warning3.getStartingDate());
+            assertEquals(DateTimeConverter.convertUtcToShortDate(1632124800L, timezone3), warning3.getStartingDate());
         }, () -> {
             assertEquals(DateTimeConverter.convertUtcToShortDate(1632211200L, timezone3), warning3.getEndingDate());
         }, () -> {
