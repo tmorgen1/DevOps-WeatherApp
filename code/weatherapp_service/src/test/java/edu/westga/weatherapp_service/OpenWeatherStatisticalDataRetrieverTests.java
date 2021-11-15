@@ -386,5 +386,93 @@ public class OpenWeatherStatisticalDataRetrieverTests {
             fail("Remote Exception while testing");
         }
     }
+
+    @Test
+    public void getDataByCoordinatesThrowsExceptionOnOutOfBoundsLowerLatitude() {
+        try {
+            OpenWeatherStatisticalDataRetriever retriever = new OpenWeatherStatisticalDataRetriever(new MockDataRetriever());
+            assertThrows(IllegalArgumentException.class, () -> {
+                retriever.getDataByCoordinates(-100, 0, 1);
+            });
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            fail("Remote Exception while testing");
+        }
+    }
+
+    @Test
+    public void getDataByCoordinatesThrowsExceptionOnOutOfBoundsHigherLatitude() {
+        try {
+            OpenWeatherStatisticalDataRetriever retriever = new OpenWeatherStatisticalDataRetriever(new MockDataRetriever());
+            assertThrows(IllegalArgumentException.class, () -> {
+                retriever.getDataByCoordinates(100, 0, 1);
+            });
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            fail("Remote Exception while testing");
+        }
+    }
+
+    @Test
+    public void getDataByCoordinatesThrowsExceptionOnOutOfBoundsLowerLongitude() {
+        try {
+            OpenWeatherStatisticalDataRetriever retriever = new OpenWeatherStatisticalDataRetriever(new MockDataRetriever());
+            assertThrows(IllegalArgumentException.class, () -> {
+                retriever.getDataByCoordinates(0, -200, 1);
+            });
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            fail("Remote Exception while testing");
+        }
+    }
+
+    @Test
+    public void getDataByCoordinatesThrowsExceptionOnOutOfBoundsHigherLongitude() {
+        try {
+            OpenWeatherStatisticalDataRetriever retriever = new OpenWeatherStatisticalDataRetriever(new MockDataRetriever());
+            assertThrows(IllegalArgumentException.class, () -> {
+                retriever.getDataByCoordinates(0, 200, 1);
+            });
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            fail("Remote Exception while testing");
+        }
+    }
+
+    @Test
+    public void getDataByCoordinatesThrowsExceptionOnOutOfBoundsLowerMonth() {
+        try {
+            OpenWeatherStatisticalDataRetriever retriever = new OpenWeatherStatisticalDataRetriever(new MockDataRetriever());
+            assertThrows(IllegalArgumentException.class, () -> {
+                retriever.getDataByCoordinates(0, 0, 0);
+            });
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            fail("Remote Exception while testing");
+        }
+    }
     
+    @Test
+    public void getDataByCoordinatesThrowsExceptionOnOutOfBoundsHigherMonth() {
+        try {
+            OpenWeatherStatisticalDataRetriever retriever = new OpenWeatherStatisticalDataRetriever(new MockDataRetriever());
+            assertThrows(IllegalArgumentException.class, () -> {
+                retriever.getDataByCoordinates(0, 0, 13);
+            });
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            fail("Remote Exception while testing");
+        }
+    }
+
+    @Test
+    public void getDataByCoordinatesSuccessfully() {
+        try {
+            OpenWeatherStatisticalDataRetriever retriever = new OpenWeatherStatisticalDataRetriever(new MockDataRetriever());
+            assertNotNull(retriever.getDataByCoordinates(0, 0, 1));
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            fail("Remote Exception while testing");
+        }
+    }
 }

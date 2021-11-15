@@ -1,4 +1,4 @@
-package edu.westga.weatherapp_gui;
+package edu.westga.weatherapp_gui.viewmodel;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -11,21 +11,21 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.MethodOrderer.Alphanumeric;
 
 import edu.westga.weatherapp_gui.model.SevereWeatherWarning;
-import edu.westga.weatherapp_gui.viewmodel.SevereWeatherWarningPageViewModel;
 
 @TestMethodOrder(Alphanumeric.class)
 public class SevereWeatherWarningPageViewModelTests {
 
     @Test
     public void testConstructionNoSevereWeatherWarningSet() {
+        SevereWeatherWarningPageViewModel.setSevereWeatherWarningObjectPropertyValue(null);
         SevereWeatherWarningPageViewModel viewModel = new SevereWeatherWarningPageViewModel();
         assertAll(() -> {
-            assertFalse(viewModel.getErrorTextStringProperty().getValue().isEmpty());
+            assertEquals(SevereWeatherWarningPageViewModel.NULL_WARNING_EXCEPTION_THROWN,
+                    viewModel.getErrorTextStringProperty().getValue());
         }, () -> {
             assertTrue(viewModel.getErrorTextVisibilityProperty().getValue());
         });
     }
-    
 
     @Test
     public void testConstructionWithSevereWeatherWarningSet() {
@@ -39,6 +39,8 @@ public class SevereWeatherWarningPageViewModelTests {
             assertFalse(viewModel.getDescriptionTextProperty().getValue().isEmpty());
         }, () -> {
             assertNotNull(SevereWeatherWarningPageViewModel.getSevereWeatherWarningObjectProperty().getValue());
+        }, () -> {
+            assertEquals(warning, SevereWeatherWarningPageViewModel.getSevereWeatherWarningObjectProperty().getValue());
         });
     }
 }

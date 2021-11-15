@@ -5,8 +5,7 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
-import edu.westga.weatherapp_gui.model.IpGrabber;
-import edu.westga.weatherapp_shared.interfaces.LocationSearcher;
+import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
 import edu.westga.weatherapp_shared.interfaces.MapRadarDataRetriever;
 import edu.westga.weatherapp_shared.model.WeatherLocation;
 
@@ -23,26 +22,18 @@ public class WeatherRadarPageViewModel {
     private MapRadarDataRetriever mapRadarDataRetriever;
 
     /**
-     * The weather location searcher
-     */
-    private LocationSearcher locationSearcher;
-
-    /**
      * Creates an instance of the weather radar page viewmodel and connects to the
      * java rmi data
      * 
      * @param mapRadarDataRetriever - the map radar data retriever
-     * @param locationSearcher      - the location searcher
      */
-    public WeatherRadarPageViewModel(MapRadarDataRetriever mapRadarDataRetriever, LocationSearcher locationSearcher) {
-        if (mapRadarDataRetriever != null && locationSearcher != null) {
+    public WeatherRadarPageViewModel(MapRadarDataRetriever mapRadarDataRetriever) {
+        if (mapRadarDataRetriever != null) {
             this.mapRadarDataRetriever = mapRadarDataRetriever;
-            this.locationSearcher = locationSearcher;
         } else {
             try {
                 this.mapRadarDataRetriever = (MapRadarDataRetriever) Naming
                         .lookup("rmi://localhost:5000/radar-weather");
-                this.locationSearcher = (LocationSearcher) Naming.lookup("rmi://localhost:5000/location-searcher");
             } catch (MalformedURLException | RemoteException | NotBoundException e) {
                 System.err.println("Error looking up java rmi binding");
             }
@@ -56,7 +47,7 @@ public class WeatherRadarPageViewModel {
      */
     public String loadWeatherRadarMap() {
         try {
-            WeatherLocation currentLocation = this.getCurrentLocation();
+            WeatherLocation currentLocation = CurrentWeatherInformation.getUserLocation();
             double latitude = currentLocation.getLatitude();
             double longitude = currentLocation.getLongitude();
             String latLonString = latitude + ", " + longitude;
@@ -64,18 +55,5 @@ public class WeatherRadarPageViewModel {
         } catch (RemoteException e) {
             return null;
         }
-    }
-
-    /**
-     * Gets the current location of the user based on their ip address
-     * 
-     * @throws RemoteException - in the event of a RMI exception
-     * @return a weather location of the user's current location
-     */
-    private WeatherLocation getCurrentLocation() throws RemoteException {
-        String ip = IpGrabber.getCurrentIpAddress();
-        WeatherLocation currentLocation = this.locationSearcher.getLocationByIP(ip);
-
-        return currentLocation;
     }
 }

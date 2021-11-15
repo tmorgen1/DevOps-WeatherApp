@@ -60,4 +60,16 @@ public interface StatisticalWeatherDataRetriever extends Remote {
      */
     String getDataByCityAndStateCodeAndCountryCode(String cityName, String stateCode, String countryCode, int numOfTheMonth) throws RemoteException;
 
+    /**
+     * Obtains the statistical weather data for a location given the coordinates
+     * 
+     * @param latitude - the latitude of the location
+     * @param longitude - the longitude of the location
+     * @param numOfTheMonth - the month to get the data for
+     * 
+     * @return the statistical weather data for the location
+     * @throws RemoteException - exception in the event of an RMI error
+     */
+    String getDataByCoordinates(double latitude, double longitude, int numOfTheMonth) throws RemoteException;
+
 }

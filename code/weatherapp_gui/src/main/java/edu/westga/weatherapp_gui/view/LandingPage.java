@@ -22,8 +22,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.HBox;
@@ -185,6 +183,12 @@ public class LandingPage {
     private ImageView favoriteFilledImageView;
 
     /**
+     * The map radar image view
+     */
+    @FXML
+    private ImageView mapRadarImageView;
+
+    /**
      * The hourly forecast HBox
      */
     @FXML
@@ -215,6 +219,18 @@ public class LandingPage {
     private Menu settingMenu;
 
     /**
+     * The historical weather button
+     */
+    @FXML
+    private JFXButton historicalButton;
+
+    /**
+     * The location icon image view
+     */
+    @FXML
+    private ImageView locationIconImageView;
+
+    /**
      * The temperature suffix
      */
     private String temperatureSuffix = GuiConstants.FAHRENHEIT_SUFFIX;
@@ -222,7 +238,7 @@ public class LandingPage {
     /**
      * The wind speed suffix
      */
-    private String windSpeedSuffix = GuiConstants.MILES_PER_HOUR_SYMBOL;
+    private String windSpeedSuffix = GuiConstants.MILES_PER_HOUR_SUFFIX;
 
     /**
      * The array list of hourly forecast panes
@@ -261,6 +277,10 @@ public class LandingPage {
             return;
         } else if (CurrentWeatherInformation.getWeatherLocation() == null && !CurrentWeatherInformation.isFinishedFirstLoadIpGrab()) {
             WeatherLocation currentLocation = this.viewModel.getCurrentLocation();
+            if (currentLocation == null) {
+                return;
+            }
+            CurrentWeatherInformation.setUserLocation(currentLocation);
             CurrentWeatherInformation.setWeatherLocation(currentLocation);
             this.updateSelectedWeatherLocation(currentLocation);
         }
@@ -414,23 +434,6 @@ public class LandingPage {
     }
 
     /**
-     * Event handler for the location search text field. Handles the on enter
-     * pressed key event. Updates all current weather data information if
-     * successful.
-     * 
-     * @param event - the enter key event
-     */
-    @FXML
-    void onEnterPressed(KeyEvent event) {
-        if (!event.getCode().equals(KeyCode.ENTER)) {
-            return;
-        }
-
-        this.removeFocusFromSearchBar();
-        this.tryGetAndUpdateWeatherData();
-    }
-
-    /**
      * Handles the mouse click event for the weather radar clicked. Moves to the weather radar page
      * 
      * @param event - the mouse click event
@@ -440,6 +443,36 @@ public class LandingPage {
         try {
             Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             WindowGenerator.changeScene(currentStage, App.WEATHER_RADAR_PAGE_VIEW, App.WEATHER_RADAR_PAGE_TITLE);
+        } catch (IOException exception) {
+            this.displayNoLocationSnackbar("Please Enter a Location First");
+        }
+    }
+
+    /**
+     * Handles the mouse click event for the location icon clicked. Moves to the change location page
+     * 
+     * @param event - the mouse click event
+     */
+    @FXML
+    void onLocationIconClicked(MouseEvent event) {
+        try {
+            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            WindowGenerator.changeScene(currentStage, App.CHANGE_LOCATION_PAGE_VIEW, App.CHANGE_LOCATION_PAGE_TITLE);
+        } catch (IOException exception) {
+            this.displayNoLocationSnackbar("Please Enter a Location First");
+        }
+    }
+
+    /**
+     * Handles the mouse click event for the historical weather button clicked. Moves to the month selection page
+     * 
+     * @param event - the mouse click event
+     */
+    @FXML
+    void onHistoricalClicked(ActionEvent event) {
+        try {
+            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            WindowGenerator.changeScene(currentStage, App.MONTH_SELECTION_PAGE_VIEW, App.MONTH_SELECTION_PAGE_TITLE);
         } catch (IOException exception) {
             this.displayNoLocationSnackbar("Please Enter a Location First");
         }
@@ -589,7 +622,7 @@ public class LandingPage {
     @FXML
     void onCelsiusSelected(ActionEvent event) {
         this.temperatureSuffix = GuiConstants.CELSIUS_SUFFIX;
-        this.windSpeedSuffix = GuiConstants.KILOMETERS_PER_HOUR_SYMBOL;
+        this.windSpeedSuffix = GuiConstants.KILOMETERS_PER_HOUR_SUFFIX;
         this.setAllCheckMenuItemsFalse();
         this.celsiusCheckMenuItem.setSelected(true);
         CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Metric);
@@ -607,7 +640,7 @@ public class LandingPage {
     @FXML
     void onFahrenheitSelected(ActionEvent event) {
         this.temperatureSuffix = GuiConstants.FAHRENHEIT_SUFFIX;
-        this.windSpeedSuffix = GuiConstants.MILES_PER_HOUR_SYMBOL;
+        this.windSpeedSuffix = GuiConstants.MILES_PER_HOUR_SUFFIX;
         this.setAllCheckMenuItemsFalse();
         this.fahrenheitCheckMenuItem.setSelected(true);
         CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Imperial);
@@ -625,7 +658,7 @@ public class LandingPage {
     @FXML
     void onKelvinSelected(ActionEvent event) {
         this.temperatureSuffix = GuiConstants.KELVIN_SUFFIX;
-        this.windSpeedSuffix = GuiConstants.KILOMETERS_PER_HOUR_SYMBOL;
+        this.windSpeedSuffix = GuiConstants.KILOMETERS_PER_HOUR_SUFFIX;
         this.setAllCheckMenuItemsFalse();
         this.kelvinCheckMenuItem.setSelected(true);
         CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Kelvin);
