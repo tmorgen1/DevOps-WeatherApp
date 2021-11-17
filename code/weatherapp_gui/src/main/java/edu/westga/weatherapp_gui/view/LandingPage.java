@@ -48,6 +48,7 @@ import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
 import edu.westga.weatherapp_gui.model.DateTimeConverter;
 import edu.westga.weatherapp_gui.model.GuiConstants;
 import edu.westga.weatherapp_shared.model.WeatherLocation;
+import edu.westga.weatherapp_gui.view.utils.PageResizeHelper;
 import edu.westga.weatherapp_gui.view.utils.WindowGenerator;
 import edu.westga.weatherapp_gui.viewmodel.LandingPageViewModel;
 import edu.westga.weatherapp_shared.enums.MeasurementUnits;
@@ -254,6 +255,7 @@ public class LandingPage {
         this.hourlyInfoPanes = new ArrayList<HourlyInfoPane>();
         this.viewModel = new LandingPageViewModel(null, null, null, null);
         Platform.runLater(() -> this.landingPagePane.requestFocus());
+        Platform.runLater(() -> new PageResizeHelper().setScalingRules(this.landingPagePane));
         this.setFavoritedLocationsListItems();
         this.setupSearchListViewSelectionListener();
         this.setupLocationSearchTextChangedListener();
@@ -269,9 +271,11 @@ public class LandingPage {
      * Loads the HourlyInfoPane components and fetches the hourly forecast data.
      */
     private void loadHourlyForecastInfoPanes() {
-        if (CurrentWeatherInformation.getWeatherLocation() == null && CurrentWeatherInformation.isFinishedFirstLoadIpGrab()) {
+        if (CurrentWeatherInformation.getWeatherLocation() == null
+                && CurrentWeatherInformation.isFinishedFirstLoadIpGrab()) {
             return;
-        } else if (CurrentWeatherInformation.getWeatherLocation() == null && !CurrentWeatherInformation.isFinishedFirstLoadIpGrab()) {
+        } else if (CurrentWeatherInformation.getWeatherLocation() == null
+                && !CurrentWeatherInformation.isFinishedFirstLoadIpGrab()) {
             WeatherLocation currentLocation = this.viewModel.getCurrentLocation();
             if (currentLocation == null) {
                 return;
@@ -321,7 +325,8 @@ public class LandingPage {
     }
 
     /**
-     * Updates the previously loaded hourly info panes rather than creating new ones to improve load times.
+     * Updates the previously loaded hourly info panes rather than creating new ones
+     * to improve load times.
      */
     private void updateLoadedHourlyInfoPanes() {
         Task<ArrayList<HourlyInfoPane>> task = new Task<ArrayList<HourlyInfoPane>>() {
@@ -333,7 +338,7 @@ public class LandingPage {
                     String dayIconUrl = LandingPage.this.getDayIconUrl(index);
                     String hour = LandingPage.this.getHour(index);
                     String temp = LandingPage.this.getTemperature(index);
-        
+
                     previousPanes.get(index).setIconImageView(dayIconUrl);
                     previousPanes.get(index).setTemperatureLabel(temp);
                     previousPanes.get(index).setTimeLabel(hour);
@@ -361,6 +366,7 @@ public class LandingPage {
 
     /**
      * Gets the temperature for the specified hourly info pane
+     * 
      * @param index - the index of the specified hourly info pane
      * @return the temperature
      */
@@ -371,6 +377,7 @@ public class LandingPage {
 
     /**
      * Gets the day icon url for the specified hourly info pane
+     * 
      * @param index - the index of the specified hourly info pane
      * @return the weather icon url
      */
@@ -446,7 +453,8 @@ public class LandingPage {
     }
 
     /**
-     * Handles the mouse click event for the weather radar clicked. Moves to the weather radar page
+     * Handles the mouse click event for the weather radar clicked. Moves to the
+     * weather radar page
      * 
      * @param event - the mouse click event
      */
@@ -461,7 +469,8 @@ public class LandingPage {
     }
 
     /**
-     * Handles the mouse click event for the historical weather button clicked. Moves to the month selection page
+     * Handles the mouse click event for the historical weather button clicked.
+     * Moves to the month selection page
      * 
      * @param event - the mouse click event
      */
@@ -476,14 +485,16 @@ public class LandingPage {
     }
 
     /**
-     * Scrolls the hbox horizontally instead of vertically when a scroll event is fired
+     * Scrolls the hbox horizontally instead of vertically when a scroll event is
+     * fired
      * 
      * @param event - the scroll event
      */
     @FXML
     void hourlyInfoOnScroll(ScrollEvent event) {
         if (event.getDeltaX() == 0 && event.getDeltaY() != 0) {
-            this.hourlyInfoScrollPane.setHvalue(this.hourlyInfoScrollPane.getHvalue() - event.getDeltaY() / this.hourlyForecastHBox.getWidth());
+            this.hourlyInfoScrollPane.setHvalue(
+                    this.hourlyInfoScrollPane.getHvalue() - event.getDeltaY() / this.hourlyForecastHBox.getWidth());
         }
     }
 
@@ -525,15 +536,16 @@ public class LandingPage {
      * updateSelectedWeatherLocation.
      */
     private void setupSearchListViewSelectionListener() {
-        this.searchResultsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<WeatherLocation>() {
-            @Override
-            public void changed(ObservableValue<? extends WeatherLocation> observable, WeatherLocation oldValue,
-                    WeatherLocation newValue) {
-                if (newValue != null) {
-                    LandingPage.this.updateSelectedWeatherLocation(newValue);
-                }
-            }
-        });
+        this.searchResultsListView.getSelectionModel().selectedItemProperty()
+                .addListener(new ChangeListener<WeatherLocation>() {
+                    @Override
+                    public void changed(ObservableValue<? extends WeatherLocation> observable, WeatherLocation oldValue,
+                            WeatherLocation newValue) {
+                        if (newValue != null) {
+                            LandingPage.this.updateSelectedWeatherLocation(newValue);
+                        }
+                    }
+                });
     }
 
     /**
@@ -541,15 +553,16 @@ public class LandingPage {
      * updateSelectedWeatherLocation.
      */
     private void setupFavoritesListViewSelectionListener() {
-        this.favoritedListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<WeatherLocation>() {
-            @Override
-            public void changed(ObservableValue<? extends WeatherLocation> observable, WeatherLocation oldValue,
-                    WeatherLocation newValue) {
-                if (newValue != null) {
-                    LandingPage.this.updateSelectedWeatherLocation(newValue);
-                }
-            }
-        });
+        this.favoritedListView.getSelectionModel().selectedItemProperty()
+                .addListener(new ChangeListener<WeatherLocation>() {
+                    @Override
+                    public void changed(ObservableValue<? extends WeatherLocation> observable, WeatherLocation oldValue,
+                            WeatherLocation newValue) {
+                        if (newValue != null) {
+                            LandingPage.this.updateSelectedWeatherLocation(newValue);
+                        }
+                    }
+                });
     }
 
     /**
@@ -570,7 +583,8 @@ public class LandingPage {
      * Sets the favorited list view to fake data.
      */
     private void setFavoritedLocationsListItems() {
-        ObservableList<WeatherLocation> favoritedItems = FXCollections.observableArrayList(this.viewModel.getFavoritedWeatherLocations());
+        ObservableList<WeatherLocation> favoritedItems = FXCollections
+                .observableArrayList(this.viewModel.getFavoritedWeatherLocations());
         this.favoritedListView.setItems(favoritedItems);
     }
 
@@ -596,7 +610,8 @@ public class LandingPage {
     }
 
     /**
-     * Updates the favorite icon to be filled if it was favorited, or unfilled if it was unfavorited
+     * Updates the favorite icon to be filled if it was favorited, or unfilled if it
+     * was unfavorited
      */
     private void updateFavoriteIcon() {
         if (CurrentWeatherInformation.getWeatherLocation() != null) {
@@ -711,7 +726,8 @@ public class LandingPage {
     }
 
     /**
-     * Hides the filled favorite icon image view and shows the outline favorite icon image view
+     * Hides the filled favorite icon image view and shows the outline favorite icon
+     * image view
      */
     private void switchToOutlineFavoriteIcon() {
         this.favoriteOutlineImageView.setVisible(true);
@@ -731,7 +747,8 @@ public class LandingPage {
     }
 
     /**
-     * Hides the outline favorite icon image view and shows the filled favorite icon image view
+     * Hides the outline favorite icon image view and shows the filled favorite icon
+     * image view
      */
     private void switchToFilledFavoriteIcon() {
         this.favoriteOutlineImageView.setVisible(false);

@@ -7,9 +7,11 @@ import edu.westga.weatherapp_gui.App;
 import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
 import edu.westga.weatherapp_gui.model.DateTimeConverter;
 import edu.westga.weatherapp_gui.model.GuiConstants;
+import edu.westga.weatherapp_gui.view.utils.PageResizeHelper;
 import edu.westga.weatherapp_gui.view.utils.WindowGenerator;
 import edu.westga.weatherapp_gui.viewmodel.DailyForecastPageViewModel;
 import edu.westga.weatherapp_shared.enums.MeasurementUnits;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.concurrent.Worker.State;
@@ -124,6 +126,7 @@ public class DailyForecastPage {
         this.dayForecastPanes = new ArrayList<DayForecastPane>();
         this.setMeasurementSettings();
         this.viewModel = new DailyForecastPageViewModel(null, null);
+        Platform.runLater(() -> new PageResizeHelper().setScalingRules(this.dailyForecastPagePane));
         this.loadDayForecastComponents();
     }
 

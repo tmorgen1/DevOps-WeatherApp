@@ -28,6 +28,16 @@
          </cursor>
       </ImageView>
       <JFXComboBox fx:id="severeWarningsComboBox" layoutX="22.0" layoutY="82.0" prefHeight="25.0" prefWidth="348.0" promptText="Select Severe Weather Warning" style="-fx-background-color: #313A45;" stylesheets="@../../../../styles/SevereWeatherWarningsStyleSheet.css" />
+      <Label fx:id="noWarningsForLocationLabel" layoutX="22.0" layoutY="273.0" text="There are no weather warnings for this area." textFill="WHITE" visible="false">
+         <font>
+            <Font name="Segoe UI" size="18.0" />
+         </font>
+      </Label>
+      <Text fx:id="errorText" fill="RED" layoutX="26.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="350.0">
+         <font>
+            <Font name="Segoe UI" size="18.0" />
+         </font>
+      </Text>
       <MenuBar prefHeight="25.0" prefWidth="401.0">
          <menus>
             <Menu mnemonicParsing="false" text="Settings">
@@ -39,15 +49,5 @@
             </Menu>
          </menus>
       </MenuBar>
-      <Label fx:id="noWarningsForLocationLabel" layoutX="22.0" layoutY="273.0" text="There are no weather warnings for this area." textFill="WHITE" visible="false">
-         <font>
-            <Font name="Segoe UI" size="18.0" />
-         </font>
-      </Label>
-      <Text fx:id="errorText" fill="RED" layoutX="26.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="350.0">
-         <font>
-            <Font name="Segoe UI" size="18.0" />
-         </font>
-      </Text>
    </children>
 </Pane>

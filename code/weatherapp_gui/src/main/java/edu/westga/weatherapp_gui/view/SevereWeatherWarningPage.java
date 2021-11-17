@@ -3,13 +3,16 @@ package edu.westga.weatherapp_gui.view;
 import java.io.IOException;
 
 import edu.westga.weatherapp_gui.App;
+import edu.westga.weatherapp_gui.view.utils.PageResizeHelper;
 import edu.westga.weatherapp_gui.view.utils.WindowGenerator;
 import edu.westga.weatherapp_gui.viewmodel.SevereWeatherWarningPageViewModel;
 import javafx.scene.Node;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -32,6 +35,12 @@ public class SevereWeatherWarningPage {
      */
     @FXML
     private ScrollPane severeWarningScrollPane;
+
+    /**
+     * this severe weather warning page's pane
+     */
+    @FXML
+    private Pane severeWarningPane;
 
     /**
      * this severe weather warning page's warning name label
@@ -63,6 +72,7 @@ public class SevereWeatherWarningPage {
     @FXML
     void initialize() {
         this.viewModel = new SevereWeatherWarningPageViewModel();
+        Platform.runLater(() -> new PageResizeHelper().setScalingRules(this.severeWarningPane));
         this.bindToViewModel();
     }
 

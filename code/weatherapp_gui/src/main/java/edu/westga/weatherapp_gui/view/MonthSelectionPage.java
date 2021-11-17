@@ -6,6 +6,7 @@ import com.jfoenix.controls.JFXButton;
 
 import edu.westga.weatherapp_gui.App;
 import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
+import edu.westga.weatherapp_gui.view.utils.PageResizeHelper;
 import edu.westga.weatherapp_gui.view.utils.WindowGenerator;
 import edu.westga.weatherapp_shared.enums.MeasurementUnits;
 import javafx.application.Platform;
@@ -83,6 +84,7 @@ public class MonthSelectionPage {
     @FXML
     void initialize() {
         Platform.runLater(() -> this.monthSelectionPane.requestFocus());
+        Platform.runLater(() -> new PageResizeHelper().setScalingRules(this.monthSelectionPane));
         this.setMeasurementSettings();
     }
 

@@ -26,17 +26,6 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </ImageView>
-      <MenuBar prefHeight="25.0" prefWidth="401.0">
-         <menus>
-            <Menu fx:id="settingMenu" mnemonicParsing="false" text="Settings">
-               <items>
-                  <CheckMenuItem fx:id="fahrenheitCheckMenuItem" mnemonicParsing="false" onAction="#onFahrenheitSelected" selected="true" text="Fahrenheit" />
-                  <CheckMenuItem fx:id="celsiusCheckMenuItem" mnemonicParsing="false" onAction="#onCelsiusSelected" text="Celsius" />
-                  <CheckMenuItem fx:id="kelvinCheckMenuItem" mnemonicParsing="false" onAction="#onKelvinSelected" text="Kelvin" />
-               </items>
-            </Menu>
-         </menus>
-      </MenuBar>
       <JFXButton fx:id="januaryButton" buttonType="RAISED" layoutX="27.0" layoutY="80.0" onAction="#onJanuaryButtonClicked" prefHeight="106.0" prefWidth="106.0" style="-fx-border-radius: 15; -fx-background-color: #ffffff00; -fx-border-color: #EC6E4C; -fx-background-radius: 15;" text="January" textFill="WHITE">
          <font>
             <Font size="16.0" />
@@ -133,5 +122,16 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </JFXButton>
+      <MenuBar prefHeight="25.0" prefWidth="401.0">
+         <menus>
+            <Menu fx:id="settingMenu" mnemonicParsing="false" text="Settings">
+               <items>
+                  <CheckMenuItem fx:id="fahrenheitCheckMenuItem" mnemonicParsing="false" onAction="#onFahrenheitSelected" selected="true" text="Fahrenheit" />
+                  <CheckMenuItem fx:id="celsiusCheckMenuItem" mnemonicParsing="false" onAction="#onCelsiusSelected" text="Celsius" />
+                  <CheckMenuItem fx:id="kelvinCheckMenuItem" mnemonicParsing="false" onAction="#onKelvinSelected" text="Kelvin" />
+               </items>
+            </Menu>
+         </menus>
+      </MenuBar>
    </children>
 </Pane>
