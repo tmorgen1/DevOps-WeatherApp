@@ -50,7 +50,7 @@ public class WeatherRadarPage {
      */
     @FXML
     void initialize() {
-        this.viewModel = new WeatherRadarPageViewModel(null, null);
+        this.viewModel = new WeatherRadarPageViewModel(null);
         this.loadWeatherRadarMap();
         Platform.runLater(() -> new PageResizeHelper().setScalingRules(this.weatherRadarPagePane));
     }

@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 import edu.westga.weatherapp_gui.view.ViewTestWithServer;
+import javafx.geometry.Point2D;
 import javafx.geometry.VerticalDirection;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
@@ -73,7 +74,8 @@ public class LandingPageViewTests extends ViewTestWithServer {
         this.doubleClickOn("#locationSearchTextField");
         this.type(KeyCode.N, KeyCode.E, KeyCode.W, KeyCode.N, KeyCode.A, KeyCode.N);
         sleep(2000);
-        this.type(KeyCode.ENTER);
+        Point2D searchResultsPoint = this.lookup("#searchResultsListView").tryQuery().get().localToScreen(5, 5);
+        this.clickOn(searchResultsPoint, MouseButton.PRIMARY);
         while (progressIndicator.get().isVisible())
         {
             sleep(10);
@@ -82,17 +84,6 @@ public class LandingPageViewTests extends ViewTestWithServer {
         sleep(1000);
         this.clickOn("#favoriteFilledImageView");
         sleep(1000);
-    }
-
-    @Test
-    public void pressingEnterSelectsTopMostSearchOption() {
-        Optional<Node> progressIndicator = this.lookup("#progressIndicator").tryQuery();
-        while (progressIndicator.get().isVisible())
-        {
-            sleep(10);
-        }
-        this.doubleClickOn("#locationSearchTextField");
-        this.type(KeyCode.N, KeyCode.E, KeyCode.W, KeyCode.N, KeyCode.A, KeyCode.N, KeyCode.ENTER);
     }
 
     @Test
@@ -119,7 +110,8 @@ public class LandingPageViewTests extends ViewTestWithServer {
         this.doubleClickOn("#locationSearchTextField");
         this.type(KeyCode.N, KeyCode.E, KeyCode.W, KeyCode.N, KeyCode.A, KeyCode.N);
         sleep(2000);
-        this.type(KeyCode.ENTER);
+        Point2D searchResultsPoint = this.lookup("#searchResultsListView").tryQuery().get().localToScreen(5, 5);
+        this.clickOn(searchResultsPoint, MouseButton.PRIMARY);
         while (progressIndicator.get().isVisible())
         {
             sleep(10);

@@ -139,4 +139,9 @@ public class WeatherLocation implements Serializable {
 
         return false;
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }
