@@ -3,11 +3,14 @@ package edu.westga.weatherapp_gui.view;
 import java.io.IOException;
 
 import edu.westga.weatherapp_gui.App;
+import edu.westga.weatherapp_gui.view.utils.PageResizeHelper;
 import edu.westga.weatherapp_gui.view.utils.WindowGenerator;
 import edu.westga.weatherapp_gui.viewmodel.WeatherRadarPageViewModel;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.scene.Node;
@@ -24,6 +27,12 @@ public class WeatherRadarPage {
      */
     @FXML
     private WebView weatherRadarWebView;
+
+    /**
+     * The weather radar page pane
+     */
+    @FXML
+    private Pane weatherRadarPagePane;
 
     /**
      * The back arrow image view
@@ -43,6 +52,7 @@ public class WeatherRadarPage {
     void initialize() {
         this.viewModel = new WeatherRadarPageViewModel(null, null);
         this.loadWeatherRadarMap();
+        Platform.runLater(() -> new PageResizeHelper().setScalingRules(this.weatherRadarPagePane));
     }
 
     /**
