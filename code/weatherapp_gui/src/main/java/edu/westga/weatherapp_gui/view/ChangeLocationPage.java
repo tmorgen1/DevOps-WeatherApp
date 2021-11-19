@@ -8,6 +8,7 @@ import com.jfoenix.controls.JFXSnackbar.SnackbarEvent;
 
 import edu.westga.weatherapp_gui.App;
 import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
+import edu.westga.weatherapp_gui.view.utils.PageResizeHelper;
 import edu.westga.weatherapp_gui.view.utils.WindowGenerator;
 import edu.westga.weatherapp_gui.viewmodel.ChangeLocationPageViewModel;
 import edu.westga.weatherapp_shared.model.WeatherLocation;
@@ -63,6 +64,7 @@ public class ChangeLocationPage {
     @FXML
     void initialize() {
         this.viewModel = new ChangeLocationPageViewModel(null);
+        Platform.runLater(() -> new PageResizeHelper().setScalingRules(this.changeLocationPane));
         this.setupLocationSearchTextChangedListener();
         this.setupSearchListViewSelectionListener();
         this.setFavoritedLocationsListItems();

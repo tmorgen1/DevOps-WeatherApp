@@ -7,10 +7,12 @@ import com.jfoenix.controls.JFXComboBox;
 import edu.westga.weatherapp_gui.App;
 import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
 import edu.westga.weatherapp_gui.model.SevereWeatherWarning;
+import edu.westga.weatherapp_gui.view.utils.PageResizeHelper;
 import edu.westga.weatherapp_gui.view.utils.WindowGenerator;
 import edu.westga.weatherapp_gui.viewmodel.SevereWeatherWarningPageViewModel;
 import edu.westga.weatherapp_gui.viewmodel.SevereWeatherWarningsPageViewModel;
 import javafx.scene.Node;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -73,6 +75,7 @@ public class SevereWeatherWarningsPage {
     void initialize() {
         this.viewModel = new SevereWeatherWarningsPageViewModel(null);
         this.setSevereWarningsComboBoxCellFactory();
+        Platform.runLater(() -> new PageResizeHelper().setScalingRules(this.severeWarningsPagePane));
         this.setSevereWarningsComboBoxSelectionChangeListener();
         this.bindToViewModel();
         this.viewModel.setsevereWeatherWarningsPagePropertiesValues(CurrentWeatherInformation.getWeatherLocation(),

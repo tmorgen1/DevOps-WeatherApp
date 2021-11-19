@@ -7,9 +7,11 @@ import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
 import edu.westga.weatherapp_gui.model.GuiConstants;
 import edu.westga.weatherapp_gui.model.MeasurementUnitConverter;
 import edu.westga.weatherapp_gui.model.Months;
+import edu.westga.weatherapp_gui.view.utils.PageResizeHelper;
 import edu.westga.weatherapp_gui.view.utils.WindowGenerator;
 import edu.westga.weatherapp_gui.viewmodel.StatisticalWeatherPageViewModel;
 import edu.westga.weatherapp_shared.enums.MeasurementUnits;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.concurrent.Worker.State;
@@ -71,6 +73,9 @@ public class StatisticalWeatherPage {
 
     @FXML
     private Pane contentPane;
+
+    @FXML
+    private Pane statisticalWeatherPagePane;
 
     @FXML
     private Label recordMaxTempLabel;
@@ -159,6 +164,7 @@ public class StatisticalWeatherPage {
     @FXML
     void initialize() {
         this.viewModel = new StatisticalWeatherPageViewModel(null);
+        Platform.runLater(() -> new PageResizeHelper().setScalingRules(this.statisticalWeatherPagePane));
         this.setMeasurementSettings();
         this.loadStatisticalWeatherInfo();
         this.setMonthLabel();

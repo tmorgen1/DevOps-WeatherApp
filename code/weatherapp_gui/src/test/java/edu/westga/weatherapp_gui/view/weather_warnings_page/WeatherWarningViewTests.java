@@ -25,7 +25,7 @@ public class WeatherWarningViewTests extends ViewTestWithServer {
         {
             this.type(KeyCode.BACK_SPACE);
         }
-        this.type(KeyCode.S, KeyCode.E, KeyCode.A, KeyCode.T, KeyCode.T, KeyCode.L, KeyCode.E);
+        this.type(KeyCode.R, KeyCode.U, KeyCode.G, KeyCode.B, KeyCode.Y);
         sleep(20000);
         Point2D searchResultsPoint = this.lookup("#searchResultsListView").tryQuery().get().localToScreen(5, 5);
         this.clickOn(searchResultsPoint, MouseButton.PRIMARY);

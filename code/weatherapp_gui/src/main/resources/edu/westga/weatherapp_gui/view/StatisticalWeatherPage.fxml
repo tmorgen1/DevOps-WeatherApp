@@ -12,7 +12,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="742.0" prefWidth="570.0" style="-fx-background-color: #2A2E37;" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="edu.westga.weatherapp_gui.view.StatisticalWeatherPage">
+<Pane fx:id="statisticalWeatherPagePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="756.0" prefWidth="570.0" style="-fx-background-color: #2A2E37;" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="edu.westga.weatherapp_gui.view.StatisticalWeatherPage">
    <children>
       <Label layoutX="198.0" layoutY="36.0" text="Statistical Data" textFill="WHITE">
          <font>
@@ -27,17 +27,6 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </ImageView>
-      <MenuBar prefHeight="25.0" prefWidth="570.0">
-         <menus>
-            <Menu fx:id="settingMenu" disable="true" mnemonicParsing="false" text="Settings">
-               <items>
-                  <CheckMenuItem fx:id="fahrenheitCheckMenuItem" mnemonicParsing="false" onAction="#onFahrenheitSelected" selected="true" text="Fahrenheit" />
-                  <CheckMenuItem fx:id="celsiusCheckMenuItem" mnemonicParsing="false" onAction="#onCelsiusSelected" text="Celsius" />
-                  <CheckMenuItem fx:id="kelvinCheckMenuItem" mnemonicParsing="false" onAction="#onKelvinSelected" text="Kelvin" />
-               </items>
-            </Menu>
-         </menus>
-      </MenuBar>
       <Pane fx:id="contentPane" layoutX="10.0" layoutY="105.0" prefHeight="616.0" prefWidth="550.0" visible="false">
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1b1e24" height="192.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="265.0" />
@@ -339,5 +328,16 @@
             <Font name="Segoe UI" size="24.0" />
          </font>
       </Label>
+      <MenuBar prefHeight="25.0" prefWidth="570.0">
+         <menus>
+            <Menu fx:id="settingMenu" disable="true" mnemonicParsing="false" text="Settings">
+               <items>
+                  <CheckMenuItem fx:id="fahrenheitCheckMenuItem" mnemonicParsing="false" onAction="#onFahrenheitSelected" selected="true" text="Fahrenheit" />
+                  <CheckMenuItem fx:id="celsiusCheckMenuItem" mnemonicParsing="false" onAction="#onCelsiusSelected" text="Celsius" />
+                  <CheckMenuItem fx:id="kelvinCheckMenuItem" mnemonicParsing="false" onAction="#onKelvinSelected" text="Kelvin" />
+               </items>
+            </Menu>
+         </menus>
+      </MenuBar>
    </children>
 </Pane>
