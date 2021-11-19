@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>APIDataRetriever.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">weatherapp_service</a> &gt; <a href="index.source.html" class="el_package">edu.westga.weatherapp_service.model</a> &gt; <span class="el_source">APIDataRetriever.java</span></div><h1>APIDataRetriever.java</h1><pre class="source lang-java linenums">package edu.westga.weatherapp_service.model;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Scanner;
+import edu.westga.weatherapp_shared.enums.MeasurementUnits;
+import edu.westga.weatherapp_shared.interfaces.DataRetriever;
+
+/**
+ * Implements the DataRetriever interface.  Handles streaming data response from OpenWeather API calls.
+ * 
+ * @author Thomas Morgenstern
+ */
+<span class="fc" id="L17">public class APIDataRetriever implements DataRetriever {</span>
+
+    @Override
+    public String getData(URL apiCall) {
+<span class="fc bfc" id="L21" title="All 2 branches covered.">        if (apiCall == null) {</span>
+<span class="fc" id="L22">            throw new IllegalArgumentException(&quot;apiCall should not be null&quot;);</span>
+        }
+
+<span class="fc" id="L25">        String data = null;</span>
+
+<span class="fc" id="L27">        try (Scanner scanner = new Scanner(apiCall.openStream())) {</span>
+<span class="fc" id="L28">            StringBuffer jsonBuffer = new StringBuffer();</span>
+<span class="fc" id="L29">            scanner.useDelimiter(&quot;\\A&quot;);</span>
+<span class="fc bfc" id="L30" title="All 2 branches covered.">            while (scanner.hasNext()) {</span>
+<span class="fc" id="L31">                jsonBuffer.append(scanner.next());</span>
+            }
+
+<span class="fc" id="L34">            data = jsonBuffer.toString();</span>
+<span class="nc" id="L35">        } catch (IOException exception) {</span>
+<span class="nc" id="L36">            System.err.println(&quot;IOException: api call data stream could not be opened&quot;);</span>
+<span class="fc" id="L37">        }</span>
+
+<span class="fc" id="L39">        return data;</span>
+    }
+
+    @Override
+    public URL getServiceAPICallURL(String apiCallCommand, String apiCallBase, String apiKey, MeasurementUnits units) {
+<span class="fc bfc" id="L44" title="All 2 branches covered.">        if (apiCallCommand == null) {</span>
+<span class="fc" id="L45">            throw new IllegalArgumentException(&quot;apiCallCommand should not be null&quot;);</span>
+        }
+<span class="fc bfc" id="L47" title="All 2 branches covered.">        if (apiCallBase == null) {</span>
+<span class="fc" id="L48">            throw new IllegalArgumentException(&quot;apiCallBase should not be null&quot;);</span>
+        }
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        if (apiKey == null) {</span>
+<span class="fc" id="L51">            throw new IllegalArgumentException(&quot;apiKey should not be null&quot;);</span>
+        }
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        if (units == null) {</span>
+<span class="fc" id="L54">            throw new IllegalArgumentException(&quot;units should not be null&quot;);</span>
+        }
+
+<span class="fc" id="L57">        String unitTypeAppendString = &quot;&amp;units=&quot; + units.name().toLowerCase();</span>
+<span class="fc" id="L58">        apiCallCommand = apiCallCommand.replace(&quot; &quot;, &quot;&quot;);</span>
+
+<span class="fc" id="L60">        URL apiCall = null;</span>
+        try {
+<span class="fc" id="L62">            URI uri = new URI(apiCallBase + apiKey + unitTypeAppendString + apiCallCommand);</span>
+<span class="fc" id="L63">            apiCall = new URL(uri.toASCIIString());</span>
+<span class="nc" id="L64">        } catch (MalformedURLException | URISyntaxException exception) {</span>
+<span class="nc" id="L65">            System.err.println(&quot;Malformed URL Exception: API call could not be generated&quot;);</span>
+<span class="fc" id="L66">        }</span>
+
+<span class="fc" id="L68">        return apiCall;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OpenWeatherStatisticalDataRetriever.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">weatherapp_service</a> &gt; <a href="index.source.html" class="el_package">edu.westga.weatherapp_service.model</a> &gt; <span class="el_source">OpenWeatherStatisticalDataRetriever.java</span></div><h1>OpenWeatherStatisticalDataRetriever.java</h1><pre class="source lang-java linenums">package edu.westga.weatherapp_service.model;
+
+import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
+import edu.westga.weatherapp_service.resources.ServiceConstants;
+import edu.westga.weatherapp_shared.enums.MeasurementUnits;
+import edu.westga.weatherapp_shared.interfaces.DataRetriever;
+import edu.westga.weatherapp_shared.interfaces.StatisticalWeatherDataRetriever;
+
+/**
+ * This weather data retriever uses the OpenWeather API to obtain statistical weather data based on historical weather data.
+ * Also extends the UnicastRemoteObject to allow for Remote Method Invocation.
+ * 
+ * @author Thomas Morgenstern
+ */
+public class OpenWeatherStatisticalDataRetriever extends UnicastRemoteObject
+        implements StatisticalWeatherDataRetriever {
+
+    /**
+     * Number of the month should be between 1 and 12, inclusive.
+     */
+    private static final String NUM_OF_THE_MONTH_SHOULD_BE_IN_BETWEEN_1_AND_12_INCLUSIVE = &quot;numOfTheMonth should be in between 1 and 12, inclusive&quot;;
+
+    /**
+     * Country code should not be empty error message.
+     */
+    private static final String COUNTRY_CODE_SHOULD_NOT_BE_EMPTY_ERROR_MESSAGE = &quot;countryCode should not be empty&quot;;
+
+    /**
+     * Country code should not be null error message.
+     */
+    private static final String COUNTRY_CODE_SHOULD_NOT_BE_NULL_ERROR_MESSAGE = &quot;countryCode should not be null&quot;;
+
+    /**
+     * State could should not be empty error message.
+     */
+    private static final String STATE_CODE_SHOULD_NOT_BE_EMPTY_ERROR_MESSAGE = &quot;stateCode should not be empty&quot;;
+
+    /**
+     * State code should not be null error message.
+     */
+    private static final String STATE_CODE_SHOULD_NOT_BE_NULL_ERROR_MESSAGE = &quot;stateCode should not be null&quot;;
+
+    /**
+     * City name should not be empty error message.
+     */
+    private static final String CITY_NAME_SHOULD_NOT_BE_EMPTY_ERROR_MESSAGE = &quot;cityName should not be empty&quot;;
+
+    /**
+     * City name should not be null error message.
+     */
+    private static final String CITY_NAME_SHOULD_NOT_BE_NULL_ERROR_MESSAGE = &quot;cityName should not be null&quot;;
+
+    /**
+     * APIDataRetriever should not be null error message.
+     */
+    private static final String API_DATA_RETRIEVER_SHOULD_NOT_BE_NULL_ERROR_MESSAGE = &quot;APIDataRetriever should not be null&quot;;
+
+    /**
+     * OpenWeather API Base call.
+     */
+    private static final String OPEN_WEATHER_API_CALL_BASE = &quot;https://history.openweathermap.org/data/2.5/aggregated/month?appid=&quot;;
+
+    /**
+     * Latitude should be between -90 and 90, inclusive error message
+     */
+    private static final String LATITUDE_ERROR_MESSAGE = &quot;latitude should be in between -90 and 90, inclusive&quot;;
+
+    /**
+     * Longitude should be between -180 and 180, inclusive error message
+     */
+    private static final String LONGITUDE_ERROR_MESSAGE = &quot;longitude should be in between -180 and 180, inclusive&quot;;
+
+    private DataRetriever dataRetriever;
+
+    /**
+     * Creates an OpenWeather statistical data retriever.
+     * 
+     * @param retriever - the object to handle web url calls
+     * @throws RemoteException - exception in the event of an RMI error
+     */
+    public OpenWeatherStatisticalDataRetriever(DataRetriever retriever) throws RemoteException {
+<span class="fc" id="L87">        super();</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        if (retriever == null) {</span>
+<span class="fc" id="L89">            throw new IllegalArgumentException(API_DATA_RETRIEVER_SHOULD_NOT_BE_NULL_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L92">        this.dataRetriever = retriever;</span>
+<span class="fc" id="L93">    }</span>
+
+    @Override
+    public String getDataByCity(String cityName, int numOfTheMonth) throws RemoteException {
+<span class="fc bfc" id="L97" title="All 2 branches covered.">        if (cityName == null) {</span>
+<span class="fc" id="L98">            throw new IllegalArgumentException(CITY_NAME_SHOULD_NOT_BE_NULL_ERROR_MESSAGE);</span>
+        }
+<span class="fc bfc" id="L100" title="All 2 branches covered.">        if (cityName.isEmpty()) {</span>
+<span class="fc" id="L101">            throw new IllegalArgumentException(CITY_NAME_SHOULD_NOT_BE_EMPTY_ERROR_MESSAGE);</span>
+        }
+<span class="fc bfc" id="L103" title="All 4 branches covered.">        if (numOfTheMonth &lt; 1 || numOfTheMonth &gt; 12) {</span>
+<span class="fc" id="L104">            throw new IllegalArgumentException(NUM_OF_THE_MONTH_SHOULD_BE_IN_BETWEEN_1_AND_12_INCLUSIVE);</span>
+        }
+
+<span class="fc" id="L107">        cityName = URLEncoder.encode(cityName, StandardCharsets.UTF_8);</span>
+
+<span class="fc" id="L109">        URL apiCall = this.dataRetriever.getServiceAPICallURL(&quot;&amp;q=&quot; + cityName + &quot;&amp;month=&quot; + numOfTheMonth,</span>
+                OpenWeatherStatisticalDataRetriever.OPEN_WEATHER_API_CALL_BASE, ServiceConstants.API_KEY,
+                MeasurementUnits.Imperial);
+<span class="fc" id="L112">        return this.dataRetriever.getData(apiCall);</span>
+    }
+
+    @Override
+    public String getDataByCityAndCountryCode(String cityName, String countryCode, int numOfTheMonth)
+            throws RemoteException {
+<span class="fc bfc" id="L118" title="All 2 branches covered.">        if (cityName == null) {</span>
+<span class="fc" id="L119">            throw new IllegalArgumentException(CITY_NAME_SHOULD_NOT_BE_NULL_ERROR_MESSAGE);</span>
+        }
+<span class="fc bfc" id="L121" title="All 2 branches covered.">        if (countryCode == null) {</span>
+<span class="fc" id="L122">            throw new IllegalArgumentException(COUNTRY_CODE_SHOULD_NOT_BE_NULL_ERROR_MESSAGE);</span>
+        }
+<span class="fc bfc" id="L124" title="All 2 branches covered.">        if (cityName.isEmpty()) {</span>
+<span class="fc" id="L125">            throw new IllegalArgumentException(CITY_NAME_SHOULD_NOT_BE_EMPTY_ERROR_MESSAGE);</span>
+        }
+<span class="fc bfc" id="L127" title="All 2 branches covered.">        if (countryCode.isEmpty()) {</span>
+<span class="fc" id="L128">            throw new IllegalArgumentException(COUNTRY_CODE_SHOULD_NOT_BE_EMPTY_ERROR_MESSAGE);</span>
+        }
+<span class="fc bfc" id="L130" title="All 4 branches covered.">        if (numOfTheMonth &lt; 1 || numOfTheMonth &gt; 12) {</span>
+<span class="fc" id="L131">            throw new IllegalArgumentException(NUM_OF_THE_MONTH_SHOULD_BE_IN_BETWEEN_1_AND_12_INCLUSIVE);</span>
+        }
+
+<span class="fc" id="L134">        cityName = URLEncoder.encode(cityName, StandardCharsets.UTF_8);</span>
+
+<span class="fc" id="L136">        URL apiCall = this.dataRetriever.getServiceAPICallURL(</span>
+                &quot;&amp;q=&quot; + cityName + &quot;,&quot; + countryCode + &quot;&amp;month=&quot; + numOfTheMonth,
+                OpenWeatherStatisticalDataRetriever.OPEN_WEATHER_API_CALL_BASE, ServiceConstants.API_KEY,
+                MeasurementUnits.Imperial);
+<span class="fc" id="L140">        return this.dataRetriever.getData(apiCall);</span>
+    }
+
+    @Override
+    public String getDataByCityAndStateCode(String cityName, String stateCode, int numOfTheMonth)
+            throws RemoteException {
+<span class="fc bfc" id="L146" title="All 2 branches covered.">        if (cityName == null) {</span>
+<span class="fc" id="L147">            throw new IllegalArgumentException(CITY_NAME_SHOULD_NOT_BE_NULL_ERROR_MESSAGE);</span>
+        }
+<span class="fc bfc" id="L149" title="All 2 branches covered.">        if (stateCode == null) {</span>
+<span class="fc" id="L150">            throw new IllegalArgumentException(STATE_CODE_SHOULD_NOT_BE_NULL_ERROR_MESSAGE);</span>
+        }
+<span class="fc bfc" id="L152" title="All 2 branches covered.">        if (cityName.isEmpty()) {</span>
+<span class="fc" id="L153">            throw new IllegalArgumentException(CITY_NAME_SHOULD_NOT_BE_EMPTY_ERROR_MESSAGE);</span>
+        }
+<span class="fc bfc" id="L155" title="All 2 branches covered.">        if (stateCode.isEmpty()) {</span>
+<span class="fc" id="L156">            throw new IllegalArgumentException(STATE_CODE_SHOULD_NOT_BE_EMPTY_ERROR_MESSAGE);</span>
+        }
+<span class="fc bfc" id="L158" title="All 4 branches covered.">        if (numOfTheMonth &lt; 1 || numOfTheMonth &gt; 12) {</span>
+<span class="fc" id="L159">            throw new IllegalArgumentException(NUM_OF_THE_MONTH_SHOULD_BE_IN_BETWEEN_1_AND_12_INCLUSIVE);</span>
+        }
+
+<span class="fc" id="L162">        cityName = URLEncoder.encode(cityName, StandardCharsets.UTF_8);</span>
+
+<span class="fc" id="L164">        URL apiCall = this.dataRetriever.getServiceAPICallURL(</span>
+                &quot;&amp;q=&quot; + cityName + &quot;,&quot; + stateCode + &quot;&amp;month=&quot; + numOfTheMonth,
+                OpenWeatherStatisticalDataRetriever.OPEN_WEATHER_API_CALL_BASE, ServiceConstants.API_KEY,
+                MeasurementUnits.Imperial);
+<span class="fc" id="L168">        return this.dataRetriever.getData(apiCall);</span>
+    }
+
+    @Override
+    public String getDataByCityAndStateCodeAndCountryCode(String cityName, String stateCode, String countryCode,
+            int numOfTheMonth) throws RemoteException {
+<span class="fc bfc" id="L174" title="All 2 branches covered.">        if (cityName == null) {</span>
+<span class="fc" id="L175">            throw new IllegalArgumentException(CITY_NAME_SHOULD_NOT_BE_NULL_ERROR_MESSAGE);</span>
+        }
+<span class="fc bfc" id="L177" title="All 2 branches covered.">        if (stateCode == null) {</span>
+<span class="fc" id="L178">            throw new IllegalArgumentException(STATE_CODE_SHOULD_NOT_BE_NULL_ERROR_MESSAGE);</span>
+        }
+<span class="fc bfc" id="L180" title="All 2 branches covered.">        if (countryCode == null) {</span>
+<span class="fc" id="L181">            throw new IllegalArgumentException(COUNTRY_CODE_SHOULD_NOT_BE_NULL_ERROR_MESSAGE);</span>
+        }
+<span class="fc bfc" id="L183" title="All 2 branches covered.">        if (cityName.isEmpty()) {</span>
+<span class="fc" id="L184">            throw new IllegalArgumentException(CITY_NAME_SHOULD_NOT_BE_EMPTY_ERROR_MESSAGE);</span>
+        }
+<span class="fc bfc" id="L186" title="All 2 branches covered.">        if (stateCode.isEmpty()) {</span>
+<span class="fc" id="L187">            throw new IllegalArgumentException(STATE_CODE_SHOULD_NOT_BE_EMPTY_ERROR_MESSAGE);</span>
+        }
+<span class="fc bfc" id="L189" title="All 2 branches covered.">        if (countryCode.isEmpty()) {</span>
+<span class="fc" id="L190">            throw new IllegalArgumentException(COUNTRY_CODE_SHOULD_NOT_BE_EMPTY_ERROR_MESSAGE);</span>
+        }
+<span class="fc bfc" id="L192" title="All 4 branches covered.">        if (numOfTheMonth &lt; 1 || numOfTheMonth &gt; 12) {</span>
+<span class="fc" id="L193">            throw new IllegalArgumentException(NUM_OF_THE_MONTH_SHOULD_BE_IN_BETWEEN_1_AND_12_INCLUSIVE);</span>
+        }
+
+<span class="fc" id="L196">        cityName = URLEncoder.encode(cityName, StandardCharsets.UTF_8);</span>
+
+<span class="fc" id="L198">        URL apiCall = this.dataRetriever.getServiceAPICallURL(</span>
+                &quot;&amp;q=&quot; + cityName + &quot;,&quot; + stateCode + &quot;,&quot; + countryCode + &quot;&amp;month=&quot; + numOfTheMonth,
+                OpenWeatherStatisticalDataRetriever.OPEN_WEATHER_API_CALL_BASE, ServiceConstants.API_KEY,
+                MeasurementUnits.Imperial);
+<span class="fc" id="L202">        return this.dataRetriever.getData(apiCall);</span>
+    }
+    
+    @Override
+    public String getDataByCoordinates(double latitude, double longitude, int numOfTheMonth) {
+<span class="fc bfc" id="L207" title="All 4 branches covered.">        if (latitude &lt; -90 || latitude &gt; 90) {</span>
+<span class="fc" id="L208">            throw new IllegalArgumentException(LATITUDE_ERROR_MESSAGE);</span>
+        }
+<span class="fc bfc" id="L210" title="All 4 branches covered.">        if (longitude &lt; -180 || longitude &gt; 180) {</span>
+<span class="fc" id="L211">            throw new IllegalArgumentException(LONGITUDE_ERROR_MESSAGE);</span>
+        }
+<span class="fc bfc" id="L213" title="All 4 branches covered.">        if (numOfTheMonth &lt; 1 || numOfTheMonth &gt; 12) {</span>
+<span class="fc" id="L214">            throw new IllegalArgumentException(NUM_OF_THE_MONTH_SHOULD_BE_IN_BETWEEN_1_AND_12_INCLUSIVE);</span>
+        }
+        
+<span class="fc" id="L217">        URL apiCall = this.dataRetriever.getServiceAPICallURL(</span>
+                &quot;&amp;lat=&quot; + latitude + &quot;&amp;lon=&quot; + longitude + &quot;&amp;month=&quot; + numOfTheMonth,
+                OpenWeatherStatisticalDataRetriever.OPEN_WEATHER_API_CALL_BASE, ServiceConstants.API_KEY,
+                MeasurementUnits.Imperial);
+<span class="fc" id="L221">        return this.dataRetriever.getData(apiCall);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

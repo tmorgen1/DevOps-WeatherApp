@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PageResizeHelper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">weatherapp_gui</a> &gt; <a href="index.source.html" class="el_package">edu.westga.weatherapp_gui.view.utils</a> &gt; <span class="el_source">PageResizeHelper.java</span></div><h1>PageResizeHelper.java</h1><pre class="source lang-java linenums">package edu.westga.weatherapp_gui.view.utils;
+
+import javafx.scene.Node;
+import javafx.scene.control.MenuBar;
+import javafx.scene.layout.Pane;
+import javafx.scene.transform.Scale;
+import javafx.stage.Stage;
+
+/**
+ * The PageResizeHelper class helps to resize the current page
+ * 
+ * @author Eboni Walker
+ * @version Nov 14, 2021
+ */
+<span class="fc" id="L15">public class PageResizeHelper {</span>
+
+    private static final double CENTER_OFFSET = 2;
+
+    private static final int INITIAL_VALUE = 0;
+
+    private static final double RATIO_BOUNDARY = 1;
+
+    private static final double PAGE_SIZE_1 = 756.0;
+
+    private static final double PAGE_SIZE_2 = 600.0;
+
+    private static final double PAGE_SIZE_3 = 577.0;
+
+    private static final double PAGE_SIZE_1_MENU_BAR_TRANSLATE_X = 130;
+
+    private static final double PAGE_SIZE_2_MENU_BAR_TRANSLATE_X = 208;
+
+    private static final double PAGE_SIZE_3_MENU_BAR_TRANSLATE_X = 220;
+
+    private static final double PAGE_SIZE_1_MENU_BAR_TRANSLATE_Y = 200;
+
+    private static final double PAGE_SIZE_2_MENU_BAR_TRANSLATE_Y = 330;
+
+    private static final double PAGE_SIZE_3_MENU_BAR_TRANSLATE_Y = 340;
+
+    private static final String MAXIMIZED_STYLE = &quot;-fx-padding:  2 2 2 60&quot;;
+
+    private static final String MINIMIZED_STYLE = &quot;-fx-padding:  2 2 2 2&quot;;
+
+    private double menuBarTranslateY;
+
+    private double menuBarTranslateX;
+
+    private Pane pagePane;
+
+    private boolean canScaleNow;
+
+    /**
+     * Sets the scaling rules for the page
+     * 
+     * @param pagePane the page's root pane
+     */
+    public void setScalingRules(Pane pagePane) {
+<span class="fc" id="L59">        this.pagePane = pagePane;</span>
+<span class="fc" id="L60">        this.canScaleNow = true;</span>
+<span class="fc" id="L61">        Stage currStage = (Stage) this.pagePane.getScene().getWindow();</span>
+<span class="fc" id="L62">        double initWidth = pagePane.getPrefWidth();</span>
+<span class="fc" id="L63">        double initHeight = pagePane.getPrefHeight();</span>
+<span class="fc" id="L64">        MenuBar settingMenuBar = this.findSettingMenuBar(this.pagePane);</span>
+<span class="fc" id="L65">        this.bindMenuBarWidthIfNotNull(settingMenuBar, currStage);</span>
+<span class="fc" id="L66">        this.determineMenuBarCoordinateTranslations();</span>
+<span class="fc" id="L67">        this.setChangeListeners(initWidth, initHeight, settingMenuBar, currStage);</span>
+
+<span class="fc" id="L69">        this.preserveMaximizedState(currStage, settingMenuBar);</span>
+<span class="fc" id="L70">    }</span>
+
+    private void preserveMaximizedState(Stage currStage, MenuBar settingMenuBar) {
+<span class="fc" id="L73">        boolean wasMaximized = false;</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        if (currStage.getUserData() != null) {</span>
+<span class="fc" id="L75">            wasMaximized = ((Boolean) currStage.getUserData());</span>
+        }
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">        if (wasMaximized) {</span>
+<span class="nc" id="L78">            currStage.hide();</span>
+<span class="nc" id="L79">            currStage.setMaximized(wasMaximized);</span>
+<span class="nc" id="L80">            this.canScaleNow = false;</span>
+<span class="nc" id="L81">            currStage.show();</span>
+<span class="nc" id="L82">            this.setMenuBarLayoutXIfNotNull(settingMenuBar, this.menuBarTranslateX);</span>
+        }
+
+<span class="fc" id="L85">    }</span>
+
+    private void determineMenuBarCoordinateTranslations() {
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        if (this.pagePane.getPrefHeight() == PageResizeHelper.PAGE_SIZE_1) {</span>
+<span class="fc" id="L89">            this.menuBarTranslateY = PAGE_SIZE_1_MENU_BAR_TRANSLATE_X;</span>
+<span class="fc" id="L90">            this.menuBarTranslateX = PAGE_SIZE_1_MENU_BAR_TRANSLATE_Y;</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">        } else if (this.pagePane.getPrefHeight() == PageResizeHelper.PAGE_SIZE_2) {</span>
+<span class="fc" id="L92">            this.menuBarTranslateY = PAGE_SIZE_2_MENU_BAR_TRANSLATE_X;</span>
+<span class="fc" id="L93">            this.menuBarTranslateX = PAGE_SIZE_2_MENU_BAR_TRANSLATE_Y;</span>
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">        } else if (this.pagePane.getPrefHeight() == PageResizeHelper.PAGE_SIZE_3) {</span>
+<span class="fc" id="L95">            this.menuBarTranslateY = PAGE_SIZE_3_MENU_BAR_TRANSLATE_X;</span>
+<span class="fc" id="L96">            this.menuBarTranslateX = PAGE_SIZE_3_MENU_BAR_TRANSLATE_Y;</span>
+        }
+<span class="fc" id="L98">    }</span>
+
+    private void setChangeListeners(double initWidth, double initHeight, MenuBar settingMenuBar, Stage currStage) {
+<span class="fc" id="L101">        this.setPaneWidthChangeListener(initWidth, initHeight, settingMenuBar);</span>
+<span class="fc" id="L102">        this.setPaneHeightChangeListener(initWidth, initHeight, settingMenuBar);</span>
+<span class="fc" id="L103">        this.setStageMaximizedChangeListener(currStage, settingMenuBar, initWidth, initHeight);</span>
+<span class="fc" id="L104">    }</span>
+
+    private void setStageMaximizedChangeListener(Stage currStage, MenuBar settingMenuBar, double initWidth,
+            double initHeight) {
+<span class="fc" id="L108">        currStage.maximizedProperty().addListener((observableMaximized, oldMaximized, newMaximized) -&gt; {</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">            if (newMaximized) {</span>
+<span class="nc" id="L110">                this.canScaleNow = false;</span>
+<span class="nc" id="L111">                this.setMenuBarLayoutIfNotNull(settingMenuBar, this.menuBarTranslateX, PageResizeHelper.INITIAL_VALUE,</span>
+                        PageResizeHelper.MAXIMIZED_STYLE);
+            } else {
+<span class="nc" id="L114">                this.canScaleNow = true;</span>
+<span class="nc" id="L115">                this.setMenuBarLayoutIfNotNull(settingMenuBar, PageResizeHelper.INITIAL_VALUE, -this.menuBarTranslateY,</span>
+                        PageResizeHelper.MINIMIZED_STYLE);
+<span class="nc" id="L117">                this.pagePane.snapPositionX(PageResizeHelper.INITIAL_VALUE);</span>
+<span class="nc" id="L118">                this.pagePane.snapPositionY(PageResizeHelper.INITIAL_VALUE);</span>
+<span class="nc" id="L119">                this.pagePane.snapPositionX(this.pagePane.getWidth() / PageResizeHelper.CENTER_OFFSET);</span>
+<span class="nc" id="L120">                this.pagePane.snapPositionY(this.pagePane.getHeight() / PageResizeHelper.CENTER_OFFSET);</span>
+            }
+<span class="nc" id="L122">        });</span>
+<span class="fc" id="L123">    }</span>
+
+    private void setPaneHeightChangeListener(double initWidth, double initHeight, MenuBar settingMenuBar) {
+<span class="fc" id="L126">        this.pagePane.heightProperty().addListener((observableHeight, oldHeight, newHeight) -&gt; {</span>
+<span class="nc" id="L127">            this.setLayoutNodesTranlateY(newHeight.doubleValue(), oldHeight.doubleValue());</span>
+<span class="nc" id="L128">            this.helpScaleNodesWithMenu(initWidth, initHeight, settingMenuBar);</span>
+<span class="nc" id="L129">        });</span>
+<span class="fc" id="L130">    }</span>
+
+    private void setPaneWidthChangeListener(double initWidth, double initHeight, MenuBar settingMenuBar) {
+<span class="fc" id="L133">        this.pagePane.widthProperty().addListener((observableWidth, oldWidth, newWidth) -&gt; {</span>
+<span class="nc" id="L134">            this.setLayoutNodesTranlateX(newWidth.doubleValue(), oldWidth.doubleValue());</span>
+<span class="nc" id="L135">            this.helpScaleNodesWithMenu(initWidth, initHeight, settingMenuBar);</span>
+<span class="nc" id="L136">        });</span>
+<span class="fc" id="L137">    }</span>
+
+    private void helpScaleNodesWithMenu(double initWidth, double initHeight, MenuBar settingMenuBar) {
+<span class="nc" id="L140">        double centerX = this.pagePane.getLayoutBounds().getCenterX();</span>
+<span class="nc" id="L141">        double centerY = this.pagePane.getLayoutBounds().getCenterY();</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">        if (this.canScaleNow) {</span>
+<span class="nc" id="L143">            this.scaleLayoutNodes(initWidth, initHeight, PageResizeHelper.INITIAL_VALUE,</span>
+                    PageResizeHelper.INITIAL_VALUE);
+        } else {
+<span class="nc" id="L146">            this.setMenuBarTranslateYIfNotNull(settingMenuBar, this.menuBarTranslateY);</span>
+<span class="nc" id="L147">            this.scaleLayoutNodes(initWidth, initHeight, centerX, centerY);</span>
+        }
+<span class="nc" id="L149">    }</span>
+
+    private void scaleLayoutNodes(double initWidth, double initHeight, double pivotX, double pivotY) {
+<span class="nc" id="L152">        double newHeight = this.pagePane.getHeight();</span>
+<span class="nc" id="L153">        double newWidth = this.pagePane.getWidth();</span>
+<span class="nc" id="L154">        double ratio = initWidth - initHeight;</span>
+<span class="nc" id="L155">        double scaleFactor = this.determineScaleFactor(newWidth, newHeight, initWidth, initHeight, ratio);</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">        if (scaleFactor &gt;= PageResizeHelper.RATIO_BOUNDARY) {</span>
+<span class="nc" id="L157">            Scale scale = new Scale(scaleFactor, scaleFactor);</span>
+<span class="nc" id="L158">            scale.setPivotX(pivotX);</span>
+<span class="nc" id="L159">            scale.setPivotY(pivotY);</span>
+<span class="nc" id="L160">            this.pagePane.getScene().getRoot().getTransforms().setAll(scale);</span>
+<span class="nc" id="L161">        } else {</span>
+<span class="nc" id="L162">            this.pagePane.setPrefWidth(Math.max(initWidth, newWidth));</span>
+<span class="nc" id="L163">            this.pagePane.setPrefHeight(Math.max(initHeight, newHeight));</span>
+        }
+<span class="nc" id="L165">    }</span>
+
+    private void setLayoutNodesTranlateX(double newWidth, double oldWidth) {
+<span class="nc bnc" id="L168" title="All 2 branches missed.">        for (Node child : this.pagePane.getChildren()) {</span>
+<span class="nc bnc" id="L169" title="All 2 branches missed.">            if (!(child instanceof MenuBar)) {</span>
+<span class="nc" id="L170">                child.setLayoutX(child.getLayoutX() + ((newWidth - oldWidth) / PageResizeHelper.CENTER_OFFSET));</span>
+            }
+<span class="nc" id="L172">        }</span>
+<span class="nc" id="L173">    }</span>
+
+    private void setLayoutNodesTranlateY(double newHeight, double oldHeight) {
+<span class="nc bnc" id="L176" title="All 2 branches missed.">        for (Node child : this.pagePane.getChildren()) {</span>
+<span class="nc bnc" id="L177" title="All 2 branches missed.">            if (!(child instanceof MenuBar)) {</span>
+<span class="nc" id="L178">                child.setLayoutY(child.getLayoutY() + ((newHeight - oldHeight) / PageResizeHelper.CENTER_OFFSET));</span>
+            }
+<span class="nc" id="L180">        }</span>
+<span class="nc" id="L181">    }</span>
+
+    private void bindMenuBarWidthIfNotNull(MenuBar settingMenuBar, Stage currStage) {
+<span class="fc bfc" id="L184" title="All 2 branches covered.">        if (settingMenuBar != null) {</span>
+<span class="fc" id="L185">            settingMenuBar.minWidthProperty().bind(currStage.widthProperty());</span>
+        }
+<span class="fc" id="L187">    }</span>
+
+    private void setMenuBarLayoutIfNotNull(MenuBar settingMenuBar, double layoutX, double layoutY, String padding) {
+<span class="nc bnc" id="L190" title="All 2 branches missed.">        if (settingMenuBar != null) {</span>
+<span class="nc" id="L191">            settingMenuBar.setLayoutY(layoutY);</span>
+<span class="nc" id="L192">            settingMenuBar.setLayoutX(layoutX);</span>
+<span class="nc" id="L193">            settingMenuBar.getMenus().get(PageResizeHelper.INITIAL_VALUE).setStyle(padding);</span>
+        }
+<span class="nc" id="L195">    }</span>
+
+    private void setMenuBarTranslateYIfNotNull(MenuBar settingMenuBar, double translateY) {
+<span class="nc bnc" id="L198" title="All 2 branches missed.">        if (settingMenuBar != null) {</span>
+<span class="nc" id="L199">            settingMenuBar.setTranslateY(translateY);</span>
+        }
+<span class="nc" id="L201">    }</span>
+
+    private void setMenuBarLayoutXIfNotNull(MenuBar settingMenuBar, double layoutX) {
+<span class="nc bnc" id="L204" title="All 2 branches missed.">        if (settingMenuBar != null) {</span>
+<span class="nc" id="L205">            settingMenuBar.setLayoutX(layoutX);</span>
+        }
+<span class="nc" id="L207">    }</span>
+
+    private double determineScaleFactor(double newWidth, double newHeight, double initWidth, double initHeight,
+            double ratio) {
+<span class="nc" id="L211">        double scaleFactor = PageResizeHelper.INITIAL_VALUE;</span>
+<span class="nc bnc" id="L212" title="All 2 branches missed.">        if (newWidth / newHeight &gt; ratio) {</span>
+<span class="nc" id="L213">            scaleFactor = newHeight / initHeight;</span>
+        } else {
+<span class="nc" id="L215">            scaleFactor = newWidth / initWidth;</span>
+        }
+<span class="nc" id="L217">        return scaleFactor;</span>
+    }
+
+    private MenuBar findSettingMenuBar(Pane pagePane) {
+<span class="fc" id="L221">        MenuBar bar = null;</span>
+<span class="fc bfc" id="L222" title="All 2 branches covered.">        for (Node child : this.pagePane.getChildren()) {</span>
+<span class="fc bfc" id="L223" title="All 2 branches covered.">            if (child instanceof MenuBar) {</span>
+<span class="fc" id="L224">                bar = (MenuBar) child;</span>
+            }
+<span class="fc" id="L226">        }</span>
+<span class="fc" id="L227">        return bar;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MeasurementUnitConverter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">weatherapp_gui</a> &gt; <a href="index.source.html" class="el_package">edu.westga.weatherapp_gui.model</a> &gt; <span class="el_source">MeasurementUnitConverter.java</span></div><h1>MeasurementUnitConverter.java</h1><pre class="source lang-java linenums">package edu.westga.weatherapp_gui.model;
+
+import java.text.DecimalFormat;
+
+import edu.westga.weatherapp_shared.enums.MeasurementUnits;
+
+/**
+ * This class converts temperatures from Kelvin to Celsius or Fahrenheit
+ * 
+ * @author Michael Pavich
+ */
+<span class="nc" id="L12">public class MeasurementUnitConverter {</span>
+
+    /**
+     * The format for all units with decimals
+     */
+    private static final String DECIMAL_FORMAT = &quot;0.00&quot;;
+
+    /**
+     * Converts a given temperature from the starting unit to the ending unit
+     * 
+     * @param temp - the temperature to be converted
+     * @param startingUnit - the starting unit of the temperature
+     * @param endingUnit - the ending unit of the temperature
+     * @return the converted temperature
+     */
+    public static double convertTemperature(double temp, MeasurementUnits startingUnit, MeasurementUnits endingUnit) {
+<span class="fc" id="L28">        double convertedTemp = 0.0;</span>
+<span class="fc" id="L29">        DecimalFormat decimalFormat = new DecimalFormat(DECIMAL_FORMAT);</span>
+
+<span class="fc bfc" id="L31" title="All 2 branches covered.">        if (startingUnit == endingUnit) {</span>
+<span class="fc" id="L32">            return Double.parseDouble(decimalFormat.format(temp));</span>
+        }
+
+<span class="fc bfc" id="L35" title="All 2 branches covered.">        if (startingUnit == MeasurementUnits.Imperial) {</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">            if (endingUnit == MeasurementUnits.Metric) {</span>
+<span class="fc" id="L37">                convertedTemp = convertFahrenheitToCelsius(temp);</span>
+<span class="pc bpc" id="L38" title="1 of 2 branches missed.">            } else if (endingUnit == MeasurementUnits.Kelvin) {</span>
+<span class="fc" id="L39">                convertedTemp = convertFahreenheitToKelvin(temp);</span>
+            }
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        } else if (startingUnit == MeasurementUnits.Metric) {</span>
+<span class="fc bfc" id="L42" title="All 2 branches covered.">            if (endingUnit == MeasurementUnits.Imperial) {</span>
+<span class="fc" id="L43">                convertedTemp = convertCelsiusToFahrenheit(temp);</span>
+<span class="pc bpc" id="L44" title="1 of 2 branches missed.">            } else if (endingUnit == MeasurementUnits.Kelvin) {</span>
+<span class="fc" id="L45">                convertedTemp = convertCelsiusToKelvin(temp);</span>
+            }
+        } else {
+<span class="fc bfc" id="L48" title="All 2 branches covered.">            if (endingUnit == MeasurementUnits.Imperial) {</span>
+<span class="fc" id="L49">                convertedTemp = convertKelvinToFahrenheit(temp);</span>
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">            } else if (endingUnit == MeasurementUnits.Metric) {</span>
+<span class="fc" id="L51">                convertedTemp = convertKelvinToCelsius(temp);</span>
+            }
+        }
+
+<span class="fc" id="L55">        return Double.parseDouble(decimalFormat.format(convertedTemp));</span>
+    }
+
+    /**
+     * Converts a given pressure from the starting unit to the ending unit
+     * 
+     * @param pressure - the pressure to convert
+     * @param startingUnit - the starting unit of the pressure
+     * @param endingUnit - the ending unit of the pressure
+     * @return the converted pressure
+     */
+    public static double convertPressure(double pressure, MeasurementUnits startingUnit, MeasurementUnits endingUnit) {
+<span class="fc" id="L67">        double convertedPressure = 0.0;</span>
+<span class="fc" id="L68">        DecimalFormat decimalFormat = new DecimalFormat(DECIMAL_FORMAT);</span>
+
+<span class="fc bfc" id="L70" title="All 2 branches covered.">        if (startingUnit == endingUnit) {</span>
+<span class="fc" id="L71">            return Double.parseDouble(decimalFormat.format(pressure));</span>
+        }
+    
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        if (startingUnit == MeasurementUnits.Imperial) {</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">            if (endingUnit == MeasurementUnits.Metric) {</span>
+<span class="fc" id="L76">                convertedPressure = convertPsiToPa(pressure);</span>
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">            } else if (endingUnit == MeasurementUnits.Kelvin) {</span>
+<span class="fc" id="L78">                convertedPressure = convertPsiToHpa(pressure);</span>
+            }
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        } else if (startingUnit == MeasurementUnits.Metric) {</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">            if (endingUnit == MeasurementUnits.Imperial) {</span>
+<span class="fc" id="L82">                convertedPressure = convertPaToPsi(pressure);</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">            } else if (endingUnit == MeasurementUnits.Kelvin) {</span>
+<span class="fc" id="L84">                convertedPressure = convertPaToHpa(pressure);</span>
+            }
+        } else {
+<span class="fc bfc" id="L87" title="All 2 branches covered.">            if (endingUnit == MeasurementUnits.Imperial) {</span>
+<span class="fc" id="L88">                convertedPressure = convertHpaToPsi(pressure);</span>
+<span class="pc bpc" id="L89" title="1 of 2 branches missed.">            } else if (endingUnit == MeasurementUnits.Metric) {</span>
+<span class="fc" id="L90">                convertedPressure = convertHpaToPa(pressure);</span>
+            }
+        }
+
+<span class="fc" id="L94">        return Double.parseDouble(decimalFormat.format(convertedPressure));</span>
+    }
+
+    /**
+     * Converts a given wind speed from the starting unit to the ending unit
+     * 
+     * @param speed - the wind speed to convert
+     * @param startingUnit - the starting unit of the wind speed
+     * @param endingUnit - the ending unit of the wind speed
+     * @return the converted wind speed
+     */
+    public static double convertWind(double speed, MeasurementUnits startingUnit, MeasurementUnits endingUnit) {
+<span class="fc" id="L106">        double convertedSpeed = 0.0;</span>
+<span class="fc" id="L107">        DecimalFormat decimalFormat = new DecimalFormat(DECIMAL_FORMAT);</span>
+
+<span class="fc bfc" id="L109" title="All 2 branches covered.">        if (startingUnit == endingUnit) {</span>
+<span class="fc" id="L110">            return Double.parseDouble(decimalFormat.format(speed));</span>
+        }
+
+<span class="fc bfc" id="L113" title="All 6 branches covered.">        if ((startingUnit == MeasurementUnits.Metric || startingUnit == MeasurementUnits.Kelvin) &amp;&amp; endingUnit == MeasurementUnits.Imperial) {</span>
+<span class="fc" id="L114">            convertedSpeed = convertMetersToFeet(speed);</span>
+<span class="pc bpc" id="L115" title="1 of 6 branches missed.">        } else if (startingUnit == MeasurementUnits.Imperial &amp;&amp; (endingUnit == MeasurementUnits.Metric || endingUnit == MeasurementUnits.Kelvin)) {</span>
+<span class="fc" id="L116">            convertedSpeed = convertFeetToMeters(speed);</span>
+        } else {
+<span class="fc" id="L118">            convertedSpeed = speed;</span>
+        }
+
+<span class="fc" id="L121">        return Double.parseDouble(decimalFormat.format(convertedSpeed));</span>
+    }
+
+    /**
+     * Converts a given precipitation volume from the starting unit to the ending unit
+     * 
+     * @param volume - the precipitation volume to convert
+     * @param startingUnit - the starting unit of the precipitation volume
+     * @param endingUnit - the ending unit of the precipitation volume
+     * @return the converted precipitation volume
+     */
+    public static double convertPrecipitation(double volume, MeasurementUnits startingUnit, MeasurementUnits endingUnit) {
+<span class="fc" id="L133">        double convertedVolume = 0.0;</span>
+<span class="fc" id="L134">        DecimalFormat decimalFormat = new DecimalFormat(DECIMAL_FORMAT);</span>
+
+<span class="fc bfc" id="L136" title="All 2 branches covered.">        if (startingUnit == endingUnit) {</span>
+<span class="fc" id="L137">            return Double.parseDouble(decimalFormat.format(volume));</span>
+        }
+
+<span class="fc bfc" id="L140" title="All 6 branches covered.">        if ((startingUnit == MeasurementUnits.Metric || startingUnit == MeasurementUnits.Kelvin) &amp;&amp; endingUnit == MeasurementUnits.Imperial) {</span>
+<span class="fc" id="L141">            convertedVolume = convertMillimetersToInches(volume);</span>
+<span class="pc bpc" id="L142" title="3 of 6 branches missed.">        } else if (startingUnit == MeasurementUnits.Imperial &amp;&amp; (endingUnit == MeasurementUnits.Metric || endingUnit == MeasurementUnits.Kelvin)) {</span>
+<span class="fc" id="L143">            convertedVolume = convertInchesToMillimeters(volume);</span>
+        } else {
+<span class="fc" id="L145">            convertedVolume = volume;</span>
+        }
+
+<span class="fc" id="L148">        return Double.parseDouble(decimalFormat.format(convertedVolume));</span>
+    }
+    
+    /**
+     * Converts a temperature from Kelvin to Fahrenheit
+     * 
+     * @param temperature - the temperature to convert
+     * @return the temperature in Fahrenheit
+     */
+    public static double convertKelvinToFahrenheit(double temperature) {
+<span class="fc" id="L158">        return (temperature - 273.15) * 9 / 5 + 32;</span>
+    }
+
+    /**
+     * Converts a temperature from Kelvin to Celsius
+     * @param temperature - the temperature to convert
+     * @return the temperature in Celsius
+     */
+    public static double convertKelvinToCelsius(double temperature) {
+<span class="fc" id="L167">        return temperature - 273.15;</span>
+    }
+
+    /**
+     * Converts a temperature from Celsius to Fahrenheit
+     * 
+     * @param temperature - the temperature to convert
+     * @return the temperature in Fahrenheit
+     */
+    public static double convertCelsiusToFahrenheit(double temperature) {
+<span class="fc" id="L177">        return temperature * 9 / 5 + 32;</span>
+    }
+
+    /**
+     * Converts a temperature from Celsius to Kelvin
+     * 
+     * @param temperature - the temperature to convert
+     * @return the temperature in Kelvin
+     */
+    public static double convertCelsiusToKelvin(double temperature) {
+<span class="fc" id="L187">        return temperature + 273.15;</span>
+    }
+
+    /**
+     * Converts a temperature from Fahrenheit to Celsius
+     * 
+     * @param temperature - the temperature to convert
+     * @return the temperature in Celsius
+     */
+    public static double convertFahrenheitToCelsius(double temperature) {
+<span class="fc" id="L197">        return (temperature - 32) * 5 / 9;</span>
+    }
+
+    /**
+     * Converts a temperature from farhrenheit to Kelvin
+     * 
+     * @param temperature - the temperature to convert
+     * @return the temperature in Kelvin
+     */
+    public static double convertFahreenheitToKelvin(double temperature) {
+<span class="fc" id="L207">        return (temperature - 32) * 5 / 9 + 273.15;</span>
+    }
+
+    /**
+     * Converts a pressure from hpa to psi
+     * 
+     * @param pressure - the pressure to convert
+     * @return the pressure in psi
+     */
+    public static double convertHpaToPsi(double pressure) {
+<span class="fc" id="L217">        return pressure * 0.0145037738;</span>
+    }
+
+    /**
+     * Converts a pressure from hpa to pa
+     * 
+     * @param pressure - the pressure to convert
+     * @return the pressure in pa
+     */
+    public static double convertHpaToPa(double pressure) {
+<span class="fc" id="L227">        return pressure * 100;</span>
+    }
+
+    /**
+     * Converts a pressure from psi to hpa
+     * 
+     * @param pressure - the pressure to convert
+     * @return the pressure in hpa
+     */
+    public static double convertPsiToHpa(double pressure) {
+<span class="fc" id="L237">        return pressure * 68.9476;</span>
+    }
+
+    /**
+     * Converts a pressure from psi to pa
+     * 
+     * @param pressure - the pressure to convert
+     * @return the pressure in pa
+     */
+    public static double convertPsiToPa(double pressure) {
+<span class="fc" id="L247">        return pressure * 6894.75729;</span>
+    }
+
+    /**
+     * Converts a pressure from pa to hpa
+     * 
+     * @param pressure - the pressure to convert
+     * @return the pressure in hpa
+     */
+    public static double convertPaToHpa(double pressure) {
+<span class="fc" id="L257">        return pressure * 0.01;</span>
+    }
+
+    /**
+     * Converts a pressure from pa to psi
+     * 
+     * @param pressure - the pressure to convert
+     * @return the pressure in psi
+     */
+    public static double convertPaToPsi(double pressure) {
+<span class="fc" id="L267">        return pressure * 0.000145037738;</span>
+    }
+
+    /**
+     * Converts a wind speed from meters per second to feet per second
+     * 
+     * @param meters - the wind speed to convert
+     * @return the wind speed in feet per second
+     */
+    public static double convertMetersToFeet(double meters) {
+<span class="fc" id="L277">        return meters * 3.28084;</span>
+    }
+
+    /**
+     * Converts a wind speed from feet per second to meters per second
+     * 
+     * @param feet - the wind speed to convert
+     * @return the wind speed in meters per second
+     */
+    public static double convertFeetToMeters(double feet) {
+<span class="fc" id="L287">        return feet * 0.3048;</span>
+    }
+
+    /**
+     * Converts a precipitation volume from millimeters to inches
+     * 
+     * @param millimeters - the precipitation volume to convert
+     * @return the precipitation volume in inches
+     */
+    public static double convertMillimetersToInches(double millimeters) {
+<span class="fc" id="L297">        return millimeters * 0.0393700787;</span>
+    }
+
+    /**
+     * Converts a precipitation volume from inches to millimeters
+     * 
+     * @param inches - the precipitation volume to convert
+     * @return the precipitation volume in millimeters
+     */
+    public static double convertInchesToMillimeters(double inches) {
+<span class="fc" id="L307">        return inches * 25.4;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

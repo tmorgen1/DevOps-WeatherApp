@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DailyForecastPage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">weatherapp_gui</a> &gt; <a href="index.source.html" class="el_package">edu.westga.weatherapp_gui.view</a> &gt; <span class="el_source">DailyForecastPage.java</span></div><h1>DailyForecastPage.java</h1><pre class="source lang-java linenums">package edu.westga.weatherapp_gui.view;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+import edu.westga.weatherapp_gui.App;
+import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
+import edu.westga.weatherapp_gui.model.DateTimeConverter;
+import edu.westga.weatherapp_gui.model.GuiConstants;
+import edu.westga.weatherapp_gui.view.utils.PageResizeHelper;
+import edu.westga.weatherapp_gui.view.utils.WindowGenerator;
+import edu.westga.weatherapp_gui.viewmodel.DailyForecastPageViewModel;
+import edu.westga.weatherapp_shared.enums.MeasurementUnits;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.concurrent.Worker.State;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.Node;
+import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.ScrollPane;
+
+/**
+ * Defines the daily forecast page view.
+ * 
+ * @author Michael Pavich
+ */
+<span class="fc" id="L38">public class DailyForecastPage {</span>
+
+    /**
+     * The number of days for the forecast to load
+     */
+    public static final int DAYS = 16;
+
+    /**
+     * The daily forecast page view model
+     */
+    private DailyForecastPageViewModel viewModel;
+
+    /**
+     * The array list of day forecast panes
+     */
+    private ArrayList&lt;DayForecastPane&gt; dayForecastPanes;
+
+    /**
+     * The daily forecast page pane
+     */
+    @FXML
+    private Pane dailyForecastPagePane;
+
+    /**
+     * The back arrow image view
+     */
+    @FXML
+    private ImageView backArrowImageView;
+
+    /**
+     * The daily forecast vertical box
+     */
+    @FXML
+    private VBox dailyForecastVBox;
+
+    /**
+     * The progress indicator
+     */
+    @FXML
+    private ProgressIndicator progressIndicator;
+
+    /**
+     * The progress indicator label
+     */
+    @FXML
+    private Label progressLabel;
+
+    /**
+     * The scroll pane
+     */
+    @FXML
+    private ScrollPane scrollPane;
+
+    /**
+     * The fahrenheit check menu item
+     */
+    @FXML
+    private CheckMenuItem fahrenheitCheckMenuItem;
+
+    /**
+     * The celsius check menu item
+     */
+    @FXML
+    private CheckMenuItem celsiusCheckMenuItem;
+
+    /**
+     * The kelvin check menu item
+     */
+    @FXML
+    private CheckMenuItem kelvinCheckMenuItem;
+
+    /**
+     * The settings menu
+     */
+    @FXML
+    private Menu settingMenu;
+
+    /**
+     * The current temperature suffix
+     */
+<span class="fc" id="L118">    private String temperatureSuffix = GuiConstants.FAHRENHEIT_SUFFIX;</span>
+
+    /**
+     * Initializes after all FXML fields are loaded. Sets the measurement settings
+     * if it has been changed. Loads the daily forecast.
+     */
+    @FXML
+    void initialize() {
+<span class="fc" id="L126">        this.dayForecastPanes = new ArrayList&lt;DayForecastPane&gt;();</span>
+<span class="fc" id="L127">        this.setMeasurementSettings();</span>
+<span class="fc" id="L128">        this.viewModel = new DailyForecastPageViewModel(null, null);</span>
+<span class="fc" id="L129">        Platform.runLater(() -&gt; new PageResizeHelper().setScalingRules(this.dailyForecastPagePane));</span>
+<span class="fc" id="L130">        this.loadDayForecastComponents();</span>
+<span class="fc" id="L131">    }</span>
+
+    /**
+     * Handles the celsius check menu item selected event. Changes the current
+     * temperature suffix. Selects the celsius check menu item and deselects all
+     * others. Clears the currently saved current weather info. Pulls fresh daily
+     * forecast data with the new settings.
+     * 
+     * @param event - the select event
+     */
+    @FXML
+    void onCelsiusSelected(ActionEvent event) {
+<span class="fc" id="L143">        this.temperatureSuffix = GuiConstants.CELSIUS_SUFFIX;</span>
+<span class="fc" id="L144">        this.setAllCheckMenuItemsFalse();</span>
+<span class="fc" id="L145">        CurrentWeatherInformation.setWeatherData(null);</span>
+<span class="fc" id="L146">        this.celsiusCheckMenuItem.setSelected(true);</span>
+<span class="fc" id="L147">        CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Metric);</span>
+<span class="fc" id="L148">        this.reloadForecastWithNewUnits();</span>
+<span class="fc" id="L149">    }</span>
+
+    /**
+     * Handles the fahrenheit check menu item selected event. Changes the current
+     * temperature suffix. Selects the fahrenheit check menu item and deselects all
+     * others. Clears the currently saved current weather info. Pulls fresh daily
+     * forecast data with the new settings.
+     * 
+     * @param event - the select event
+     */
+    @FXML
+    void onFahrenheitSelected(ActionEvent event) {
+<span class="fc" id="L161">        this.temperatureSuffix = GuiConstants.FAHRENHEIT_SUFFIX;</span>
+<span class="fc" id="L162">        this.setAllCheckMenuItemsFalse();</span>
+<span class="fc" id="L163">        CurrentWeatherInformation.setWeatherData(null);</span>
+<span class="fc" id="L164">        this.fahrenheitCheckMenuItem.setSelected(true);</span>
+<span class="fc" id="L165">        CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Imperial);</span>
+<span class="fc" id="L166">        this.reloadForecastWithNewUnits();</span>
+<span class="fc" id="L167">    }</span>
+
+    /**
+     * Handles the kelvin check menu item selected event. Changes the current
+     * temperature suffix. Selects the kelvin check menu item and deselects all
+     * others. Clears the currently saved current weather info. Pulls fresh daily
+     * forecast data with the new settings.
+     * 
+     * @param event - the select event
+     */
+    @FXML
+    void onKelvinSelected(ActionEvent event) {
+<span class="fc" id="L179">        this.temperatureSuffix = GuiConstants.KELVIN_SUFFIX;</span>
+<span class="fc" id="L180">        this.setAllCheckMenuItemsFalse();</span>
+<span class="fc" id="L181">        CurrentWeatherInformation.setWeatherData(null);</span>
+<span class="fc" id="L182">        this.kelvinCheckMenuItem.setSelected(true);</span>
+<span class="fc" id="L183">        CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Kelvin);</span>
+<span class="fc" id="L184">        this.reloadForecastWithNewUnits();</span>
+<span class="fc" id="L185">    }</span>
+
+    /**
+     * Hides the current daily forecast, shows the loading indication, and fetches
+     * fresh forecast information.
+     */
+    private void reloadForecastWithNewUnits() {
+<span class="fc" id="L192">        this.hideDailyForecastInformation();</span>
+<span class="fc" id="L193">        this.showLoadingIndication();</span>
+<span class="fc" id="L194">        this.loadDayForecastComponents();</span>
+<span class="fc" id="L195">    }</span>
+
+    /**
+     * Sets all of the check menu items to be false.
+     */
+    private void setAllCheckMenuItemsFalse() {
+<span class="fc" id="L201">        this.fahrenheitCheckMenuItem.setSelected(false);</span>
+<span class="fc" id="L202">        this.celsiusCheckMenuItem.setSelected(false);</span>
+<span class="fc" id="L203">        this.kelvinCheckMenuItem.setSelected(false);</span>
+<span class="fc" id="L204">    }</span>
+
+    /**
+     * Sets the check menu item to the saved measurement units setting
+     */
+    private void setMeasurementSettings() {
+<span class="fc" id="L210">        this.setAllCheckMenuItemsFalse();</span>
+<span class="fc bfc" id="L211" title="All 2 branches covered.">        if (CurrentWeatherInformation.getMeasurementUnits() == MeasurementUnits.Imperial) {</span>
+<span class="fc" id="L212">            this.fahrenheitCheckMenuItem.setSelected(true);</span>
+<span class="fc" id="L213">            this.temperatureSuffix = GuiConstants.FAHRENHEIT_SUFFIX;</span>
+<span class="fc bfc" id="L214" title="All 2 branches covered.">        } else if (CurrentWeatherInformation.getMeasurementUnits() == MeasurementUnits.Metric) {</span>
+<span class="fc" id="L215">            this.temperatureSuffix = GuiConstants.CELSIUS_SUFFIX;</span>
+<span class="fc" id="L216">            this.celsiusCheckMenuItem.setSelected(true);</span>
+        } else {
+<span class="fc" id="L218">            this.temperatureSuffix = GuiConstants.KELVIN_SUFFIX;</span>
+<span class="fc" id="L219">            this.kelvinCheckMenuItem.setSelected(true);</span>
+        }
+<span class="fc" id="L221">    }</span>
+
+    /**
+     * Loads the DayForecastPane components based on the number of days inputed.
+     * 
+     * @param days - the number of days for the forecast
+     */
+    private void loadDayForecastComponents() {
+<span class="fc" id="L229">        this.viewModel.getWeatherDataByWeatherLocation(CurrentWeatherInformation.getWeatherLocation(), DAYS);</span>
+<span class="fc" id="L230">        this.dailyForecastVBox.getChildren().clear();</span>
+
+<span class="fc bfc" id="L232" title="All 2 branches covered.">        if (CurrentWeatherInformation.getDayForecastPanes() != null) {</span>
+<span class="fc" id="L233">            this.updateLoadedDayForecastPanes();</span>
+<span class="fc" id="L234">            return;</span>
+        }
+
+<span class="fc" id="L237">        this.dayForecastPanes.clear();</span>
+<span class="fc" id="L238">        this.createDayForecastPanes();</span>
+<span class="fc" id="L239">    }</span>
+
+    /**
+     * Updates the previously loaded day forecast panes instead of creating new ones to improve load times
+     */
+    private void updateLoadedDayForecastPanes() {
+<span class="fc" id="L245">        Task&lt;ArrayList&lt;DayForecastPane&gt;&gt; task = new Task&lt;ArrayList&lt;DayForecastPane&gt;&gt;() {</span>
+
+            @Override
+            public ArrayList&lt;DayForecastPane&gt; call() throws Exception {
+<span class="fc" id="L249">                ArrayList&lt;DayForecastPane&gt; previousPanes = CurrentWeatherInformation.getDayForecastPanes();</span>
+<span class="fc bfc" id="L250" title="All 2 branches covered.">                for (int index = 0; index &lt; DAYS; index++) {</span>
+<span class="fc" id="L251">                    String dayOfWeek = DailyForecastPage.this.getDayOfWeek(index);</span>
+<span class="fc" id="L252">                    String dayIconUrl = DailyForecastPage.this.getDayIconUrl(index);</span>
+<span class="fc" id="L253">                    String date = DailyForecastPage.this.getDayDate(index);</span>
+<span class="fc" id="L254">                    String maxTemp = DailyForecastPage.this.getDayMaxTemperature(index);</span>
+<span class="fc" id="L255">                    String minTemp = DailyForecastPage.this.getDayMinTemperature(index);</span>
+
+<span class="fc" id="L257">                    previousPanes.get(index).setDayOfTheWeekLabel(dayOfWeek);</span>
+<span class="fc" id="L258">                    previousPanes.get(index).setWeatherIconImageView(dayIconUrl);</span>
+<span class="fc" id="L259">                    previousPanes.get(index).setDateLabel(date);</span>
+<span class="fc" id="L260">                    previousPanes.get(index).setMaxTemperatureLabel(maxTemp);</span>
+<span class="fc" id="L261">                    previousPanes.get(index).setMinTemperatureLabel(minTemp);</span>
+                }
+<span class="fc" id="L263">                return previousPanes;</span>
+            }
+        };
+
+<span class="fc" id="L267">        task.setOnSucceeded(e -&gt; this.handleTaskSucceeded(e));</span>
+<span class="fc" id="L268">        new Thread(task).start();</span>
+<span class="fc" id="L269">    }</span>
+
+    /**
+     * Creates new day forecast panes
+     */
+    private void createDayForecastPanes() {
+<span class="fc" id="L275">        Task&lt;ArrayList&lt;DayForecastPane&gt;&gt; task = new Task&lt;ArrayList&lt;DayForecastPane&gt;&gt;() {</span>
+
+            @Override
+            public ArrayList&lt;DayForecastPane&gt; call() throws Exception {
+<span class="fc" id="L279">                ArrayList&lt;DayForecastPane&gt; panes = new ArrayList&lt;DayForecastPane&gt;();</span>
+<span class="fc" id="L280">                FXMLLoader loader = new FXMLLoader(getClass().getResource(App.DAY_FORECAST_PANE_VIEW));</span>
+<span class="fc bfc" id="L281" title="All 2 branches covered.">                for (int index = 0; index &lt; DAYS; index++) {</span>
+<span class="fc" id="L282">                    String dayOfWeek = DailyForecastPage.this.getDayOfWeek(index);</span>
+<span class="fc" id="L283">                    String dayIconUrl = DailyForecastPage.this.getDayIconUrl(index);</span>
+<span class="fc" id="L284">                    String date = DailyForecastPage.this.getDayDate(index);</span>
+<span class="fc" id="L285">                    String maxTemp = DailyForecastPage.this.getDayMaxTemperature(index);</span>
+<span class="fc" id="L286">                    String minTemp = DailyForecastPage.this.getDayMinTemperature(index);</span>
+<span class="fc" id="L287">                    DayForecastPane pane = new DayForecastPane(dayOfWeek, date, maxTemp, minTemp, dayIconUrl, loader);</span>
+<span class="fc" id="L288">                    panes.add(pane);</span>
+                }
+<span class="fc" id="L290">                return panes;</span>
+            }
+        };
+
+<span class="fc" id="L294">        task.setOnSucceeded(e -&gt; this.handleTaskSucceeded(e));</span>
+<span class="fc" id="L295">        new Thread(task).start();</span>
+<span class="fc" id="L296">    }</span>
+
+    /**
+     * Gets the day of the week name for the specified day index
+     * 
+     * @param dayIndex - the day index
+     * @return the day of the week
+     */
+    private String getDayOfWeek(int dayIndex) {
+<span class="fc" id="L305">        Long timezone = this.viewModel.getTimezone();</span>
+<span class="fc" id="L306">        Long utcDateTime = this.viewModel.getDayUtcDateTime(dayIndex);</span>
+<span class="fc" id="L307">        return DateTimeConverter.convertUtcToDayOfWeek(utcDateTime, timezone);</span>
+    }
+
+    /**
+     * Gets the day icon url for the specified day index
+     * 
+     * @param dayIndex - the day index
+     * @return the icon url
+     */
+    private String getDayIconUrl(int dayIndex) {
+<span class="fc" id="L317">        return this.viewModel.getDayWeatherIcon(dayIndex);</span>
+    }
+
+    /**
+     * Gets the day date for the specified day index
+     * 
+     * @param dayIndex - the day index
+     * @return the date
+     */
+    private String getDayDate(int dayIndex) {
+<span class="fc" id="L327">        Long timezone = this.viewModel.getTimezone();</span>
+<span class="fc" id="L328">        Long utcDateTime = this.viewModel.getDayUtcDateTime(dayIndex);</span>
+<span class="fc" id="L329">        return DateTimeConverter.convertUtcToShortDate(utcDateTime, timezone);</span>
+    }
+
+    /**
+     * Gets the max temperature for the specified day index
+     * 
+     * @param dayIndex - the day index
+     * @return the max temp
+     */
+    private String getDayMaxTemperature(int dayIndex) {
+<span class="fc" id="L339">        String maxTemperature = this.viewModel.getDayMaxTemperature(dayIndex);</span>
+<span class="fc" id="L340">        return maxTemperature + this.temperatureSuffix;</span>
+    }
+
+    /**
+     * Gets the min temperature for the specified day index
+     * 
+     * @param dayIndex - the day index
+     * @return the min temp
+     */
+    private String getDayMinTemperature(int dayIndex) {
+<span class="fc" id="L350">        String minTemperature = this.viewModel.getDayMinTemperature(dayIndex);</span>
+<span class="fc" id="L351">        return minTemperature + this.temperatureSuffix;</span>
+    }
+
+    /**
+     * Event handler for the back arrow image view. Handles the on click mouse
+     * event. Switches to the landing page scene
+     * 
+     * @param event - the clicked mouse event
+     */
+    @FXML
+    private void onBackArrowClicked(MouseEvent event) {
+        try {
+<span class="fc" id="L363">            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();</span>
+<span class="fc" id="L364">            WindowGenerator.changeScene(currentStage, App.LANDING_PAGE_VIEW, App.LANDING_PAGE_TITLE);</span>
+<span class="nc" id="L365">        } catch (IOException exception) {</span>
+<span class="nc" id="L366">            System.err.println(&quot;IO Exception: Error switching scenes&quot;);</span>
+<span class="fc" id="L367">        }</span>
+<span class="fc" id="L368">    }</span>
+
+    /**
+     * Hides the loading progress indicator and progress label
+     */
+    private void hideLoadingIndication() {
+<span class="fc" id="L374">        this.progressIndicator.setVisible(false);</span>
+<span class="fc" id="L375">        this.progressLabel.setVisible(false);</span>
+<span class="fc" id="L376">        this.settingMenu.setDisable(false);</span>
+<span class="fc" id="L377">    }</span>
+
+    /**
+     * Shows the loadings progress indicator and progress label
+     */
+    private void showLoadingIndication() {
+<span class="fc" id="L383">        this.progressIndicator.setVisible(true);</span>
+<span class="fc" id="L384">        this.progressLabel.setVisible(true);</span>
+<span class="fc" id="L385">        this.settingMenu.setDisable(true);</span>
+<span class="fc" id="L386">    }</span>
+
+    /**
+     * Shows the scroll pane that contains the daily forecast info
+     */
+    private void showDailyForecastInformation() {
+<span class="fc" id="L392">        this.scrollPane.setVisible(true);</span>
+<span class="fc" id="L393">    }</span>
+
+    /**
+     * Hides the scroll pane that contains the daily forecast info
+     */
+    private void hideDailyForecastInformation() {
+<span class="fc" id="L399">        this.scrollPane.setVisible(false);</span>
+<span class="fc" id="L400">    }</span>
+
+    /**
+     * Handles the succession of loading the daily forecast information
+     * 
+     * @param event - the worker state event
+     */
+    @SuppressWarnings(&quot;unchecked&quot;)
+    private void handleTaskSucceeded(WorkerStateEvent event) {
+<span class="pc bpc" id="L409" title="2 of 4 branches missed.">        if (event.getSource().getState() == State.SUCCEEDED &amp;&amp; event.getSource().getValue() instanceof ArrayList) {</span>
+<span class="fc" id="L410">            this.dayForecastPanes = (ArrayList&lt;DayForecastPane&gt;) event.getSource().getValue();</span>
+<span class="fc" id="L411">            this.dailyForecastVBox.getChildren().addAll(this.dayForecastPanes);</span>
+<span class="fc" id="L412">            this.hideLoadingIndication();</span>
+<span class="fc" id="L413">            this.showDailyForecastInformation();</span>
+<span class="fc" id="L414">            CurrentWeatherInformation.setDayForecastPanes(this.dayForecastPanes);</span>
+        }
+<span class="fc" id="L416">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

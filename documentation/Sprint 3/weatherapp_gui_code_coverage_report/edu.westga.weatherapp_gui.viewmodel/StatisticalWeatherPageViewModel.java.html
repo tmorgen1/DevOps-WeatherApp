@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StatisticalWeatherPageViewModel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">weatherapp_gui</a> &gt; <a href="index.source.html" class="el_package">edu.westga.weatherapp_gui.viewmodel</a> &gt; <span class="el_source">StatisticalWeatherPageViewModel.java</span></div><h1>StatisticalWeatherPageViewModel.java</h1><pre class="source lang-java linenums">package edu.westga.weatherapp_gui.viewmodel;
+
+import java.rmi.Naming;
+
+import org.json.JSONObject;
+
+import edu.westga.weatherapp_shared.interfaces.StatisticalWeatherDataRetriever;
+import edu.westga.weatherapp_shared.model.WeatherLocation;
+
+/**
+ * This class is the ViewModel for the Statistical Weather Page.
+ * 
+ * @author Michael Pavich
+ */
+public class StatisticalWeatherPageViewModel {
+
+    /**
+     * The null weather data error message
+     */
+    private static final String NULL_WEATHER_DATA_ERROR_MESSAGE = &quot;Weather data cannot be null&quot;;
+
+    /**
+     * The statistical weather data retriever
+     */
+    private StatisticalWeatherDataRetriever statisticalWeatherDataRetriever;
+
+    /**
+     * The current statistical weather data
+     */
+    private JSONObject statisticalWeatherData;
+    
+    /**
+     * Constructor for StatisticalWeatherPageViewModel that connects to the statistical weather data service
+     * 
+     * @param statisticalWeatherDataRetriever - the statistical weather data retriever
+     */
+<span class="fc" id="L37">    public StatisticalWeatherPageViewModel(StatisticalWeatherDataRetriever statisticalWeatherDataRetriever) {</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">        if (statisticalWeatherDataRetriever != null) {</span>
+<span class="fc" id="L39">            this.statisticalWeatherDataRetriever = statisticalWeatherDataRetriever;</span>
+        } else {
+            try {
+<span class="fc" id="L42">                this.statisticalWeatherDataRetriever = (StatisticalWeatherDataRetriever) Naming.lookup(&quot;rmi://localhost:5000/statistical-weather&quot;);</span>
+<span class="nc" id="L43">            } catch (Exception exception) {</span>
+<span class="nc" id="L44">                System.err.println(&quot;Error looking up java rmi binding&quot;);</span>
+<span class="fc" id="L45">            }</span>
+        }
+<span class="fc" id="L47">    }</span>
+
+    /**
+     * Gets the statistical weather data for the given location and month
+     * 
+     * @param weatherLocation - the location to get the weather data for
+     * @param month - the month to get the data for
+     * @return the statistical weather data
+     */
+    public JSONObject getStatisticalWeatherDataByWeatherLocation(WeatherLocation weatherLocation, int month) {
+<span class="fc bfc" id="L57" title="All 2 branches covered.">        if (weatherLocation == null) {</span>
+<span class="fc" id="L58">            throw new IllegalArgumentException(&quot;City cannot be null&quot;);</span>
+        }
+<span class="fc" id="L60">        double latitude = weatherLocation.getLatitude();</span>
+<span class="fc" id="L61">        double longitude = weatherLocation.getLongitude();</span>
+
+        try {
+<span class="fc" id="L64">            this.statisticalWeatherData = new JSONObject(this.statisticalWeatherDataRetriever.getDataByCoordinates(latitude, longitude, month));</span>
+<span class="fc" id="L65">            return this.statisticalWeatherData;</span>
+<span class="nc" id="L66">        } catch (Exception exception) {</span>
+<span class="nc" id="L67">            System.err.println(exception.getMessage());</span>
+<span class="nc" id="L68">            return null;</span>
+        }
+    }
+
+    /**
+     * Gets the record min temperature for the given month from the statistical weather data
+     * 
+     * @return the record min temperature
+     */
+    public double getRecordMinTemperature() {
+<span class="fc bfc" id="L78" title="All 2 branches covered.">        if (this.statisticalWeatherData == null) {</span>
+<span class="fc" id="L79">            throw new IllegalArgumentException(NULL_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L82">        return this.statisticalWeatherData.getJSONObject(&quot;result&quot;).getJSONObject(&quot;temp&quot;).getDouble(&quot;record_min&quot;);</span>
+    }
+
+    /**
+     * Gets the record max temperature for the given month from the statistical weather data
+     * 
+     * @return the record max temperature
+     */
+    public double getRecordMaxTemperature() {
+<span class="fc bfc" id="L91" title="All 2 branches covered.">        if (this.statisticalWeatherData == null) {</span>
+<span class="fc" id="L92">            throw new IllegalArgumentException(NULL_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L95">        return this.statisticalWeatherData.getJSONObject(&quot;result&quot;).getJSONObject(&quot;temp&quot;).getDouble(&quot;record_max&quot;);</span>
+    }
+
+    /**
+     * Gets the average min temperature for the given month from the statistical weather data
+     * 
+     * @return the average min temperature
+     */
+    public double getAverageMinTemperature() {
+<span class="fc bfc" id="L104" title="All 2 branches covered.">        if (this.statisticalWeatherData == null) {</span>
+<span class="fc" id="L105">            throw new IllegalArgumentException(NULL_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L108">        return this.statisticalWeatherData.getJSONObject(&quot;result&quot;).getJSONObject(&quot;temp&quot;).getDouble(&quot;average_min&quot;);</span>
+    }
+
+    /**
+     * Gets the average max temperature for the given month from the statistical weather data
+     * 
+     * @return the average max temperature
+     */
+    public double getAverageMaxTemperature() {
+<span class="fc bfc" id="L117" title="All 2 branches covered.">        if (this.statisticalWeatherData == null) {</span>
+<span class="fc" id="L118">            throw new IllegalArgumentException(NULL_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L121">        return this.statisticalWeatherData.getJSONObject(&quot;result&quot;).getJSONObject(&quot;temp&quot;).getDouble(&quot;average_max&quot;);</span>
+    }
+
+    /**
+     * Gets the average temperature for the given month from the statistical weather data
+     * 
+     * @return the average temperature
+     */
+    public double getAverageTemperature() {
+<span class="fc bfc" id="L130" title="All 2 branches covered.">        if (this.statisticalWeatherData == null) {</span>
+<span class="fc" id="L131">            throw new IllegalArgumentException(NULL_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L134">        return this.statisticalWeatherData.getJSONObject(&quot;result&quot;).getJSONObject(&quot;temp&quot;).getDouble(&quot;mean&quot;);</span>
+    }
+
+    /**
+     * Gets the record min pressure for the given month from the statistical weather data
+     * 
+     * @return the record min pressure
+     */
+    public double getRecordMinPressure() {
+<span class="fc bfc" id="L143" title="All 2 branches covered.">        if (this.statisticalWeatherData == null) {</span>
+<span class="fc" id="L144">            throw new IllegalArgumentException(NULL_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L147">        return this.statisticalWeatherData.getJSONObject(&quot;result&quot;).getJSONObject(&quot;pressure&quot;).getDouble(&quot;min&quot;);</span>
+    }
+
+    /**
+     * Gets the record max pressure for the given month from the statistical weather data
+     * 
+     * @return the record max pressure
+     */
+    public double getRecordMaxPressure() {
+<span class="fc bfc" id="L156" title="All 2 branches covered.">        if (this.statisticalWeatherData == null) {</span>
+<span class="fc" id="L157">            throw new IllegalArgumentException(NULL_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L160">        return this.statisticalWeatherData.getJSONObject(&quot;result&quot;).getJSONObject(&quot;pressure&quot;).getDouble(&quot;max&quot;);</span>
+    }
+
+    /**
+     * Gets the median pressure for the given month from the statistical weather data
+     * 
+     * @return the median pressure
+     */
+    public double getMedianPressure() {
+<span class="fc bfc" id="L169" title="All 2 branches covered.">        if (this.statisticalWeatherData == null) {</span>
+<span class="fc" id="L170">            throw new IllegalArgumentException(NULL_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L173">        return this.statisticalWeatherData.getJSONObject(&quot;result&quot;).getJSONObject(&quot;pressure&quot;).getDouble(&quot;median&quot;);</span>
+    }
+
+    /**
+     * Gets the average pressure for the given month from the statistical weather data
+     * 
+     * @return the average pressure
+     */
+    public double getAveragePressure() {
+<span class="fc bfc" id="L182" title="All 2 branches covered.">        if (this.statisticalWeatherData == null) {</span>
+<span class="fc" id="L183">            throw new IllegalArgumentException(NULL_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L186">        return this.statisticalWeatherData.getJSONObject(&quot;result&quot;).getJSONObject(&quot;pressure&quot;).getDouble(&quot;mean&quot;);</span>
+    }
+
+    /**
+     * Gets the record max humidity for the given month from the statistical weather data
+     * 
+     * @return the record max humidity
+     */
+    public double getRecordMaxHumidity() {
+<span class="fc bfc" id="L195" title="All 2 branches covered.">        if (this.statisticalWeatherData == null) {</span>
+<span class="fc" id="L196">            throw new IllegalArgumentException(NULL_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L199">        return this.statisticalWeatherData.getJSONObject(&quot;result&quot;).getJSONObject(&quot;humidity&quot;).getDouble(&quot;max&quot;);</span>
+    }
+
+    /**
+     * Gets the record min humidity for the given month from the statistical weather data
+     * 
+     * @return the record min humidity
+     */
+    public double getRecordMinHumidity() {
+<span class="fc bfc" id="L208" title="All 2 branches covered.">        if (this.statisticalWeatherData == null) {</span>
+<span class="fc" id="L209">            throw new IllegalArgumentException(NULL_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L212">        return this.statisticalWeatherData.getJSONObject(&quot;result&quot;).getJSONObject(&quot;humidity&quot;).getDouble(&quot;min&quot;);</span>
+    }
+
+    /**
+     * Gets the median humidity for the given month from the statistical weather data
+     * 
+     * @return the median humidity
+     */
+    public double getMedianHumidity() {
+<span class="fc bfc" id="L221" title="All 2 branches covered.">        if (this.statisticalWeatherData == null) {</span>
+<span class="fc" id="L222">            throw new IllegalArgumentException(NULL_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L225">        return this.statisticalWeatherData.getJSONObject(&quot;result&quot;).getJSONObject(&quot;humidity&quot;).getDouble(&quot;median&quot;);</span>
+    }
+
+    /**
+     * Gets the average humidity for the given month from the statistical weather data
+     * 
+     * @return the average humidity
+     */
+    public double getAverageHumidity() {
+<span class="fc bfc" id="L234" title="All 2 branches covered.">        if (this.statisticalWeatherData == null) {</span>
+<span class="fc" id="L235">            throw new IllegalArgumentException(NULL_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L238">        return this.statisticalWeatherData.getJSONObject(&quot;result&quot;).getJSONObject(&quot;humidity&quot;).getDouble(&quot;mean&quot;);</span>
+    }
+
+    /**
+     * Gets the record max wind speed for the given month from the statistical weather data
+     * 
+     * @return the record max wind speed
+     */
+    public double getRecordMaxWind() {
+<span class="fc bfc" id="L247" title="All 2 branches covered.">        if (this.statisticalWeatherData == null) {</span>
+<span class="fc" id="L248">            throw new IllegalArgumentException(NULL_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L251">        return this.statisticalWeatherData.getJSONObject(&quot;result&quot;).getJSONObject(&quot;wind&quot;).getDouble(&quot;max&quot;);</span>
+    }
+
+    /**
+     * Gets the record min wind speed for the given month from the statistical weather data
+     * 
+     * @return the record min wind speed
+     */
+    public double getRecordMinWind() {
+<span class="fc bfc" id="L260" title="All 2 branches covered.">        if (this.statisticalWeatherData == null) {</span>
+<span class="fc" id="L261">            throw new IllegalArgumentException(NULL_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L264">        return this.statisticalWeatherData.getJSONObject(&quot;result&quot;).getJSONObject(&quot;wind&quot;).getDouble(&quot;min&quot;);</span>
+    }
+
+    /**
+     * Gets the median wind speed for the given month from the statistical weather data
+     * 
+     * @return the median wind speed
+     */
+    public double getMedianWind() {
+<span class="fc bfc" id="L273" title="All 2 branches covered.">        if (this.statisticalWeatherData == null) {</span>
+<span class="fc" id="L274">            throw new IllegalArgumentException(NULL_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L277">        return this.statisticalWeatherData.getJSONObject(&quot;result&quot;).getJSONObject(&quot;wind&quot;).getDouble(&quot;median&quot;);</span>
+    }
+
+    /**
+     * Gets the average wind speed for the given month from the statistical weather data
+     * 
+     * @return the average wind speed
+     */
+    public double getAverageWind() {
+<span class="fc bfc" id="L286" title="All 2 branches covered.">        if (this.statisticalWeatherData == null) {</span>
+<span class="fc" id="L287">            throw new IllegalArgumentException(NULL_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L290">        return this.statisticalWeatherData.getJSONObject(&quot;result&quot;).getJSONObject(&quot;wind&quot;).getDouble(&quot;mean&quot;);</span>
+    }
+
+    /**
+     * Gets the record max precipitation for the given month from the statistical weather data
+     * 
+     * @return the record max precipitation
+     */
+    public double getRecordMaxPrecipitation() {
+<span class="fc bfc" id="L299" title="All 2 branches covered.">        if (this.statisticalWeatherData == null) {</span>
+<span class="fc" id="L300">            throw new IllegalArgumentException(NULL_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L303">        return this.statisticalWeatherData.getJSONObject(&quot;result&quot;).getJSONObject(&quot;precipitation&quot;).getDouble(&quot;max&quot;);</span>
+    }
+
+    /**
+     * Gets the record min precipitation for the given month from the statistical weather data
+     * 
+     * @return the record min precipitation
+     */
+    public double getRecordMinPrecipitation() {
+<span class="fc bfc" id="L312" title="All 2 branches covered.">        if (this.statisticalWeatherData == null) {</span>
+<span class="fc" id="L313">            throw new IllegalArgumentException(NULL_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L316">        return this.statisticalWeatherData.getJSONObject(&quot;result&quot;).getJSONObject(&quot;precipitation&quot;).getDouble(&quot;min&quot;);</span>
+    }
+
+    /**
+     * Gets the median precipitation for the given month from the statistical weather data
+     * 
+     * @return the median precipitation
+     */
+    public double getMedianPrecipitation() {
+<span class="fc bfc" id="L325" title="All 2 branches covered.">        if (this.statisticalWeatherData == null) {</span>
+<span class="fc" id="L326">            throw new IllegalArgumentException(NULL_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L329">        return this.statisticalWeatherData.getJSONObject(&quot;result&quot;).getJSONObject(&quot;precipitation&quot;).getDouble(&quot;median&quot;);</span>
+    }
+
+    /**
+     * Gets the average precipitation for the given month from the statistical weather data
+     * 
+     * @return the average precipitation
+     */
+    public double getAveragePrecipitation() {
+<span class="fc bfc" id="L338" title="All 2 branches covered.">        if (this.statisticalWeatherData == null) {</span>
+<span class="fc" id="L339">            throw new IllegalArgumentException(NULL_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L342">        return this.statisticalWeatherData.getJSONObject(&quot;result&quot;).getJSONObject(&quot;precipitation&quot;).getDouble(&quot;mean&quot;);</span>
+    }
+
+    /**
+     * Gets the record max cloud coverage for the given month from the statistical weather data
+     * 
+     * @return the record max cloud coverage
+     */
+    public double getRecordMaxClouds() {
+<span class="fc bfc" id="L351" title="All 2 branches covered.">        if (this.statisticalWeatherData == null) {</span>
+<span class="fc" id="L352">            throw new IllegalArgumentException(NULL_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L355">        return this.statisticalWeatherData.getJSONObject(&quot;result&quot;).getJSONObject(&quot;clouds&quot;).getDouble(&quot;max&quot;);</span>
+    }
+
+    /**
+     * Gets the record min cloud coverage for the given month from the statistical weather data
+     * 
+     * @return the record min cloud coverage
+     */
+    public double getRecordMinClouds() {
+<span class="fc bfc" id="L364" title="All 2 branches covered.">        if (this.statisticalWeatherData == null) {</span>
+<span class="fc" id="L365">            throw new IllegalArgumentException(NULL_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L368">        return this.statisticalWeatherData.getJSONObject(&quot;result&quot;).getJSONObject(&quot;clouds&quot;).getDouble(&quot;min&quot;);</span>
+    }
+
+    /**
+     * Gets the median cloud coverage for the given month from the statistical weather data
+     * 
+     * @return the median cloud coverage
+     */
+    public double getMedianClouds() {
+<span class="fc bfc" id="L377" title="All 2 branches covered.">        if (this.statisticalWeatherData == null) {</span>
+<span class="fc" id="L378">            throw new IllegalArgumentException(NULL_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L381">        return this.statisticalWeatherData.getJSONObject(&quot;result&quot;).getJSONObject(&quot;clouds&quot;).getDouble(&quot;median&quot;);</span>
+    }
+
+    /**
+     * Gets the average cloud coverage for the given month from the statistical weather data
+     * 
+     * @return the average cloud coverage
+     */
+    public double getAverageClouds() {
+<span class="fc bfc" id="L390" title="All 2 branches covered.">        if (this.statisticalWeatherData == null) {</span>
+<span class="fc" id="L391">            throw new IllegalArgumentException(NULL_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L394">        return this.statisticalWeatherData.getJSONObject(&quot;result&quot;).getJSONObject(&quot;clouds&quot;).getDouble(&quot;mean&quot;);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

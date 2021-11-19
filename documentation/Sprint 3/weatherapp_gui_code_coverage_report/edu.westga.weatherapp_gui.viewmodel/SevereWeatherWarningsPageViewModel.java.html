@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SevereWeatherWarningsPageViewModel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">weatherapp_gui</a> &gt; <a href="index.source.html" class="el_package">edu.westga.weatherapp_gui.viewmodel</a> &gt; <span class="el_source">SevereWeatherWarningsPageViewModel.java</span></div><h1>SevereWeatherWarningsPageViewModel.java</h1><pre class="source lang-java linenums">package edu.westga.weatherapp_gui.viewmodel;
+
+import java.rmi.Naming;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import edu.westga.weatherapp_shared.enums.MeasurementUnits;
+import edu.westga.weatherapp_shared.interfaces.SevereWeatherWarningsRetriever;
+import edu.westga.weatherapp_shared.model.WeatherLocation;
+import edu.westga.weatherapp_gui.model.SevereWeatherWarning;
+import javafx.beans.property.StringProperty;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+
+/**
+ * The view model class for the severe weather warnings page.
+ * 
+ * @author Eboni Walker
+ * @version 1.0
+ */
+public class SevereWeatherWarningsPageViewModel {
+
+    /**
+     * the section of the json data that contains the Severe Weather Warnings
+     */
+    public static final String DATA_ALERTS_SECTION = &quot;alerts&quot;;
+
+    /**
+     * rmi exception thrown text
+     */
+    public static final String  RMI_EXCEPTION_THROWN = &quot;Error looking up java rmi binding&quot;;
+
+    /**
+     * location not found
+     */
+    public static final String LOCATION_NOT_FOUND_EXCEPTION_THROWN = &quot;No location found.&quot;;
+
+    /**
+     * the error text string property for use in bindings
+     */
+    private StringProperty errorTextStringProperty;
+
+    /**
+     * the no warnings for location visibility property for use in bindings
+     */
+    private BooleanProperty noWarningsForLocationVisibilityProperty;
+
+    /**
+     * the severe warnings combo box visibility property for use in bindings
+     */
+    private BooleanProperty severeWarningComboBoxVisibilityProperty;
+
+    /**
+     * the severe warnings combo box list property for use in bindings
+     */
+    private ListProperty&lt;SevereWeatherWarning&gt; severeWarningComboBoxListProperty;
+
+    /**
+     * the error Text visibility property for use in bindings
+     */
+    private BooleanProperty errorTextVisibilityProperty;
+
+    /**
+     * the severe weather warnings retrieverr
+     */
+    private SevereWeatherWarningsRetriever severeWeatherWarningsRetriever;
+
+    /**
+     * Creates an instance of the Severe Weather Warnings Page View Model
+     * 
+     * 
+     * @param dataRetriever the data retriever
+     */
+<span class="fc" id="L81">    public SevereWeatherWarningsPageViewModel(SevereWeatherWarningsRetriever dataRetriever) {</span>
+<span class="fc" id="L82">        this.severeWarningComboBoxListProperty = new SimpleListProperty&lt;SevereWeatherWarning&gt;(</span>
+<span class="fc" id="L83">                FXCollections.observableArrayList());</span>
+<span class="fc" id="L84">        this.errorTextStringProperty = new SimpleStringProperty();</span>
+<span class="fc" id="L85">        this.errorTextVisibilityProperty = new SimpleBooleanProperty();</span>
+<span class="fc" id="L86">        this.noWarningsForLocationVisibilityProperty = new SimpleBooleanProperty();</span>
+<span class="fc" id="L87">        this.severeWarningComboBoxVisibilityProperty = new SimpleBooleanProperty();</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        if (dataRetriever != null) {</span>
+<span class="fc" id="L89">            this.severeWeatherWarningsRetriever = dataRetriever;</span>
+        } else {
+<span class="fc" id="L91">            String lookUpUrl = &quot;rmi:/&quot; + &quot;/localhost:5000/severe-warnings&quot;;</span>
+<span class="fc" id="L92">            this.initializeSevereWeatherWarningsRetrieverUsingNaming(lookUpUrl);</span>
+        }
+<span class="fc" id="L94">    }</span>
+
+    /**
+     * Initailizes the severeWeatherWarningsRetriever class pointed to by the lookUpUrl
+     * 
+     * @param lookUpUrl the url for Naming to get the class to link to
+     */
+    private void initializeSevereWeatherWarningsRetrieverUsingNaming(String lookUpUrl) {
+        try {
+<span class="fc" id="L103">            this.severeWeatherWarningsRetriever = (SevereWeatherWarningsRetriever) Naming.lookup(lookUpUrl);</span>
+<span class="fc" id="L104">        } catch (Exception ex) {</span>
+<span class="fc" id="L105">            this.setErrorTextStringPropertyValue(SevereWeatherWarningsPageViewModel.RMI_EXCEPTION_THROWN);</span>
+<span class="fc" id="L106">            this.setErrorTextVisibilityProperty(true);</span>
+<span class="fc" id="L107">        }</span>
+<span class="fc" id="L108">    }</span>
+
+    /**
+     * Sets the string value of the severe weather warnings page's properties values
+     * 
+     * @precondition location != null &amp;&amp; units != null
+     * @param location the location for the warnings
+     * @param units    the unit of measument the warning should come in
+     */
+    public void setsevereWeatherWarningsPagePropertiesValues(WeatherLocation location, MeasurementUnits units) {
+        try {
+<span class="fc" id="L119">            String data = this.severeWeatherWarningsRetriever.getSevereWeatherWarningsForLocation(location.getLatitude(),</span>
+<span class="fc" id="L120">                    location.getLongitude(), units);</span>
+<span class="fc" id="L121">            this.setSevereWarningPageComboBoxListProperty(data);</span>
+<span class="fc" id="L122">            this.setNoWarningsForLocationVisibilityPropertyValue();</span>
+<span class="fc" id="L123">            this.setSevereWarningComboBoxVisibilityPropertyValue();</span>
+<span class="fc" id="L124">        } catch (RemoteException | NullPointerException ex) {</span>
+<span class="fc" id="L125">            this.setErrorTextStringPropertyValue(SevereWeatherWarningsPageViewModel.LOCATION_NOT_FOUND_EXCEPTION_THROWN);</span>
+<span class="fc" id="L126">            this.setErrorTextVisibilityProperty(true);</span>
+<span class="fc" id="L127">        }</span>
+<span class="fc" id="L128">    }</span>
+
+    /**
+     * Converts the severe weather warnings data from a location into a list of
+     * severe weather warnings and sets the value of
+     * severeWarningComboBoxListProperty to that list
+     * 
+     * @param data the raw data from the source
+     */
+    private void setSevereWarningPageComboBoxListProperty(String data) {
+<span class="fc bfc" id="L138" title="All 2 branches covered.">        if (!data.contains(SevereWeatherWarningsPageViewModel.DATA_ALERTS_SECTION)) {</span>
+<span class="fc" id="L139">            return;</span>
+        }
+<span class="fc" id="L141">        JSONObject weatherWarningsData = new JSONObject(data);</span>
+<span class="fc" id="L142">        JSONArray warningsData = this.extractWarningDataFromJsonObjectAsAJsonArray(weatherWarningsData);</span>
+<span class="fc" id="L143">        ArrayList&lt;SevereWeatherWarning&gt; severeWeatherWarnings = new ArrayList&lt;SevereWeatherWarning&gt;();</span>
+<span class="fc bfc" id="L144" title="All 2 branches covered.">        for (int ix = 0; ix &lt; warningsData.length(); ix++) {</span>
+<span class="fc" id="L145">            String warningName = warningsData.getJSONObject(ix).getString(&quot;event&quot;);</span>
+<span class="fc" id="L146">            String start = String.valueOf(warningsData.getJSONObject(ix).getLong(&quot;start&quot;));</span>
+<span class="fc" id="L147">            String end = String.valueOf(warningsData.getJSONObject(ix).getLong(&quot;end&quot;));</span>
+<span class="fc" id="L148">            String timezone = String.valueOf(weatherWarningsData.getLong(&quot;timezone_offset&quot;));</span>
+<span class="fc" id="L149">            String details = warningsData.getJSONObject(ix).getString(&quot;description&quot;);</span>
+<span class="fc" id="L150">            SevereWeatherWarning severeWarning = new SevereWeatherWarning(warningName, start, end, details, timezone);</span>
+<span class="fc" id="L151">            severeWeatherWarnings.add(severeWarning);</span>
+        }
+<span class="fc" id="L153">        this.severeWarningComboBoxListProperty.setAll(FXCollections.observableArrayList(severeWeatherWarnings));</span>
+<span class="fc" id="L154">    }</span>
+
+    /**
+     * 
+     * Extracts the severe weather warning's data from the raw data as a jsonarray
+     * 
+     * @param data the raw data from the source
+     * 
+     * @return the json array of that data or an empty json array if no data found
+     */
+
+    private JSONArray extractWarningDataFromJsonObjectAsAJsonArray(JSONObject data) {
+<span class="fc" id="L166">        JSONArray warningsData = data.optJSONArray(SevereWeatherWarningsPageViewModel.DATA_ALERTS_SECTION);</span>
+<span class="fc" id="L167">        return warningsData;</span>
+    }
+
+    /**
+     * Gets the severe warning combo box list property
+     * 
+     * @return the severeWarningComboBoxListProperty
+     */
+    public ListProperty&lt;SevereWeatherWarning&gt; getSevereWarningComboBoxListProperty() {
+<span class="fc" id="L176">        return this.severeWarningComboBoxListProperty;</span>
+    }
+    
+    /**
+     * Gets the error text string property
+     * 
+     * @return the errorTextStringProperty
+     */
+    public StringProperty getErrorTextStringProperty() {
+<span class="fc" id="L185">        return this.errorTextStringProperty;</span>
+    }
+
+    /**
+     * Gets the no warnings for location visibility property
+     * 
+     * @return the noWarningsForLocationVisibilityProperty
+     */
+    public BooleanProperty getNoWarningsForLocationVisibilityProperty() {
+<span class="fc" id="L194">        return this.noWarningsForLocationVisibilityProperty;</span>
+    }
+
+    /**
+     * Gets the severe warning combo box visiblity property
+     * 
+     * @return the severeWarningComboBoxVisibilityProperty
+     */
+    public BooleanProperty getSevereWarningComboBoxVisibilityProperty() {
+<span class="fc" id="L203">        return this.severeWarningComboBoxVisibilityProperty;</span>
+    }
+
+    /**
+     * Gets the error text visibility property
+     * 
+     * @return the errorTextVisibilityProperty
+     */
+    public BooleanProperty getErrorTextVisibilityProperty() {
+<span class="fc" id="L212">        return this.errorTextVisibilityProperty;</span>
+    }
+
+    /**
+     * Sets the error text visibility property
+     * 
+     * @param errorTextVisibilityPropertyValue the value to set it to
+     */
+    public void setErrorTextVisibilityProperty(boolean errorTextVisibilityPropertyValue) {
+<span class="fc" id="L221">        this.errorTextVisibilityProperty.setValue(errorTextVisibilityPropertyValue);</span>
+<span class="fc" id="L222">    }</span>
+
+    /**
+     * Sets the error text string property value
+     * 
+     * @param errorTextStringPropertyValue the value to set it to
+     */
+    public void setErrorTextStringPropertyValue(String errorTextStringPropertyValue) {
+<span class="fc" id="L230">        this.errorTextStringProperty.setValue(errorTextStringPropertyValue);</span>
+<span class="fc" id="L231">    }</span>
+
+    /**
+     * Sets the severe warning page combo box visibility property value
+     * 
+     * @param severeWarningComboBoxVisibilityPropertyValue the value to set it to
+     */
+    public void setSevereWarningComboBoxVisibilityPropertyValue(Boolean severeWarningComboBoxVisibilityPropertyValue) {
+<span class="fc" id="L239">        this.severeWarningComboBoxVisibilityProperty.setValue(severeWarningComboBoxVisibilityPropertyValue);</span>
+<span class="fc" id="L240">    }</span>
+
+    /**
+     * Sets the no warnings for location visibility property value
+     */
+    private void setNoWarningsForLocationVisibilityPropertyValue() {
+<span class="fc bfc" id="L246" title="All 2 branches covered.">        if (this.severeWarningComboBoxListProperty.isEmpty()) {</span>
+<span class="fc" id="L247">            this.noWarningsForLocationVisibilityProperty.setValue(true);</span>
+        } else {
+<span class="fc" id="L249">            this.noWarningsForLocationVisibilityProperty.setValue(false);</span>
+        }
+<span class="fc" id="L251">    }</span>
+
+    /**
+     * Sets the severe warning combo box visibility property value
+     */
+    private void setSevereWarningComboBoxVisibilityPropertyValue() {
+<span class="fc bfc" id="L257" title="All 2 branches covered.">        if (this.severeWarningComboBoxListProperty.isEmpty()) {</span>
+<span class="fc" id="L258">            this.setSevereWarningComboBoxVisibilityPropertyValue(false);</span>
+        } else {
+<span class="fc" id="L260">            this.setSevereWarningComboBoxVisibilityPropertyValue(true);</span>
+        }
+<span class="fc" id="L262">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

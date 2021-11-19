@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MonthSelectionPage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">weatherapp_gui</a> &gt; <a href="index.source.html" class="el_package">edu.westga.weatherapp_gui.view</a> &gt; <span class="el_source">MonthSelectionPage.java</span></div><h1>MonthSelectionPage.java</h1><pre class="source lang-java linenums">package edu.westga.weatherapp_gui.view;
+
+import java.io.IOException;
+
+import com.jfoenix.controls.JFXButton;
+
+import edu.westga.weatherapp_gui.App;
+import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
+import edu.westga.weatherapp_gui.view.utils.PageResizeHelper;
+import edu.westga.weatherapp_gui.view.utils.WindowGenerator;
+import edu.westga.weatherapp_shared.enums.MeasurementUnits;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.Menu;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
+import javafx.scene.Node;
+
+/**
+ * The month selection page that handles the interaction with the ui.
+ * 
+ * @author Michael Pavich
+ */
+<span class="fc" id="L28">public class MonthSelectionPage {</span>
+
+    @FXML
+    private Pane monthSelectionPane;
+
+    @FXML
+    private ImageView backArrowImageView;
+
+    @FXML
+    private Menu settingMenu;
+
+    @FXML
+    private CheckMenuItem fahrenheitCheckMenuItem;
+
+    @FXML
+    private CheckMenuItem celsiusCheckMenuItem;
+
+    @FXML
+    private CheckMenuItem kelvinCheckMenuItem;
+
+    @FXML
+    private JFXButton januaryButton;
+
+    @FXML
+    private JFXButton februaryButton;
+
+    @FXML
+    private JFXButton marchButton;
+
+    @FXML
+    private JFXButton aprilButton;
+
+    @FXML
+    private JFXButton mayButton;
+
+    @FXML
+    private JFXButton juneButton;
+
+    @FXML
+    private JFXButton julyButton;
+
+    @FXML
+    private JFXButton augustButton;
+
+    @FXML
+    private JFXButton septemberButton;
+
+    @FXML
+    private JFXButton octoberButton;
+
+    @FXML
+    private JFXButton novemberButton;
+
+    @FXML
+    private JFXButton decemberButton;
+
+    @FXML
+    void initialize() {
+<span class="fc" id="L86">        Platform.runLater(() -&gt; this.monthSelectionPane.requestFocus());</span>
+<span class="fc" id="L87">        Platform.runLater(() -&gt; new PageResizeHelper().setScalingRules(this.monthSelectionPane));</span>
+<span class="fc" id="L88">        this.setMeasurementSettings();</span>
+<span class="fc" id="L89">    }</span>
+
+    @FXML
+    void onJanuaryButtonClicked(ActionEvent event) {
+<span class="fc" id="L93">        this.navigateToStatisticalWeatherDataPage(1, event);</span>
+<span class="fc" id="L94">    }</span>
+    
+    @FXML
+    void onFebruaryButtonClicked(ActionEvent event) {
+<span class="fc" id="L98">        this.navigateToStatisticalWeatherDataPage(2, event);</span>
+<span class="fc" id="L99">    }</span>
+
+    @FXML
+    void onMarchButtonClicked(ActionEvent event) {
+<span class="fc" id="L103">        this.navigateToStatisticalWeatherDataPage(3, event);</span>
+<span class="fc" id="L104">    }</span>
+
+    @FXML
+    void onAprilButtonClicked(ActionEvent event) {
+<span class="fc" id="L108">        this.navigateToStatisticalWeatherDataPage(4, event);</span>
+<span class="fc" id="L109">    }</span>
+
+    @FXML
+    void onMayButtonClicked(ActionEvent event) {
+<span class="fc" id="L113">        this.navigateToStatisticalWeatherDataPage(5, event);</span>
+<span class="fc" id="L114">    }</span>
+
+    @FXML
+    void onJuneButtonClicked(ActionEvent event) {
+<span class="fc" id="L118">        this.navigateToStatisticalWeatherDataPage(6, event);</span>
+<span class="fc" id="L119">    }</span>
+
+    @FXML
+    void onJulyButtonClicked(ActionEvent event) {
+<span class="fc" id="L123">        this.navigateToStatisticalWeatherDataPage(7, event);</span>
+<span class="fc" id="L124">    }</span>
+
+    @FXML
+    void onAugustButtonClicked(ActionEvent event) {
+<span class="fc" id="L128">        this.navigateToStatisticalWeatherDataPage(8, event);</span>
+<span class="fc" id="L129">    }</span>
+
+    @FXML
+    void onSeptemberButtonClicked(ActionEvent event) {
+<span class="fc" id="L133">        this.navigateToStatisticalWeatherDataPage(9, event);</span>
+<span class="fc" id="L134">    }</span>
+
+    @FXML
+    void onOctoberButtonClicked(ActionEvent event) {
+<span class="fc" id="L138">        this.navigateToStatisticalWeatherDataPage(10, event);</span>
+<span class="fc" id="L139">    }</span>
+
+    @FXML
+    void onNovemberButtonClicked(ActionEvent event) {
+<span class="fc" id="L143">        this.navigateToStatisticalWeatherDataPage(11, event);</span>
+<span class="fc" id="L144">    }</span>
+
+    @FXML
+    void onDecemberButtonClicked(ActionEvent event) {
+<span class="fc" id="L148">        this.navigateToStatisticalWeatherDataPage(12, event);</span>
+<span class="fc" id="L149">    }</span>
+
+    @FXML
+    void onBackArrowClicked(MouseEvent event) {
+        try {
+<span class="fc" id="L154">            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();</span>
+<span class="fc" id="L155">            WindowGenerator.changeScene(currentStage, App.LANDING_PAGE_VIEW, App.LANDING_PAGE_TITLE);</span>
+<span class="nc" id="L156">        } catch (IOException exception) {</span>
+<span class="nc" id="L157">            System.err.println(&quot;IO Exception: Error switching scenes&quot;);</span>
+<span class="fc" id="L158">        }</span>
+<span class="fc" id="L159">    }</span>
+
+    @FXML
+    void onCelsiusSelected(ActionEvent event) {
+<span class="fc" id="L163">        this.setAllCheckMenuItemsFalse();</span>
+<span class="fc" id="L164">        this.celsiusCheckMenuItem.setSelected(true);</span>
+<span class="fc" id="L165">        CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Metric);</span>
+<span class="fc" id="L166">    }</span>
+
+    @FXML
+    void onFahrenheitSelected(ActionEvent event) {
+<span class="fc" id="L170">        this.setAllCheckMenuItemsFalse();</span>
+<span class="fc" id="L171">        this.fahrenheitCheckMenuItem.setSelected(true);</span>
+<span class="fc" id="L172">        CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Imperial);</span>
+<span class="fc" id="L173">    }</span>
+
+    @FXML
+    void onKelvinSelected(ActionEvent event) {
+<span class="fc" id="L177">        this.setAllCheckMenuItemsFalse();</span>
+<span class="fc" id="L178">        this.kelvinCheckMenuItem.setSelected(true);</span>
+<span class="fc" id="L179">        CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Kelvin);</span>
+<span class="fc" id="L180">    }</span>
+
+    private void navigateToStatisticalWeatherDataPage(int month, ActionEvent event) {
+<span class="fc" id="L183">        CurrentWeatherInformation.setStatisticalMonthSelected(month);</span>
+        try {
+<span class="fc" id="L185">            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();</span>
+<span class="fc" id="L186">            WindowGenerator.changeScene(currentStage, App.STATISTICAL_WEATHER_PAGE_VIEW, App.STATISTICAL_WEATHER_PAGE_TITLE);</span>
+<span class="nc" id="L187">        } catch (IOException exception) {</span>
+<span class="nc" id="L188">            System.err.println(&quot;IO Exception: Error switching scenes&quot;);</span>
+<span class="fc" id="L189">        }</span>
+<span class="fc" id="L190">    }</span>
+
+    /**
+     * Sets all of the check menu items to be false.
+     */
+    private void setAllCheckMenuItemsFalse() {
+<span class="fc" id="L196">        this.fahrenheitCheckMenuItem.setSelected(false);</span>
+<span class="fc" id="L197">        this.celsiusCheckMenuItem.setSelected(false);</span>
+<span class="fc" id="L198">        this.kelvinCheckMenuItem.setSelected(false);</span>
+<span class="fc" id="L199">    }</span>
+
+    /**
+     * Sets the check menu item to the saved measurement units setting
+     */
+    private void setMeasurementSettings() {
+<span class="fc" id="L205">        this.setAllCheckMenuItemsFalse();</span>
+<span class="fc bfc" id="L206" title="All 2 branches covered.">        if (CurrentWeatherInformation.getMeasurementUnits() == MeasurementUnits.Imperial) {</span>
+<span class="fc" id="L207">            this.fahrenheitCheckMenuItem.setSelected(true);</span>
+<span class="fc bfc" id="L208" title="All 2 branches covered.">        } else if (CurrentWeatherInformation.getMeasurementUnits() == MeasurementUnits.Metric) {</span>
+<span class="fc" id="L209">            this.celsiusCheckMenuItem.setSelected(true);</span>
+        } else {
+<span class="fc" id="L211">            this.kelvinCheckMenuItem.setSelected(true);</span>
+        }
+<span class="fc" id="L213">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

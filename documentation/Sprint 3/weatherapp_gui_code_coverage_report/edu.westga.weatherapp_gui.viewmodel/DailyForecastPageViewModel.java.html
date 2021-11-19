@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DailyForecastPageViewModel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">weatherapp_gui</a> &gt; <a href="index.source.html" class="el_package">edu.westga.weatherapp_gui.viewmodel</a> &gt; <span class="el_source">DailyForecastPageViewModel.java</span></div><h1>DailyForecastPageViewModel.java</h1><pre class="source lang-java linenums">package edu.westga.weatherapp_gui.viewmodel;
+
+import java.rmi.Naming;
+import java.rmi.RemoteException;
+
+import org.json.JSONObject;
+
+import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
+import edu.westga.weatherapp_shared.interfaces.DailyWeatherDataRetriever;
+import edu.westga.weatherapp_shared.interfaces.WeatherIconRetriever;
+import edu.westga.weatherapp_shared.model.WeatherLocation;
+
+/**
+ * Defines the daily forecast page view model class and contains all
+ * functionality for the daily forecast page view
+ * 
+ * @author Michael Pavich
+ */
+public class DailyForecastPageViewModel {
+
+    /**
+     * No daily weather data error message
+     */
+    private static final String NO_DAILY_WEATHER_DATA_ERROR_MESSAGE = &quot;No daily weather data&quot;;
+
+    /**
+     * The daily weather data retreiver
+     */
+    private DailyWeatherDataRetriever dailyWeatherDataRetriever;
+
+    /**
+     * The weather icon retriever
+     */
+    private WeatherIconRetriever weatherIconRetriever;
+
+    /**
+     * The retrieved daily weather data
+     */
+    private JSONObject dailyWeatherData;
+
+    /**
+     * Creates a new instance of the daily forecast page view model. Binds to java
+     * rmi if no data retrievers specified.
+     * 
+     * @param dataRetriever - the daily weather data retriever
+     * @param iconRetriever - the weather icon data retriever
+     */
+<span class="fc" id="L48">    public DailyForecastPageViewModel(DailyWeatherDataRetriever dataRetriever, WeatherIconRetriever iconRetriever) {</span>
+<span class="fc bfc" id="L49" title="All 4 branches covered.">        if (dataRetriever != null &amp;&amp; iconRetriever != null) {</span>
+<span class="fc" id="L50">            this.dailyWeatherDataRetriever = dataRetriever;</span>
+<span class="fc" id="L51">            this.weatherIconRetriever = iconRetriever;</span>
+        } else {
+            try {
+<span class="fc" id="L54">                this.dailyWeatherDataRetriever = (DailyWeatherDataRetriever) Naming</span>
+<span class="fc" id="L55">                        .lookup(&quot;rmi://localhost:5000/daily-weather&quot;);</span>
+<span class="fc" id="L56">                this.weatherIconRetriever = (WeatherIconRetriever) Naming.lookup(&quot;rmi://localhost:5000/weather-icons&quot;);</span>
+<span class="nc" id="L57">            } catch (Exception exception) {</span>
+<span class="nc" id="L58">                System.err.println(&quot;Error looking up java rmi binding&quot;);</span>
+<span class="fc" id="L59">            }</span>
+        }
+<span class="fc" id="L61">    }</span>
+
+    /**
+     * Gets the daily weather data for the given amount of days from the weather
+     * data retriever by city name
+     * 
+     * @param weatherLocation - the weather location
+     * @param days - the number of days to retrieve
+     * @return the daily weather json data
+     */
+    public JSONObject getWeatherDataByWeatherLocation(WeatherLocation weatherLocation, int days) {
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        if (weatherLocation == null) {</span>
+<span class="fc" id="L73">            throw new IllegalArgumentException(&quot;City cannot be null&quot;);</span>
+        }
+<span class="fc" id="L75">        String state = weatherLocation.getState();</span>
+<span class="fc" id="L76">        String city = weatherLocation.getCity();</span>
+<span class="fc" id="L77">        String country = weatherLocation.getCountry();</span>
+
+        try {
+<span class="fc" id="L80">            this.dailyWeatherDataRetriever.setUnitsOfMeasurement(CurrentWeatherInformation.getMeasurementUnits());</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">            if (state.equals(&quot;N/A&quot;)) {</span>
+<span class="fc" id="L82">                this.dailyWeatherData = new JSONObject(this.dailyWeatherDataRetriever.getDataByCityAndCountryCode(city, country, days));</span>
+            } else {
+<span class="fc" id="L84">                this.dailyWeatherData = new JSONObject(this.dailyWeatherDataRetriever.getDataByCityAndStateCodeAndCountryCode(city, state, country, days));</span>
+            }
+<span class="fc" id="L86">            return this.dailyWeatherData;</span>
+<span class="fc" id="L87">        } catch (Exception exception) {</span>
+<span class="fc" id="L88">            return null;</span>
+        }
+    }
+
+    /**
+     * Gets the weather icon for the specified day
+     * 
+     * @param day - the day index
+     * @return the weather icon
+     */
+    public String getDayWeatherIcon(int day) {
+<span class="fc bfc" id="L99" title="All 2 branches covered.">        if (this.dailyWeatherData == null) {</span>
+<span class="fc" id="L100">            throw new IllegalArgumentException(NO_DAILY_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+        try {
+<span class="fc" id="L104">            Object icon = this.dailyWeatherData.getJSONArray(&quot;list&quot;).getJSONObject(day).getJSONArray(&quot;weather&quot;)</span>
+<span class="fc" id="L105">                    .getJSONObject(0).get(&quot;icon&quot;);</span>
+<span class="fc" id="L106">            String iconString = String.valueOf(icon);</span>
+
+<span class="fc" id="L108">            return this.weatherIconRetriever.getWeatherIconUrlByIconId(iconString);</span>
+<span class="fc" id="L109">        } catch (RemoteException exception) {</span>
+<span class="fc" id="L110">            System.err.println(&quot;Remote Exception: Error retrieving weather icon url by icon id&quot;);</span>
+<span class="fc" id="L111">            return null;</span>
+        }
+    }
+
+    /**
+     * Gets the max temperature for the specified day
+     * 
+     * @param day - the day index
+     * @return the max temperature
+     */
+    public String getDayMaxTemperature(int day) {
+<span class="fc bfc" id="L122" title="All 2 branches covered.">        if (this.dailyWeatherData == null) {</span>
+<span class="fc" id="L123">            throw new IllegalArgumentException(NO_DAILY_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L126">        Long temperature = Math.round(</span>
+<span class="fc" id="L127">                this.dailyWeatherData.getJSONArray(&quot;list&quot;).getJSONObject(day).getJSONObject(&quot;temp&quot;).getDouble(&quot;max&quot;));</span>
+<span class="fc" id="L128">        return String.valueOf(temperature);</span>
+    }
+
+    /**
+     * Gets the min temperature for the specified day
+     * 
+     * @param day - the day index
+     * @return the min temperature
+     */
+    public String getDayMinTemperature(int day) {
+<span class="fc bfc" id="L138" title="All 2 branches covered.">        if (this.dailyWeatherData == null) {</span>
+<span class="fc" id="L139">            throw new IllegalArgumentException(NO_DAILY_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L142">        Long temperature = Math.round(</span>
+<span class="fc" id="L143">                this.dailyWeatherData.getJSONArray(&quot;list&quot;).getJSONObject(day).getJSONObject(&quot;temp&quot;).getDouble(&quot;min&quot;));</span>
+<span class="fc" id="L144">        return String.valueOf(temperature);</span>
+    }
+
+    /**
+     * Gets the day utc time for the specified day
+     * 
+     * @param day - the day index
+     * @return the day utc time
+     */
+    public Long getDayUtcDateTime(int day) {
+<span class="fc bfc" id="L154" title="All 2 branches covered.">        if (this.dailyWeatherData == null) {</span>
+<span class="fc" id="L155">            throw new IllegalArgumentException(NO_DAILY_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L158">        return Math.round(this.dailyWeatherData.getJSONArray(&quot;list&quot;).getJSONObject(day).getDouble(&quot;dt&quot;));</span>
+    }
+
+    /**
+     * Gets the timezone for the searched location
+     * 
+     * @return the timezone
+     */
+    public Long getTimezone() {
+<span class="fc bfc" id="L167" title="All 2 branches covered.">        if (this.dailyWeatherData == null) {</span>
+<span class="fc" id="L168">            throw new IllegalArgumentException(NO_DAILY_WEATHER_DATA_ERROR_MESSAGE);</span>
+        }
+
+<span class="fc" id="L171">        return Math.round(this.dailyWeatherData.getJSONObject(&quot;city&quot;).getDouble(&quot;timezone&quot;));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

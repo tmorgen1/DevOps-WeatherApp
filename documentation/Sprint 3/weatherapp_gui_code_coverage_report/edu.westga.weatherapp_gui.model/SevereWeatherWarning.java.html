@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SevereWeatherWarning.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">weatherapp_gui</a> &gt; <a href="index.source.html" class="el_package">edu.westga.weatherapp_gui.model</a> &gt; <span class="el_source">SevereWeatherWarning.java</span></div><h1>SevereWeatherWarning.java</h1><pre class="source lang-java linenums">package edu.westga.weatherapp_gui.model;
+
+/**
+ * A class to represent a severe weather warning
+ * 
+ * @author Eboni Walker
+ * @version 1.0
+ */
+public class SevereWeatherWarning {
+
+    /**
+     * If the warning's name cannot be found use this instead
+     */
+    public static final String UNDETERMINED_WARNING = &quot;Undetermined Warning Type&quot;;
+
+    /**
+     * If the starting date cannot be found use this instead
+     */
+    public static final String UNDETERMINED_START = &quot;Undetermined Start Date&quot;;
+
+    /**
+     * If the ending date cannot be found use this instead
+     */
+    public static final String UNDETERMINED_END = &quot;Undetermined End Date&quot;;
+
+    /**
+     * If the details cannot be found use this instead
+     */
+    public static final String UNDETERMINED_DETAILS = &quot;No Details&quot;;
+
+    /**
+     * If the timezone cannot be found use this instead
+     */
+    public static final String DEFAULT_TIMEZONE = &quot;0000&quot;;
+
+    /**
+     * The windows nextline character
+     */
+    public static final String WINDOWS_NEXTLINE = &quot;\n&quot;;
+
+    /**
+     * the warning name of the severe weather warning that this represents
+     */
+    private String warningName;
+
+    /**
+     * the starting date of the severe weather warning that this represents
+     */
+    private String startingDate;
+
+    /**
+     * the ending date of the severe weather warning that this represents
+     */
+    private String endingDate;
+
+    /**
+     * the timezone of the severe weather warning that this represents
+     */
+    private String timezone;
+
+    /**
+     * the details of the severe weather warning that this represents
+     */
+    private String details;
+
+    /**
+     * Creates an instance of the Severe Weather Warning
+     * 
+     * @param warningName  the warning's name
+     * @param startingDate the start date of the warning's period of effect
+     * @param endingDate   the end date of the warning's period of effect
+     * @param details      a description of the warning
+     * @param timezone     the timezone of the warning
+     */
+    public SevereWeatherWarning(String warningName, String startingDate, String endingDate, String details,
+<span class="fc" id="L76">            String timezone) {</span>
+
+<span class="fc" id="L78">        this.setFieldValues(warningName, startingDate, endingDate, details, timezone);</span>
+<span class="fc" id="L79">    }</span>
+
+    /**
+     * Sets this severe weather warning's field values
+     */
+    private void setFieldValues(String warningName, String startingDate, String endingDate, String details,
+            String timezone) {
+<span class="fc" id="L86">        this.setWarningName(warningName);</span>
+<span class="fc" id="L87">        this.setTimezone(timezone);</span>
+<span class="fc" id="L88">        this.setStartingDate(startingDate);</span>
+<span class="fc" id="L89">        this.setEndingDate(endingDate);</span>
+<span class="fc" id="L90">        this.setDetails(details);</span>
+<span class="fc" id="L91">    }</span>
+
+    /**
+     * Gets the name of the severe weather warning
+     * 
+     * @return the warning's name
+     */
+    public String getWarningName() {
+<span class="fc" id="L99">        return this.warningName;</span>
+    }
+
+    /**
+     * Gets the String date of the severe weather warning.
+     * 
+     * @return the warning's starting date
+     */
+    public String getStartingDate() {
+<span class="fc" id="L108">        return this.startingDate;</span>
+    }
+
+    /**
+     * Gets the ending date of the severe weather warning.
+     * 
+     * @return the warning's ending date
+     */
+    public String getEndingDate() {
+<span class="fc" id="L117">        return this.endingDate;</span>
+    }
+
+    /**
+     * Gets the timezone of the severe weather warning.
+     * 
+     * @return the warning's timezone
+     */
+    public String getTimeZone() {
+<span class="fc" id="L126">        return this.timezone;</span>
+    }
+
+    /**
+     * Gets the details of the severe weather warning.
+     * 
+     * @return the warning's details
+     */
+    public String getDetails() {
+<span class="fc" id="L135">        return this.details;</span>
+    }
+
+    /**
+     * Sets the name of the severe weather warning
+     * 
+     * @param warningName the name of the severe weather warning
+     */
+    private void setWarningName(String warningName) {
+<span class="fc bfc" id="L144" title="All 4 branches covered.">        if (warningName == null || warningName.isBlank()) {</span>
+<span class="fc" id="L145">            warningName = SevereWeatherWarning.UNDETERMINED_WARNING;</span>
+        }
+<span class="fc" id="L147">        this.warningName = warningName;</span>
+<span class="fc" id="L148">    }</span>
+
+    /**
+     * Sets the ending date of the severe weather warning
+     * 
+     * @param startingDate the starting date of the severe weather warning
+     */
+    private void setStartingDate(String startingDate) {
+<span class="fc bfc" id="L156" title="All 4 branches covered.">        if (startingDate == null || startingDate.isBlank()) {</span>
+<span class="fc" id="L157">            this.startingDate = SevereWeatherWarning.UNDETERMINED_START;</span>
+        } else {
+<span class="fc" id="L159">            this.startingDate = DateTimeConverter.convertUtcToShortDate(Long.parseLong(startingDate),</span>
+<span class="fc" id="L160">                    Long.parseLong(this.timezone));</span>
+        }
+<span class="fc" id="L162">    }</span>
+
+    /**
+     * Sets the ending date of the severe weather warning
+     * 
+     * @param endingDate the ending date of the severe weather warning
+     */
+    private void setEndingDate(String endingDate) {
+<span class="fc bfc" id="L170" title="All 4 branches covered.">        if (endingDate == null || endingDate.isBlank()) {</span>
+<span class="fc" id="L171">            this.endingDate = SevereWeatherWarning.UNDETERMINED_END;</span>
+        } else {
+<span class="fc" id="L173">            this.endingDate = DateTimeConverter.convertUtcToShortDate(Long.parseLong(endingDate),</span>
+<span class="fc" id="L174">                    Long.parseLong(this.timezone));</span>
+        }
+<span class="fc" id="L176">    }</span>
+
+    /**
+     * Sets the timezone of the severe weather warning
+     * 
+     * @param timezone the timezone of the severe weather warning
+     */
+    private void setTimezone(String timezone) {
+<span class="fc bfc" id="L184" title="All 4 branches covered.">        if (timezone == null || timezone.isBlank()) {</span>
+<span class="fc" id="L185">            timezone = SevereWeatherWarning.DEFAULT_TIMEZONE;</span>
+        }
+<span class="fc" id="L187">        this.timezone = timezone;</span>
+<span class="fc" id="L188">    }</span>
+
+    /**
+     * Sets the details of the severe weather warning's descrption.
+     * 
+     * @param details the details of the severe weather warning.
+     */
+    private void setDetails(String details) {
+<span class="fc bfc" id="L196" title="All 4 branches covered.">        if (details == null || details.isBlank()) {</span>
+<span class="fc" id="L197">            details = SevereWeatherWarning.UNDETERMINED_DETAILS;</span>
+        }
+<span class="fc" id="L199">        this.details = details.replaceAll(SevereWeatherWarning.WINDOWS_NEXTLINE, &quot; &quot;);</span>
+<span class="fc" id="L200">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DayForecastPane.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">weatherapp_gui</a> &gt; <a href="index.source.html" class="el_package">edu.westga.weatherapp_gui.view</a> &gt; <span class="el_source">DayForecastPane.java</span></div><h1>DayForecastPane.java</h1><pre class="source lang-java linenums">package edu.westga.weatherapp_gui.view;
+
+import java.io.IOException;
+
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+
+/**
+ * The custom day forecast pane component
+ * 
+ * @author Michael Pavich
+ */
+public class DayForecastPane extends Pane {
+
+    /**
+     * The day of the week label
+     */
+    @FXML
+    private Label dayOfWeekLabel;
+
+    /**
+     * The date label
+     */
+    @FXML
+    private Label dateLabel;
+
+    /**
+     * The maximum temperature label
+     */
+    @FXML
+    private Label maxTemperatureLabel;
+
+    /**
+     * The minimum temperature label
+     */
+    @FXML
+    private Label minTemperatureLabel;
+
+    /**
+     * The weather icon image view
+     */
+    @FXML
+    private ImageView weatherIconImageView;
+
+    /**
+     * Creates an instance of the day forecast pane and loads it
+     * 
+     * @param dayOfWeek - the initial day of the week
+     * @param date - the initial date
+     * @param maxTemp - the initial max temp
+     * @param minTemp - the initial min temp
+     * @param weatherIconUrl - the initial weather icon url
+     * @param loader - the fxml loader
+     */
+<span class="fc" id="L59">    public DayForecastPane(String dayOfWeek, String date, String maxTemp, String minTemp, String weatherIconUrl, FXMLLoader loader) {</span>
+<span class="fc" id="L60">        loader.setRoot(this);</span>
+<span class="fc" id="L61">        loader.setController(this);</span>
+        
+        try {
+<span class="fc" id="L64">            loader.load();</span>
+<span class="fc" id="L65">            this.setDayOfTheWeekLabel(dayOfWeek);</span>
+<span class="fc" id="L66">            this.setDateLabel(date);</span>
+<span class="fc" id="L67">            this.setMaxTemperatureLabel(maxTemp);</span>
+<span class="fc" id="L68">            this.setMinTemperatureLabel(minTemp);</span>
+<span class="fc" id="L69">            this.setWeatherIconImageView(weatherIconUrl);</span>
+<span class="nc" id="L70">        } catch (IOException exception) {</span>
+<span class="nc" id="L71">            System.err.println(&quot;IO Exception: Error loading day forecast pane component&quot;);</span>
+<span class="fc" id="L72">        }</span>
+<span class="fc" id="L73">    }</span>
+
+    /**
+     * Sets the day of the week label to the specified day
+     * 
+     * @param dayOfWeek - the new day of the week
+     */
+    public void setDayOfTheWeekLabel(String dayOfWeek) {
+<span class="fc" id="L81">        this.dayOfWeekLabel.setText(dayOfWeek);</span>
+<span class="fc" id="L82">    }</span>
+
+    /**
+     * Sets the date label to the specified date
+     * 
+     * @param date - the new date
+     */
+    public void setDateLabel(String date) {
+<span class="fc" id="L90">        this.dateLabel.setText(date);</span>
+<span class="fc" id="L91">    }</span>
+
+    /**
+     * Sets the maximum temperature label to the specified temperature
+     * 
+     * @param temperature - the new temperature
+     */
+    public void setMaxTemperatureLabel(String temperature) {
+<span class="fc" id="L99">        this.maxTemperatureLabel.setText(temperature);</span>
+<span class="fc" id="L100">    }</span>
+
+    /**
+     * Sets the minimum temperature label to the specified temperature
+     * 
+     * @param temperature - the new temperature
+     */
+    public void setMinTemperatureLabel(String temperature) {
+<span class="fc" id="L108">        this.minTemperatureLabel.setText(temperature);</span>
+<span class="fc" id="L109">    }</span>
+
+    /**
+     * Sets the weather icon image view to the specified url location
+     * 
+     * @param url - the new image url
+     */
+    public void setWeatherIconImageView(String url) {
+<span class="fc" id="L117">        Image image = new Image(url);</span>
+<span class="fc" id="L118">        this.weatherIconImageView.setImage(image);</span>
+<span class="fc" id="L119">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

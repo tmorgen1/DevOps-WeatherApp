@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SevereWeatherWarningsPage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">weatherapp_gui</a> &gt; <a href="index.source.html" class="el_package">edu.westga.weatherapp_gui.view</a> &gt; <span class="el_source">SevereWeatherWarningsPage.java</span></div><h1>SevereWeatherWarningsPage.java</h1><pre class="source lang-java linenums">package edu.westga.weatherapp_gui.view;
+
+import java.io.IOException;
+
+import com.jfoenix.controls.JFXComboBox;
+
+import edu.westga.weatherapp_gui.App;
+import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
+import edu.westga.weatherapp_gui.model.SevereWeatherWarning;
+import edu.westga.weatherapp_gui.view.utils.PageResizeHelper;
+import edu.westga.weatherapp_gui.view.utils.WindowGenerator;
+import edu.westga.weatherapp_gui.viewmodel.SevereWeatherWarningPageViewModel;
+import edu.westga.weatherapp_gui.viewmodel.SevereWeatherWarningsPageViewModel;
+import javafx.scene.Node;
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import javafx.util.Callback;
+
+/**
+ * The severe weather warnings page class.
+ * 
+ * @author Eboni Walker
+ * @version 1.0
+ */
+<span class="fc" id="L33">public class SevereWeatherWarningsPage {</span>
+
+    /**
+     * this severe warnings page's pane
+     */
+    @FXML
+    private Pane severeWarningsPagePane;
+
+    /**
+     * the severe weather warning's combobox
+     */
+    @FXML
+    private JFXComboBox&lt;SevereWeatherWarning&gt; severeWarningsComboBox;
+
+    /**
+     * the back arrow image view
+     */
+    @FXML
+    private ImageView backArrowImageView;
+
+    /**
+     * the label that displays if there are no severe weather warnings for a
+     * location
+     */
+    @FXML
+    private Label noWarningsForLocationLabel;
+
+    /**
+     * the Text that displays if the page encounters errors
+     */
+    @FXML
+    private Text errorText;
+
+    /**
+     * the view model for this page
+     */
+    private SevereWeatherWarningsPageViewModel viewModel;
+
+    /**
+     * Initializes this page after all FXML fields are loaded
+     */
+    @FXML
+    void initialize() {
+<span class="fc" id="L76">        this.viewModel = new SevereWeatherWarningsPageViewModel(null);</span>
+<span class="fc" id="L77">        this.setSevereWarningsComboBoxCellFactory();</span>
+<span class="fc" id="L78">        Platform.runLater(() -&gt; new PageResizeHelper().setScalingRules(this.severeWarningsPagePane));</span>
+<span class="fc" id="L79">        this.setSevereWarningsComboBoxSelectionChangeListener();</span>
+<span class="fc" id="L80">        this.bindToViewModel();</span>
+<span class="fc" id="L81">        this.viewModel.setsevereWeatherWarningsPagePropertiesValues(CurrentWeatherInformation.getWeatherLocation(),</span>
+<span class="fc" id="L82">                CurrentWeatherInformation.getMeasurementUnits());</span>
+<span class="fc" id="L83">    }</span>
+
+    /**
+     * Binds the view's content properties to the view model
+     */
+    private void bindToViewModel() {
+<span class="fc" id="L89">        this.severeWarningsComboBox.itemsProperty().bind(this.viewModel.getSevereWarningComboBoxListProperty());</span>
+<span class="fc" id="L90">        this.noWarningsForLocationLabel.visibleProperty()</span>
+<span class="fc" id="L91">                .bind(this.viewModel.getNoWarningsForLocationVisibilityProperty());</span>
+<span class="fc" id="L92">        this.severeWarningsComboBox.visibleProperty().bind(this.viewModel.getSevereWarningComboBoxVisibilityProperty());</span>
+<span class="fc" id="L93">        this.errorText.textProperty().bind(this.viewModel.getErrorTextStringProperty());</span>
+<span class="fc" id="L94">        this.errorText.visibleProperty().bind(this.viewModel.getErrorTextVisibilityProperty());</span>
+<span class="fc" id="L95">    }</span>
+
+    /**
+     * sets the cell factory for the severe weather warnings combo box
+     */
+    private void setSevereWarningsComboBoxCellFactory() {
+<span class="fc" id="L101">        this.severeWarningsComboBox</span>
+<span class="fc" id="L102">                .setCellFactory(new Callback&lt;ListView&lt;SevereWeatherWarning&gt;, ListCell&lt;SevereWeatherWarning&gt;&gt;() {</span>
+                    @Override
+                    public ListCell&lt;SevereWeatherWarning&gt; call(ListView&lt;SevereWeatherWarning&gt; list) {
+<span class="fc" id="L105">                        SevereWarningViewCell cell = new SevereWarningViewCell();</span>
+<span class="fc" id="L106">                        return cell;</span>
+                    }
+                });
+
+<span class="fc" id="L110">    }</span>
+
+    /**
+     * sets the selection change listener for the severe weather warnings combo box
+     */
+    private void setSevereWarningsComboBoxSelectionChangeListener() {
+<span class="fc" id="L116">        this.severeWarningsComboBox.getSelectionModel().selectedItemProperty()</span>
+<span class="fc" id="L117">                .addListener((observable, oldValue, newValue) -&gt; {</span>
+<span class="fc" id="L118">                    SevereWeatherWarningPageViewModel.setSevereWeatherWarningObjectPropertyValue(newValue);</span>
+<span class="pc bpc" id="L119" title="1 of 2 branches missed.">                    if (newValue != null) {</span>
+<span class="fc" id="L120">                        this.changePage(this.severeWarningsPagePane, App.SEVERE_WARNING_PAGE_VIEW,</span>
+<span class="fc" id="L121">                                newValue.getWarningName());</span>
+                    }
+<span class="fc" id="L123">                });</span>
+<span class="fc" id="L124">    }</span>
+
+    /**
+     * Event handler for the back arrow image view. Handles the on click mouse
+     * event. Switches to the landing page scene
+     * 
+     * @param event - the clicked mouse event
+     */
+    @FXML
+    private void onBackArrowClicked(MouseEvent event) {
+<span class="fc" id="L134">        Node sceneNode = (Node) event.getSource();</span>
+<span class="fc" id="L135">        this.changePage(sceneNode, App.LANDING_PAGE_VIEW, App.LANDING_PAGE_TITLE);</span>
+<span class="fc" id="L136">    }</span>
+
+    /**
+     * Handles switching to different pages for this page
+     * 
+     * @param event     the event that triggers the change
+     * @param pageUri   the page's uri
+     * @param pageTitle the page's title
+     */
+    @FXML
+    private void changePage(Node node, String pageUri, String pageTitle) {
+        try {
+<span class="fc" id="L148">            Stage currentStage = (Stage) node.getScene().getWindow();</span>
+<span class="fc" id="L149">            WindowGenerator.changeScene(currentStage, pageUri, pageTitle);</span>
+<span class="nc" id="L150">        } catch (IOException exception) {</span>
+<span class="nc" id="L151">            this.viewModel.setSevereWarningComboBoxVisibilityPropertyValue(false);</span>
+<span class="nc" id="L152">            this.viewModel.setErrorTextStringPropertyValue(&quot;IO Exception: Error switching scenes&quot;);</span>
+<span class="nc" id="L153">            this.viewModel.setErrorTextVisibilityProperty(true);</span>
+<span class="fc" id="L154">        }</span>
+<span class="fc" id="L155">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

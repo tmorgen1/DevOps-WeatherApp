@@ -1,0 +1,962 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LandingPage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">weatherapp_gui</a> &gt; <a href="index.source.html" class="el_package">edu.westga.weatherapp_gui.view</a> &gt; <span class="el_source">LandingPage.java</span></div><h1>LandingPage.java</h1><pre class="source lang-java linenums">package edu.westga.weatherapp_gui.view;
+
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.concurrent.Worker.State;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.Menu;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+import javafx.scene.Node;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXSnackbar;
+import com.jfoenix.controls.JFXSnackbar.SnackbarEvent;
+
+import org.json.JSONObject;
+
+import edu.westga.weatherapp_gui.App;
+import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
+import edu.westga.weatherapp_gui.model.DateTimeConverter;
+import edu.westga.weatherapp_gui.model.GuiConstants;
+import edu.westga.weatherapp_shared.model.WeatherLocation;
+import edu.westga.weatherapp_gui.view.utils.PageResizeHelper;
+import edu.westga.weatherapp_gui.view.utils.WindowGenerator;
+import edu.westga.weatherapp_gui.viewmodel.LandingPageViewModel;
+import edu.westga.weatherapp_shared.enums.MeasurementUnits;
+
+/**
+ * Defines the landing page view.
+ * 
+ * @author Michael Pavich
+ */
+<span class="fc" id="L59">public class LandingPage {</span>
+
+    /**
+     * The landing page view model
+     */
+    private LandingPageViewModel viewModel;
+
+    /**
+     * The landing page pane
+     */
+    @FXML
+    private Pane landingPagePane;
+
+    /**
+     * The location searching text field
+     */
+    @FXML
+    private TextField locationSearchTextField;
+
+    /**
+     * The weather icon image view
+     */
+    @FXML
+    private ImageView weatherIconImageView;
+
+    /**
+     * The weather description label
+     */
+    @FXML
+    private Label weatherDescriptionLabel;
+
+    /**
+     * The current temperature label
+     */
+    @FXML
+    private Label currentTemperatureLabel;
+
+    /**
+     * The wind speed label
+     */
+    @FXML
+    private Label windSpeedLabel;
+
+    /**
+     * The humidity label
+     */
+    @FXML
+    private Label humidityLabel;
+
+    /**
+     * The daily forecast jfx button
+     */
+    @FXML
+    private JFXButton dailyForecastButton;
+
+    /**
+     * The warnings jfx button
+     */
+    @FXML
+    private JFXButton warningsButton;
+
+    /**
+     * The humidity image view
+     */
+    @FXML
+    private ImageView humidityImageView;
+
+    /**
+     * The wind image view
+     */
+    @FXML
+    private ImageView windImageView;
+
+    /**
+     * The no weather information available label
+     */
+    @FXML
+    private Label noWeatherInformationLabel;
+
+    /**
+     * The fahrenheit check menu item
+     */
+    @FXML
+    private CheckMenuItem fahrenheitCheckMenuItem;
+
+    /**
+     * The celsius check menu item
+     */
+    @FXML
+    private CheckMenuItem celsiusCheckMenuItem;
+
+    /**
+     * The kelvin check menu item
+     */
+    @FXML
+    private CheckMenuItem kelvinCheckMenuItem;
+
+    /**
+     * The search pane
+     */
+    @FXML
+    private Pane searchPane;
+
+    /**
+     * The favorited list view
+     */
+    @FXML
+    private ListView&lt;WeatherLocation&gt; favoritedListView;
+
+    /**
+     * The search results list view
+     */
+    @FXML
+    private ListView&lt;WeatherLocation&gt; searchResultsListView;
+
+    /**
+     * The favorite outline image view
+     */
+    @FXML
+    private ImageView favoriteOutlineImageView;
+
+    /**
+     * The favorite filled image view
+     */
+    @FXML
+    private ImageView favoriteFilledImageView;
+
+    /**
+     * The map radar image view
+     */
+    @FXML
+    private ImageView mapRadarImageView;
+
+    /**
+     * The hourly forecast HBox
+     */
+    @FXML
+    private HBox hourlyForecastHBox;
+
+    /**
+     * The hourly info scroll pane
+     */
+    @FXML
+    private ScrollPane hourlyInfoScrollPane;
+
+    /**
+     * The loading progress indicator
+     */
+    @FXML
+    private ProgressIndicator progressIndicator;
+
+    /**
+     * The loading progress label
+     */
+    @FXML
+    private Label progressLabel;
+
+    /**
+     * The settings menu
+     */
+    @FXML
+    private Menu settingMenu;
+
+    /**
+     * The historical weather button
+     */
+    @FXML
+    private JFXButton historicalButton;
+
+    /**
+     * The location icon image view
+     */
+    @FXML
+    private ImageView locationIconImageView;
+
+    /**
+     * The temperature suffix
+     */
+<span class="fc" id="L237">    private String temperatureSuffix = GuiConstants.FAHRENHEIT_SUFFIX;</span>
+
+    /**
+     * The wind speed suffix
+     */
+<span class="fc" id="L242">    private String windSpeedSuffix = GuiConstants.MILES_PER_HOUR_SUFFIX;</span>
+
+    /**
+     * The array list of hourly forecast panes
+     */
+    private ArrayList&lt;HourlyInfoPane&gt; hourlyInfoPanes;
+
+    /**
+     * The number of hours for the forecast to load
+     */
+    public static final int HOURS = 24;
+
+    /**
+     * Initializes after all FXML fields are loaded
+     */
+    @FXML
+    void initialize() {
+<span class="fc" id="L259">        this.hourlyInfoPanes = new ArrayList&lt;HourlyInfoPane&gt;();</span>
+<span class="fc" id="L260">        this.viewModel = new LandingPageViewModel(null, null, null, null);</span>
+<span class="fc" id="L261">        Platform.runLater(() -&gt; this.landingPagePane.requestFocus());</span>
+<span class="fc" id="L262">        Platform.runLater(() -&gt; new PageResizeHelper().setScalingRules(this.landingPagePane));</span>
+<span class="fc" id="L263">        this.setFavoritedLocationsListItems();</span>
+<span class="fc" id="L264">        this.setupSearchListViewSelectionListener();</span>
+<span class="fc" id="L265">        this.setupLocationSearchTextChangedListener();</span>
+<span class="fc" id="L266">        this.setupFavoritesListViewSelectionListener();</span>
+<span class="fc" id="L267">        this.setMeasurementSettings();</span>
+<span class="fc" id="L268">        this.setupSearchTextFieldOnFocusListener();</span>
+<span class="fc" id="L269">        this.checkForSavedCurrentWeatherData();</span>
+<span class="fc" id="L270">        this.updateFavoriteIcon();</span>
+<span class="fc" id="L271">        this.loadHourlyForecastInfoPanes();</span>
+<span class="fc" id="L272">    }</span>
+
+    /**
+     * Loads the HourlyInfoPane components and fetches the hourly forecast data.
+     */
+    private void loadHourlyForecastInfoPanes() {
+<span class="fc bfc" id="L278" title="All 2 branches covered.">        if (CurrentWeatherInformation.getWeatherLocation() == null</span>
+<span class="pc bpc" id="L279" title="1 of 2 branches missed.">                &amp;&amp; CurrentWeatherInformation.isFinishedFirstLoadIpGrab()) {</span>
+<span class="nc" id="L280">            return;</span>
+<span class="fc bfc" id="L281" title="All 2 branches covered.">        } else if (CurrentWeatherInformation.getWeatherLocation() == null</span>
+<span class="pc bpc" id="L282" title="1 of 2 branches missed.">                &amp;&amp; !CurrentWeatherInformation.isFinishedFirstLoadIpGrab()) {</span>
+<span class="fc" id="L283">            WeatherLocation currentLocation = this.viewModel.getCurrentLocation();</span>
+<span class="pc bpc" id="L284" title="1 of 2 branches missed.">            if (currentLocation == null) {</span>
+<span class="nc" id="L285">                return;</span>
+            }
+<span class="fc" id="L287">            CurrentWeatherInformation.setUserLocation(currentLocation);</span>
+<span class="fc" id="L288">            CurrentWeatherInformation.setWeatherLocation(currentLocation);</span>
+<span class="fc" id="L289">            this.updateSelectedWeatherLocation(currentLocation);</span>
+        }
+
+<span class="fc" id="L292">        this.hideNoWeatherInformation();</span>
+<span class="fc" id="L293">        this.showLoadingIndication();</span>
+<span class="fc" id="L294">        WeatherLocation weatherLocation = CurrentWeatherInformation.getWeatherLocation();</span>
+<span class="fc" id="L295">        this.viewModel.getHourlyForecastDataByWeatherLocation(weatherLocation, HOURS);</span>
+<span class="fc" id="L296">        this.hourlyForecastHBox.getChildren().clear();</span>
+
+<span class="fc bfc" id="L298" title="All 2 branches covered.">        if (CurrentWeatherInformation.getHourlyInfoPanes() != null) {</span>
+<span class="fc" id="L299">            this.updateLoadedHourlyInfoPanes();</span>
+<span class="fc" id="L300">            return;</span>
+        }
+
+<span class="fc" id="L303">        this.hourlyInfoPanes.clear();</span>
+<span class="fc" id="L304">        this.createHourlyInfoPanes();</span>
+<span class="fc" id="L305">    }</span>
+
+    /**
+     * Creates and loads hourly info panes
+     */
+    private void createHourlyInfoPanes() {
+<span class="fc" id="L311">        FXMLLoader loader = new FXMLLoader(getClass().getResource(App.HOURLY_FORECAST_PANE_VIEW));</span>
+<span class="fc" id="L312">        Task&lt;ArrayList&lt;HourlyInfoPane&gt;&gt; task = new Task&lt;ArrayList&lt;HourlyInfoPane&gt;&gt;() {</span>
+
+            @Override
+            public ArrayList&lt;HourlyInfoPane&gt; call() throws Exception {
+<span class="fc" id="L316">                ArrayList&lt;HourlyInfoPane&gt; panes = new ArrayList&lt;HourlyInfoPane&gt;();</span>
+<span class="fc bfc" id="L317" title="All 2 branches covered.">                for (int index = 0; index &lt; HOURS; index++) {</span>
+<span class="fc" id="L318">                    String dayIconUrl = LandingPage.this.getDayIconUrl(index);</span>
+<span class="fc" id="L319">                    String hour = LandingPage.this.getHour(index);</span>
+<span class="fc" id="L320">                    String temp = LandingPage.this.getTemperature(index);</span>
+<span class="fc" id="L321">                    HourlyInfoPane pane = new HourlyInfoPane(temp, hour, dayIconUrl, loader);</span>
+<span class="fc" id="L322">                    panes.add(pane);</span>
+                }
+<span class="fc" id="L324">                return panes;</span>
+            }
+        };
+
+<span class="fc" id="L328">        task.setOnSucceeded(e -&gt; this.handleTaskSucceeded(e));</span>
+<span class="fc" id="L329">        new Thread(task).start();</span>
+<span class="fc" id="L330">    }</span>
+
+    /**
+     * Updates the previously loaded hourly info panes rather than creating new ones
+     * to improve load times.
+     */
+    private void updateLoadedHourlyInfoPanes() {
+<span class="fc" id="L337">        Task&lt;ArrayList&lt;HourlyInfoPane&gt;&gt; task = new Task&lt;ArrayList&lt;HourlyInfoPane&gt;&gt;() {</span>
+
+            @Override
+            public ArrayList&lt;HourlyInfoPane&gt; call() throws Exception {
+<span class="fc" id="L341">                ArrayList&lt;HourlyInfoPane&gt; previousPanes = CurrentWeatherInformation.getHourlyInfoPanes();</span>
+<span class="fc bfc" id="L342" title="All 2 branches covered.">                for (int index = 0; index &lt; HOURS; index++) {</span>
+<span class="fc" id="L343">                    String dayIconUrl = LandingPage.this.getDayIconUrl(index);</span>
+<span class="fc" id="L344">                    String hour = LandingPage.this.getHour(index);</span>
+<span class="fc" id="L345">                    String temp = LandingPage.this.getTemperature(index);</span>
+
+<span class="fc" id="L347">                    previousPanes.get(index).setIconImageView(dayIconUrl);</span>
+<span class="fc" id="L348">                    previousPanes.get(index).setTemperatureLabel(temp);</span>
+<span class="fc" id="L349">                    previousPanes.get(index).setTimeLabel(hour);</span>
+                }
+
+<span class="fc" id="L352">                return previousPanes;</span>
+            }
+        };
+
+<span class="fc" id="L356">        task.setOnSucceeded(e -&gt; this.handleTaskSucceeded(e));</span>
+<span class="fc" id="L357">        new Thread(task).start();</span>
+<span class="fc" id="L358">    }</span>
+
+    /**
+     * Gets the current hour for the specified hourly info pane
+     * 
+     * @param index - the index of the specified hourly info pane
+     * @return the hour
+     */
+    private String getHour(int index) {
+<span class="fc" id="L367">        Long timezone = this.viewModel.getTimezone();</span>
+<span class="fc" id="L368">        Long utcDateTime = this.viewModel.getHourUtcDateTime(index);</span>
+<span class="fc" id="L369">        return DateTimeConverter.convertUtcToHour(utcDateTime, timezone);</span>
+    }
+
+    /**
+     * Gets the temperature for the specified hourly info pane
+     * 
+     * @param index - the index of the specified hourly info pane
+     * @return the temperature
+     */
+    private String getTemperature(int index) {
+<span class="fc" id="L379">        String maxTemperature = this.viewModel.getHourTemperature(index);</span>
+<span class="fc" id="L380">        return maxTemperature + this.temperatureSuffix;</span>
+    }
+
+    /**
+     * Gets the day icon url for the specified hourly info pane
+     * 
+     * @param index - the index of the specified hourly info pane
+     * @return the weather icon url
+     */
+    private String getDayIconUrl(int index) {
+<span class="fc" id="L390">        return this.viewModel.getDayWeatherIcon(index);</span>
+    }
+
+    /**
+     * Handles the succession of loading the hourly forecast information
+     * 
+     * @param event - the worker state event
+     */
+    @SuppressWarnings(&quot;unchecked&quot;)
+    private void handleTaskSucceeded(WorkerStateEvent event) {
+<span class="pc bpc" id="L400" title="2 of 4 branches missed.">        if (event.getSource().getState() == State.SUCCEEDED &amp;&amp; event.getSource().getValue() instanceof ArrayList) {</span>
+<span class="fc" id="L401">            this.hourlyInfoPanes = (ArrayList&lt;HourlyInfoPane&gt;) event.getSource().getValue();</span>
+<span class="fc" id="L402">            this.hourlyForecastHBox.getChildren().clear();</span>
+<span class="fc" id="L403">            this.hourlyForecastHBox.getChildren().addAll(this.hourlyInfoPanes);</span>
+<span class="fc" id="L404">            this.hideLoadingIndication();</span>
+<span class="fc" id="L405">            this.showWeatherInformation();</span>
+<span class="fc" id="L406">            CurrentWeatherInformation.setHourlyInfoPanes(this.hourlyInfoPanes);</span>
+        }
+<span class="fc" id="L408">    }</span>
+
+    /**
+     * Hides the progress indicator and progress indicator label
+     */
+    private void hideLoadingIndication() {
+<span class="fc" id="L414">        this.progressIndicator.setVisible(false);</span>
+<span class="fc" id="L415">        this.progressLabel.setVisible(false);</span>
+<span class="fc" id="L416">        this.locationSearchTextField.setDisable(false);</span>
+<span class="fc" id="L417">        this.settingMenu.setDisable(false);</span>
+<span class="fc" id="L418">    }</span>
+
+    /**
+     * Displays the progress indicator and progress indicator label
+     */
+    private void showLoadingIndication() {
+<span class="fc" id="L424">        this.locationSearchTextField.setDisable(true);</span>
+<span class="fc" id="L425">        this.progressIndicator.setVisible(true);</span>
+<span class="fc" id="L426">        this.progressLabel.setVisible(true);</span>
+<span class="fc" id="L427">        this.settingMenu.setDisable(true);</span>
+<span class="fc" id="L428">    }</span>
+
+    /**
+     * Sets up the location search text field text change listener. Searches for
+     * similar locations based on the user's input and sets the list view to the
+     * retrieved similar locations.
+     */
+    private void setupLocationSearchTextChangedListener() {
+<span class="fc" id="L436">        PauseTransition pause = new PauseTransition(Duration.seconds(1));</span>
+<span class="fc" id="L437">        this.locationSearchTextField.textProperty().addListener((observable, oldValue, newValue) -&gt; {</span>
+<span class="fc" id="L438">            pause.setOnFinished(event -&gt; LandingPage.this.setSearchedLocationsListItems(newValue));</span>
+<span class="fc" id="L439">            pause.playFromStart();</span>
+<span class="fc" id="L440">        });</span>
+<span class="fc" id="L441">    }</span>
+
+    /**
+     * Handles the mouse click event for the weather radar clicked. Moves to the weather radar page
+     * 
+     * @param event - the mouse click event
+     */
+    @FXML
+    void onWeatherRadarClicked(MouseEvent event) {
+        try {
+<span class="fc" id="L451">            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();</span>
+<span class="fc" id="L452">            WindowGenerator.changeScene(currentStage, App.WEATHER_RADAR_PAGE_VIEW, App.WEATHER_RADAR_PAGE_TITLE);</span>
+<span class="nc" id="L453">        } catch (IOException exception) {</span>
+<span class="nc" id="L454">            this.displayNoLocationSnackbar(&quot;Please Enter a Location First&quot;);</span>
+<span class="fc" id="L455">        }</span>
+<span class="fc" id="L456">    }</span>
+
+    /**
+     * Handles the mouse click event for the location icon clicked. Moves to the change location page
+     * 
+     * @param event - the mouse click event
+     */
+    @FXML
+    void onLocationIconClicked(MouseEvent event) {
+        try {
+<span class="fc" id="L466">            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();</span>
+<span class="fc" id="L467">            WindowGenerator.changeScene(currentStage, App.CHANGE_LOCATION_PAGE_VIEW, App.CHANGE_LOCATION_PAGE_TITLE);</span>
+<span class="nc" id="L468">        } catch (IOException exception) {</span>
+<span class="nc" id="L469">            this.displayNoLocationSnackbar(&quot;Please Enter a Location First&quot;);</span>
+<span class="fc" id="L470">        }</span>
+<span class="fc" id="L471">    }</span>
+
+    /**
+     * Handles the mouse click event for the historical weather button clicked.
+     * Moves to the month selection page
+     * 
+     * @param event - the mouse click event
+     */
+    @FXML
+    void onHistoricalClicked(ActionEvent event) {
+        try {
+<span class="fc" id="L482">            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();</span>
+<span class="fc" id="L483">            WindowGenerator.changeScene(currentStage, App.MONTH_SELECTION_PAGE_VIEW, App.MONTH_SELECTION_PAGE_TITLE);</span>
+<span class="nc" id="L484">        } catch (IOException exception) {</span>
+<span class="nc" id="L485">            this.displayNoLocationSnackbar(&quot;Please Enter a Location First&quot;);</span>
+<span class="fc" id="L486">        }</span>
+<span class="fc" id="L487">    }</span>
+
+    /**
+     * Scrolls the hbox horizontally instead of vertically when a scroll event is
+     * fired
+     * 
+     * @param event - the scroll event
+     */
+    @FXML
+    void hourlyInfoOnScroll(ScrollEvent event) {
+<span class="pc bpc" id="L497" title="2 of 4 branches missed.">        if (event.getDeltaX() == 0 &amp;&amp; event.getDeltaY() != 0) {</span>
+<span class="fc" id="L498">            this.hourlyInfoScrollPane.setHvalue(</span>
+<span class="fc" id="L499">                    this.hourlyInfoScrollPane.getHvalue() - event.getDeltaY() / this.hourlyForecastHBox.getWidth());</span>
+        }
+<span class="fc" id="L501">    }</span>
+
+    /**
+     * Loads the saved weather data and weather location if it exists
+     */
+    private void checkForSavedCurrentWeatherData() {
+<span class="fc bfc" id="L507" title="All 2 branches covered.">        if (CurrentWeatherInformation.getWeatherLocation() != null</span>
+<span class="pc bpc" id="L508" title="1 of 2 branches missed.">                &amp;&amp; CurrentWeatherInformation.getWeatherData() != null) {</span>
+<span class="fc" id="L509">            this.viewModel.setCurrentWeatherData(CurrentWeatherInformation.getWeatherData());</span>
+<span class="fc" id="L510">            this.locationSearchTextField.setText(CurrentWeatherInformation.getWeatherLocation().getCity());</span>
+<span class="fc" id="L511">            this.updateAllWeatherInformation();</span>
+<span class="pc bpc" id="L512" title="1 of 2 branches missed.">        } else if (CurrentWeatherInformation.getWeatherLocation() != null</span>
+<span class="nc bnc" id="L513" title="All 2 branches missed.">                &amp;&amp; CurrentWeatherInformation.getWeatherData() == null) {</span>
+<span class="nc" id="L514">            this.locationSearchTextField.setText(CurrentWeatherInformation.getWeatherLocation().getCity());</span>
+<span class="nc" id="L515">            this.tryGetAndUpdateWeatherData();</span>
+        }
+<span class="fc" id="L517">    }</span>
+
+    /**
+     * Sets the fetched similar search results to the search results list view.
+     * 
+     * @param city - the user's searched city
+     */
+    private void setSearchedLocationsListItems(String city) {
+<span class="pc bpc" id="L525" title="2 of 4 branches missed.">        if (city != null &amp;&amp; !city.isEmpty()) {</span>
+<span class="fc" id="L526">            Collection&lt;WeatherLocation&gt; result = this.viewModel.getLocationSearchResults(city);</span>
+<span class="pc bpc" id="L527" title="1 of 2 branches missed.">            if (result != null) {</span>
+<span class="fc" id="L528">                ObservableList&lt;WeatherLocation&gt; searchItems = FXCollections.observableArrayList(result);</span>
+<span class="fc" id="L529">                this.searchResultsListView.setItems(searchItems);</span>
+            }
+<span class="fc" id="L531">        } else {</span>
+<span class="nc" id="L532">            this.searchResultsListView.setItems(null);</span>
+        }
+<span class="fc" id="L534">    }</span>
+
+    /**
+     * Sets up the search list view selection listener. Then calls
+     * updateSelectedWeatherLocation.
+     */
+    private void setupSearchListViewSelectionListener() {
+<span class="fc" id="L541">        this.searchResultsListView.getSelectionModel().selectedItemProperty()</span>
+<span class="fc" id="L542">                .addListener(new ChangeListener&lt;WeatherLocation&gt;() {</span>
+                    @Override
+                    public void changed(ObservableValue&lt;? extends WeatherLocation&gt; observable, WeatherLocation oldValue,
+                            WeatherLocation newValue) {
+<span class="fc bfc" id="L546" title="All 2 branches covered.">                        if (newValue != null) {</span>
+<span class="fc" id="L547">                            LandingPage.this.updateSelectedWeatherLocation(newValue);</span>
+                        }
+<span class="fc" id="L549">                    }</span>
+                });
+<span class="fc" id="L551">    }</span>
+
+    /**
+     * Sets up the favorites list view selection listener. Then calls
+     * updateSelectedWeatherLocation.
+     */
+    private void setupFavoritesListViewSelectionListener() {
+<span class="fc" id="L558">        this.favoritedListView.getSelectionModel().selectedItemProperty()</span>
+<span class="fc" id="L559">                .addListener(new ChangeListener&lt;WeatherLocation&gt;() {</span>
+                    @Override
+                    public void changed(ObservableValue&lt;? extends WeatherLocation&gt; observable, WeatherLocation oldValue,
+                            WeatherLocation newValue) {
+<span class="fc bfc" id="L563" title="All 2 branches covered.">                        if (newValue != null) {</span>
+<span class="fc" id="L564">                            LandingPage.this.updateSelectedWeatherLocation(newValue);</span>
+                        }
+<span class="fc" id="L566">                    }</span>
+                });
+<span class="fc" id="L568">    }</span>
+
+    /**
+     * Saves the weather location, removes the search bar from focus, sets the city
+     * to the location search text field, and tries to pull data for the selected
+     * city.
+     * 
+     * @param newWeatherLocation - the selected weather location
+     */
+    private void updateSelectedWeatherLocation(WeatherLocation newWeatherLocation) {
+<span class="fc" id="L578">        CurrentWeatherInformation.setWeatherLocation(newWeatherLocation);</span>
+<span class="fc" id="L579">        this.removeFocusFromSearchBar();</span>
+<span class="fc" id="L580">        this.locationSearchTextField.setText(newWeatherLocation.getCity());</span>
+<span class="fc" id="L581">        this.tryGetAndUpdateWeatherData();</span>
+<span class="fc" id="L582">    }</span>
+
+    /**
+     * Sets the favorited list view to fake data.
+     */
+    private void setFavoritedLocationsListItems() {
+<span class="fc" id="L588">        ObservableList&lt;WeatherLocation&gt; favoritedItems = FXCollections</span>
+<span class="fc" id="L589">                .observableArrayList(this.viewModel.getFavoritedWeatherLocations());</span>
+<span class="fc" id="L590">        this.favoritedListView.setItems(favoritedItems);</span>
+<span class="fc" id="L591">    }</span>
+
+    /**
+     * Gets the selected weather location information then tries to fetch the
+     * weather location data. Then it updates the weather information javafx info.
+     */
+    private void tryGetAndUpdateWeatherData() {
+        try {
+<span class="fc" id="L599">            WeatherLocation location = CurrentWeatherInformation.getWeatherLocation();</span>
+<span class="fc" id="L600">            JSONObject result = this.viewModel.getWeatherDataByWeatherLocation(location);</span>
+<span class="pc bpc" id="L601" title="1 of 2 branches missed.">            if (!this.checkWeatherData(result)) {</span>
+<span class="nc" id="L602">                return;</span>
+            }
+
+<span class="fc" id="L605">            this.hideWeatherInformation();</span>
+<span class="fc" id="L606">            this.updateAllWeatherInformation();</span>
+<span class="fc" id="L607">            this.updateFavoriteIcon();</span>
+<span class="fc" id="L608">            this.loadHourlyForecastInfoPanes();</span>
+<span class="nc" id="L609">        } catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L610">            this.displayNoLocationSnackbar(&quot;No Location Found&quot;);</span>
+<span class="fc" id="L611">        }</span>
+<span class="fc" id="L612">    }</span>
+
+    /**
+     * Updates the favorite icon to be filled if it was favorited, or unfilled if it
+     * was unfavorited
+     */
+    private void updateFavoriteIcon() {
+<span class="fc bfc" id="L619" title="All 2 branches covered.">        if (CurrentWeatherInformation.getWeatherLocation() != null) {</span>
+<span class="fc bfc" id="L620" title="All 2 branches covered.">            if (this.viewModel.favoritesContainsWeatherLocation(CurrentWeatherInformation.getWeatherLocation())) {</span>
+<span class="fc" id="L621">                this.switchToFilledFavoriteIcon();</span>
+            } else {
+<span class="fc" id="L623">                this.switchToOutlineFavoriteIcon();</span>
+            }
+        }
+<span class="fc" id="L626">    }</span>
+
+    /**
+     * Handles the celsius check menu item selected event. Changes the current
+     * temperature suffix. Selects the celsius check menu item and deselects all
+     * others. Clears the currently saved current weather info. Pulls fresh daily
+     * forecast data with the new settings.
+     * 
+     * @param event - the select event
+     */
+    @FXML
+    void onCelsiusSelected(ActionEvent event) {
+<span class="fc" id="L638">        this.temperatureSuffix = GuiConstants.CELSIUS_SUFFIX;</span>
+<span class="fc" id="L639">        this.windSpeedSuffix = GuiConstants.KILOMETERS_PER_HOUR_SUFFIX;</span>
+<span class="fc" id="L640">        this.setAllCheckMenuItemsFalse();</span>
+<span class="fc" id="L641">        this.celsiusCheckMenuItem.setSelected(true);</span>
+<span class="fc" id="L642">        CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Metric);</span>
+<span class="fc" id="L643">        this.updateDataIfSearchedCity();</span>
+<span class="fc" id="L644">    }</span>
+
+    /**
+     * Handles the fahrenheit check menu item selected event. Changes the current
+     * temperature suffix. Selects the fahrenheit check menu item and deselects all
+     * others. Clears the currently saved current weather info. Pulls fresh daily
+     * forecast data with the new settings.
+     * 
+     * @param event - the select event
+     */
+    @FXML
+    void onFahrenheitSelected(ActionEvent event) {
+<span class="fc" id="L656">        this.temperatureSuffix = GuiConstants.FAHRENHEIT_SUFFIX;</span>
+<span class="fc" id="L657">        this.windSpeedSuffix = GuiConstants.MILES_PER_HOUR_SUFFIX;</span>
+<span class="fc" id="L658">        this.setAllCheckMenuItemsFalse();</span>
+<span class="fc" id="L659">        this.fahrenheitCheckMenuItem.setSelected(true);</span>
+<span class="fc" id="L660">        CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Imperial);</span>
+<span class="fc" id="L661">        this.updateDataIfSearchedCity();</span>
+<span class="fc" id="L662">    }</span>
+
+    /**
+     * Handles the kelvin check menu item selected event. Changes the current
+     * temperature suffix. Selects the kelvin check menu item and deselects all
+     * others. Clears the currently saved current weather info. Pulls fresh daily
+     * forecast data with the new settings.
+     * 
+     * @param event - the select event
+     */
+    @FXML
+    void onKelvinSelected(ActionEvent event) {
+<span class="fc" id="L674">        this.temperatureSuffix = GuiConstants.KELVIN_SUFFIX;</span>
+<span class="fc" id="L675">        this.windSpeedSuffix = GuiConstants.KILOMETERS_PER_HOUR_SUFFIX;</span>
+<span class="fc" id="L676">        this.setAllCheckMenuItemsFalse();</span>
+<span class="fc" id="L677">        this.kelvinCheckMenuItem.setSelected(true);</span>
+<span class="fc" id="L678">        CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Kelvin);</span>
+<span class="fc" id="L679">        this.updateDataIfSearchedCity();</span>
+<span class="fc" id="L680">    }</span>
+
+    /**
+     * Sets the check menu item to the saved measurement units setting
+     */
+    private void setMeasurementSettings() {
+<span class="fc" id="L686">        this.setAllCheckMenuItemsFalse();</span>
+<span class="pc bpc" id="L687" title="1 of 2 branches missed.">        if (CurrentWeatherInformation.getMeasurementUnits() == MeasurementUnits.Imperial) {</span>
+<span class="fc" id="L688">            this.fahrenheitCheckMenuItem.setSelected(true);</span>
+<span class="fc" id="L689">            this.temperatureSuffix = GuiConstants.FAHRENHEIT_SUFFIX;</span>
+<span class="nc bnc" id="L690" title="All 2 branches missed.">        } else if (CurrentWeatherInformation.getMeasurementUnits() == MeasurementUnits.Metric) {</span>
+<span class="nc" id="L691">            this.temperatureSuffix = GuiConstants.CELSIUS_SUFFIX;</span>
+<span class="nc" id="L692">            this.celsiusCheckMenuItem.setSelected(true);</span>
+        } else {
+<span class="nc" id="L694">            this.temperatureSuffix = GuiConstants.KELVIN_SUFFIX;</span>
+<span class="nc" id="L695">            this.kelvinCheckMenuItem.setSelected(true);</span>
+        }
+<span class="fc" id="L697">    }</span>
+
+    /**
+     * Sets the focus to the landing page pane
+     * 
+     * @param event - the mouse click event
+     */
+    @FXML
+    void onLandingPagePaneClicked(MouseEvent event) {
+<span class="fc" id="L706">        this.removeFocusFromSearchBar();</span>
+<span class="fc" id="L707">    }</span>
+
+    /**
+     * Removes the focus from the search bar.
+     */
+    private void removeFocusFromSearchBar() {
+<span class="fc" id="L713">        Platform.runLater(() -&gt; this.favoritedListView.getSelectionModel().clearSelection());</span>
+<span class="fc" id="L714">        Platform.runLater(() -&gt; this.searchResultsListView.getSelectionModel().clearSelection());</span>
+<span class="fc" id="L715">        this.landingPagePane.requestFocus();</span>
+<span class="fc" id="L716">    }</span>
+
+    /**
+     * Removes the location from the favorites list and saves the file.
+     */
+    @FXML
+    void onFavoriteFilledClicked(MouseEvent event) {
+<span class="pc bpc" id="L723" title="1 of 2 branches missed.">        if (CurrentWeatherInformation.getWeatherLocation() != null) {</span>
+<span class="fc" id="L724">            this.viewModel.removeFavoritedLocation(CurrentWeatherInformation.getWeatherLocation());</span>
+<span class="fc" id="L725">            this.switchToOutlineFavoriteIcon();</span>
+<span class="fc" id="L726">            this.setFavoritedLocationsListItems();</span>
+        }
+<span class="fc" id="L728">    }</span>
+
+    /**
+     * Hides the filled favorite icon image view and shows the outline favorite icon
+     * image view
+     */
+    private void switchToOutlineFavoriteIcon() {
+<span class="fc" id="L735">        this.favoriteOutlineImageView.setVisible(true);</span>
+<span class="fc" id="L736">        this.favoriteFilledImageView.setVisible(false);</span>
+<span class="fc" id="L737">    }</span>
+
+    /**
+     * Adds the location to the favorites list and saves the file.
+     */
+    @FXML
+    void onFavoriteOutlineClicked(MouseEvent event) {
+<span class="pc bpc" id="L744" title="1 of 2 branches missed.">        if (CurrentWeatherInformation.getWeatherLocation() != null) {</span>
+<span class="fc" id="L745">            this.viewModel.addFavoritedLocation(CurrentWeatherInformation.getWeatherLocation());</span>
+<span class="fc" id="L746">            this.switchToFilledFavoriteIcon();</span>
+<span class="fc" id="L747">            this.setFavoritedLocationsListItems();</span>
+        }
+<span class="fc" id="L749">    }</span>
+
+    /**
+     * Hides the outline favorite icon image view and shows the filled favorite icon
+     * image view
+     */
+    private void switchToFilledFavoriteIcon() {
+<span class="fc" id="L756">        this.favoriteOutlineImageView.setVisible(false);</span>
+<span class="fc" id="L757">        this.favoriteFilledImageView.setVisible(true);</span>
+<span class="fc" id="L758">    }</span>
+
+    /**
+     * Sets up the search text field focus changed listener. If the search bar is
+     * selected, it sets the search results pane to be visible, otherwise it sets
+     * the search results pane to hidden.
+     */
+    private void setupSearchTextFieldOnFocusListener() {
+<span class="fc" id="L766">        this.locationSearchTextField.focusedProperty().addListener(new ChangeListener&lt;Boolean&gt;() {</span>
+            @Override
+            public void changed(ObservableValue&lt;? extends Boolean&gt; arg0, Boolean oldPropertyValue,
+                    Boolean newPropertyValue) {
+<span class="fc bfc" id="L770" title="All 2 branches covered.">                if (newPropertyValue) {</span>
+<span class="fc" id="L771">                    LandingPage.this.searchPane.setVisible(true);</span>
+                } else {
+<span class="fc" id="L773">                    LandingPage.this.searchPane.setVisible(false);</span>
+                }
+<span class="fc" id="L775">            }</span>
+        });
+<span class="fc" id="L777">    }</span>
+
+    /**
+     * Tries to fetch and update the weather location data if the location search
+     * text field is not empty
+     */
+    private void updateDataIfSearchedCity() {
+<span class="pc bpc" id="L784" title="1 of 2 branches missed.">        if (!this.locationSearchTextField.getText().isEmpty()) {</span>
+<span class="fc" id="L785">            this.tryGetAndUpdateWeatherData();</span>
+        }
+<span class="fc" id="L787">    }</span>
+
+    /**
+     * Sets all of the check menu items to be false.
+     */
+    private void setAllCheckMenuItemsFalse() {
+<span class="fc" id="L793">        this.fahrenheitCheckMenuItem.setSelected(false);</span>
+<span class="fc" id="L794">        this.celsiusCheckMenuItem.setSelected(false);</span>
+<span class="fc" id="L795">        this.kelvinCheckMenuItem.setSelected(false);</span>
+<span class="fc" id="L796">    }</span>
+
+    /**
+     * Event handler for the daily forecast button. Handles the on clicked action
+     * event. Navigates to the daily forecast page.
+     * 
+     * @param event - The action event
+     */
+    @FXML
+    void onDailyForecastClicked(ActionEvent event) {
+        try {
+<span class="fc" id="L807">            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();</span>
+<span class="fc" id="L808">            WindowGenerator.changeScene(currentStage, App.DAILY_FORECAST_VIEW, App.DAILY_FORECAST_PAGE_TITLE);</span>
+<span class="nc" id="L809">        } catch (IOException exception) {</span>
+<span class="nc" id="L810">            this.displayNoLocationSnackbar(&quot;Please Enter a Location First&quot;);</span>
+<span class="fc" id="L811">        }</span>
+<span class="fc" id="L812">    }</span>
+
+    /**
+     * Event handler for the warnings button. Handles the on clicked action event.
+     * Navigates to the warnings page.
+     * 
+     * @param event - The action event
+     */
+    @FXML
+    void onWarningsClicked(ActionEvent event) {
+        try {
+<span class="fc" id="L823">            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();</span>
+<span class="fc" id="L824">            WindowGenerator.changeScene(currentStage, App.SEVERE_WARNINGS_PAGE_VIEW, App.SEVERE_WARNINGS_PAGE_TITLE);</span>
+<span class="nc" id="L825">        } catch (IOException exception) {</span>
+<span class="nc" id="L826">            this.displayNoLocationSnackbar(&quot;Please Enter a Location First&quot;);</span>
+<span class="fc" id="L827">        }</span>
+<span class="fc" id="L828">    }</span>
+
+    /**
+     * Updates the temperature label, weather description label, weather icon, wind
+     * speed label, and humidity label to the retrieved current weather information.
+     * Hides the no weather location alert and displays the actual weather
+     * information.
+     */
+    private void updateAllWeatherInformation() {
+<span class="fc" id="L837">        this.updateCurrentTemperature();</span>
+<span class="fc" id="L838">        this.updateCurrentWeatherDescription();</span>
+<span class="fc" id="L839">        this.updateCurrentWeatherIcon();</span>
+<span class="fc" id="L840">        this.updateCurrentWindSpeed();</span>
+<span class="fc" id="L841">        this.updateCurrentHumidity();</span>
+
+<span class="fc" id="L843">        this.hideNoWeatherInformation();</span>
+<span class="fc" id="L844">    }</span>
+
+    /**
+     * Checks if the given weather data is valid. Displays the no weather
+     * information message and hides current weather data.
+     * 
+     * @param result - the retrieved weather data result
+     * @return the retrieved weather data result
+     */
+    private Boolean checkWeatherData(JSONObject result) {
+<span class="pc bpc" id="L854" title="1 of 2 branches missed.">        if (result == null) {</span>
+<span class="nc" id="L855">            this.hideWeatherInformation();</span>
+<span class="nc" id="L856">            this.showNoWeatherInformation();</span>
+<span class="nc" id="L857">            this.displayNoLocationSnackbar(&quot;No Location Found&quot;);</span>
+
+<span class="nc" id="L859">            return false;</span>
+        }
+
+<span class="fc" id="L862">        return true;</span>
+    }
+
+    /**
+     * Displays the no location found snackbar.
+     */
+    private void displayNoLocationSnackbar(String errorMessage) {
+<span class="nc" id="L869">        JFXSnackbar snackbar = new JFXSnackbar(this.landingPagePane);</span>
+<span class="nc" id="L870">        StackPane pane = new StackPane();</span>
+<span class="nc" id="L871">        Label label = new Label(errorMessage);</span>
+<span class="nc" id="L872">        pane.setMinSize(this.landingPagePane.getWidth(), 50);</span>
+<span class="nc" id="L873">        pane.getChildren().add(label);</span>
+<span class="nc" id="L874">        StackPane.setAlignment(label, Pos.CENTER);</span>
+<span class="nc" id="L875">        pane.setStyle(&quot;-fx-background-color: #48484A&quot;);</span>
+<span class="nc" id="L876">        label.setStyle(&quot;-fx-font-size: 16; -fx-text-fill: #FFFFFF; -fx-font-family: Segoe UI&quot;);</span>
+<span class="nc" id="L877">        snackbar.enqueue(new SnackbarEvent(pane));</span>
+<span class="nc" id="L878">    }</span>
+
+    /**
+     * Updates the current temperature label
+     */
+    private void updateCurrentTemperature() {
+<span class="fc" id="L884">        String temperature = this.viewModel.getCurrentTemperature();</span>
+<span class="fc" id="L885">        this.currentTemperatureLabel.setText(temperature + this.temperatureSuffix);</span>
+<span class="fc" id="L886">    }</span>
+
+    /**
+     * Updates the current weather description label
+     */
+    private void updateCurrentWeatherDescription() {
+<span class="fc" id="L892">        String description = this.viewModel.getCurrentWeatherDescription();</span>
+<span class="fc" id="L893">        this.weatherDescriptionLabel.setText(description);</span>
+<span class="fc" id="L894">    }</span>
+
+    /**
+     * Updates the current weather icon
+     */
+    private void updateCurrentWeatherIcon() {
+<span class="fc" id="L900">        String iconURL = this.viewModel.getCurrentWeatherIcon();</span>
+<span class="fc" id="L901">        Image iconImage = new Image(iconURL);</span>
+<span class="fc" id="L902">        this.weatherIconImageView.setImage(iconImage);</span>
+<span class="fc" id="L903">    }</span>
+
+    /**
+     * Updates the current wind speed label
+     */
+    private void updateCurrentWindSpeed() {
+<span class="fc" id="L909">        String windSpeed = this.viewModel.getCurrentWindSpeed();</span>
+<span class="fc" id="L910">        this.windSpeedLabel.setText(windSpeed + this.windSpeedSuffix);</span>
+<span class="fc" id="L911">    }</span>
+
+    /**
+     * Updates the current humidity label
+     */
+    private void updateCurrentHumidity() {
+<span class="fc" id="L917">        String humidity = this.viewModel.getCurrentHumidity();</span>
+<span class="fc" id="L918">        String humiditySuffix = &quot;%&quot;;</span>
+<span class="fc" id="L919">        this.humidityLabel.setText(humidity + humiditySuffix);</span>
+<span class="fc" id="L920">    }</span>
+
+    /**
+     * Sets the no weather information label to be visible
+     */
+    private void showNoWeatherInformation() {
+<span class="nc" id="L926">        this.noWeatherInformationLabel.setVisible(true);</span>
+<span class="nc" id="L927">    }</span>
+
+    /**
+     * Sets the no weather information label to be hidden
+     */
+    private void hideNoWeatherInformation() {
+<span class="fc" id="L933">        this.noWeatherInformationLabel.setVisible(false);</span>
+<span class="fc" id="L934">    }</span>
+
+    /**
+     * Sets all the current weather information to be visible
+     */
+    private void showWeatherInformation() {
+<span class="fc" id="L940">        this.weatherIconImageView.setVisible(true);</span>
+<span class="fc" id="L941">        this.windImageView.setVisible(true);</span>
+<span class="fc" id="L942">        this.humidityImageView.setVisible(true);</span>
+<span class="fc" id="L943">        this.windSpeedLabel.setVisible(true);</span>
+<span class="fc" id="L944">        this.humidityLabel.setVisible(true);</span>
+<span class="fc" id="L945">        this.weatherDescriptionLabel.setVisible(true);</span>
+<span class="fc" id="L946">        this.currentTemperatureLabel.setVisible(true);</span>
+<span class="fc" id="L947">    }</span>
+
+    /**
+     * Sets all the current weather information to be hidden
+     */
+    private void hideWeatherInformation() {
+<span class="fc" id="L953">        this.weatherIconImageView.setVisible(false);</span>
+<span class="fc" id="L954">        this.windImageView.setVisible(false);</span>
+<span class="fc" id="L955">        this.humidityImageView.setVisible(false);</span>
+<span class="fc" id="L956">        this.windSpeedLabel.setVisible(false);</span>
+<span class="fc" id="L957">        this.humidityLabel.setVisible(false);</span>
+<span class="fc" id="L958">        this.weatherDescriptionLabel.setVisible(false);</span>
+<span class="fc" id="L959">        this.currentTemperatureLabel.setVisible(false);</span>
+<span class="fc" id="L960">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StatisticalWeatherPage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">weatherapp_gui</a> &gt; <a href="index.source.html" class="el_package">edu.westga.weatherapp_gui.view</a> &gt; <span class="el_source">StatisticalWeatherPage.java</span></div><h1>StatisticalWeatherPage.java</h1><pre class="source lang-java linenums">package edu.westga.weatherapp_gui.view;
+
+import java.io.IOException;
+
+import edu.westga.weatherapp_gui.App;
+import edu.westga.weatherapp_gui.model.CurrentWeatherInformation;
+import edu.westga.weatherapp_gui.model.GuiConstants;
+import edu.westga.weatherapp_gui.model.MeasurementUnitConverter;
+import edu.westga.weatherapp_gui.model.Months;
+import edu.westga.weatherapp_gui.view.utils.PageResizeHelper;
+import edu.westga.weatherapp_gui.view.utils.WindowGenerator;
+import edu.westga.weatherapp_gui.viewmodel.StatisticalWeatherPageViewModel;
+import edu.westga.weatherapp_shared.enums.MeasurementUnits;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.concurrent.Worker.State;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
+import javafx.scene.Node;
+
+/**
+ * This class is the controller for the Statistical Weather Page.
+ * 
+ * @author Michael Pavich
+ */
+<span class="fc" id="L35">public class StatisticalWeatherPage {</span>
+
+    private StatisticalWeatherPageViewModel viewModel;
+
+    /**
+     * The temperature suffix
+     */
+<span class="fc" id="L42">    private String temperatureSuffix = GuiConstants.KELVIN_SUFFIX;</span>
+
+    /**
+     * The pressure suffix
+     */
+<span class="fc" id="L47">    private String pressureSuffix = GuiConstants.HECTOPASCAL_SUFFIX;</span>
+
+    /**
+     * The wind speed suffix
+     */
+<span class="fc" id="L52">    private String windSuffix = GuiConstants.METERS_PER_SECOND_SUFFIX;</span>
+    
+    /**
+     * The precipitation suffix
+     */
+<span class="fc" id="L57">    private String precipitationSuffix = GuiConstants.MILLIMETERS_SUFFIX;</span>
+
+    @FXML
+    private ImageView backArrowImageView;
+
+    @FXML
+    private Menu settingMenu;
+
+    @FXML
+    private CheckMenuItem fahrenheitCheckMenuItem;
+
+    @FXML
+    private CheckMenuItem celsiusCheckMenuItem;
+
+    @FXML
+    private CheckMenuItem kelvinCheckMenuItem;
+
+    @FXML
+    private Pane contentPane;
+
+    @FXML
+    private Pane statisticalWeatherPagePane;
+
+    @FXML
+    private Label recordMaxTempLabel;
+
+    @FXML
+    private Label recordMinTempLabel;
+
+    @FXML
+    private Label averageMaxTempLabel;
+
+    @FXML
+    private Label averageMinTempLabel;
+
+    @FXML
+    private Label averageTempLabel;
+
+    @FXML
+    private Label recordMaxPressureLabel;
+
+    @FXML
+    private Label recordMinPressureLabel;
+
+    @FXML
+    private Label averagePressureLabel;
+
+    @FXML
+    private Label medianPressureLabel;
+
+    @FXML
+    private Label recordMaxHumidityLabel;
+
+    @FXML
+    private Label recordMinHumidityLabel;
+
+    @FXML
+    private Label averageHumidityLabel;
+
+    @FXML
+    private Label medianHumidityLabel;
+
+    @FXML
+    private Label recordMaxWindLabel;
+
+    @FXML
+    private Label recordMinWindLabel;
+
+    @FXML
+    private Label averageWindLabel;
+
+    @FXML
+    private Label medianWindLabel;
+
+    @FXML
+    private Label recordMaxPrecipitationLabel;
+
+    @FXML
+    private Label recordMinPrecipitationLabel;
+
+    @FXML
+    private Label averagePrecipitationLabel;
+
+    @FXML
+    private Label medianPrecipitationLabel;
+
+    @FXML
+    private Label recordMaxCloudLabel;
+
+    @FXML
+    private Label recordMinCloudLabel;
+
+    @FXML
+    private Label averageCloudLabel;
+
+    @FXML
+    private Label medianCloudLabel;
+
+    @FXML
+    private Label monthLabel;
+
+    @FXML
+    private ProgressIndicator progressIndicator;
+
+    @FXML
+    private Label progressLabel;
+
+    @FXML
+    void initialize() {
+<span class="fc" id="L166">        this.viewModel = new StatisticalWeatherPageViewModel(null);</span>
+<span class="fc" id="L167">        Platform.runLater(() -&gt; new PageResizeHelper().setScalingRules(this.statisticalWeatherPagePane));</span>
+<span class="fc" id="L168">        this.setMeasurementSettings();</span>
+<span class="fc" id="L169">        this.loadStatisticalWeatherInfo();</span>
+<span class="fc" id="L170">        this.setMonthLabel();</span>
+<span class="fc" id="L171">    }</span>
+
+    private void setMonthLabel() {
+<span class="fc" id="L174">        int monthIndex = CurrentWeatherInformation.getStatisticalMonthSelected() - 1;</span>
+<span class="fc" id="L175">        this.monthLabel.setText(Months.values()[monthIndex].toString());</span>
+<span class="fc" id="L176">    }</span>
+
+    private void loadStatisticalWeatherInfo() {
+<span class="fc" id="L179">        Task&lt;Boolean&gt; task = new Task&lt;Boolean&gt;() {</span>
+
+            @Override
+            public Boolean call() throws Exception {
+<span class="fc" id="L183">                StatisticalWeatherPage.this.viewModel.getStatisticalWeatherDataByWeatherLocation(</span>
+<span class="fc" id="L184">                        CurrentWeatherInformation.getWeatherLocation(),</span>
+<span class="fc" id="L185">                        CurrentWeatherInformation.getStatisticalMonthSelected());</span>
+<span class="fc" id="L186">                return true;</span>
+            }
+        };
+
+<span class="fc" id="L190">        task.setOnSucceeded(e -&gt; this.handleTaskSucceeded(e));</span>
+<span class="fc" id="L191">        new Thread(task).start();</span>
+<span class="fc" id="L192">    }</span>
+
+    /**
+     * Handles the succession of loading the hourly forecast information
+     * 
+     * @param event - the worker state event
+     */
+    private void handleTaskSucceeded(WorkerStateEvent event) {
+<span class="pc bpc" id="L200" title="1 of 2 branches missed.">        if (event.getSource().getState() == State.SUCCEEDED) {</span>
+<span class="fc" id="L201">            this.hideLoadingIndication();</span>
+<span class="fc" id="L202">            this.showWeatherInformation();</span>
+<span class="fc" id="L203">            this.setWeatherInformationLabels();</span>
+        }
+<span class="fc" id="L205">    }</span>
+
+    private void setWeatherInformationLabels() {
+<span class="fc" id="L208">        this.setTemperatureLabels();</span>
+<span class="fc" id="L209">        this.setPressureLabels();</span>
+<span class="fc" id="L210">        this.setHumidityLabels();</span>
+<span class="fc" id="L211">        this.setWindLabels();</span>
+<span class="fc" id="L212">        this.setPrecipitationLabels();</span>
+<span class="fc" id="L213">        this.setCloudLabels();</span>
+<span class="fc" id="L214">    }</span>
+
+    /**
+     * Hides the progress indicator and progress indicator label
+     */
+    private void hideLoadingIndication() {
+<span class="fc" id="L220">        this.progressIndicator.setVisible(false);</span>
+<span class="fc" id="L221">        this.progressLabel.setVisible(false);</span>
+<span class="fc" id="L222">        this.settingMenu.setDisable(false);</span>
+<span class="fc" id="L223">    }</span>
+
+    /**
+     * Sets all the weather information to be visible
+     */
+    private void showWeatherInformation() {
+<span class="fc" id="L229">        this.contentPane.setVisible(true);</span>
+<span class="fc" id="L230">    }</span>
+
+    private void setTemperatureLabels() {
+<span class="fc" id="L233">        String recordMaxTemperature = String</span>
+<span class="fc" id="L234">                .valueOf(MeasurementUnitConverter.convertTemperature(this.viewModel.getRecordMaxTemperature(),</span>
+<span class="fc" id="L235">                        MeasurementUnits.Kelvin, CurrentWeatherInformation.getMeasurementUnits()));</span>
+<span class="fc" id="L236">        String recordMinTemperature = String</span>
+<span class="fc" id="L237">                .valueOf(MeasurementUnitConverter.convertTemperature(this.viewModel.getRecordMinTemperature(),</span>
+<span class="fc" id="L238">                        MeasurementUnits.Kelvin, CurrentWeatherInformation.getMeasurementUnits()));</span>
+<span class="fc" id="L239">        String averageMaxTemperature = String</span>
+<span class="fc" id="L240">                .valueOf(MeasurementUnitConverter.convertTemperature(this.viewModel.getAverageMaxTemperature(),</span>
+<span class="fc" id="L241">                        MeasurementUnits.Kelvin, CurrentWeatherInformation.getMeasurementUnits()));</span>
+<span class="fc" id="L242">        String averageMinTemperature = String</span>
+<span class="fc" id="L243">                .valueOf(MeasurementUnitConverter.convertTemperature(this.viewModel.getAverageMinTemperature(),</span>
+<span class="fc" id="L244">                        MeasurementUnits.Kelvin, CurrentWeatherInformation.getMeasurementUnits()));</span>
+<span class="fc" id="L245">        String averageTemperature = String</span>
+<span class="fc" id="L246">                .valueOf(MeasurementUnitConverter.convertTemperature(this.viewModel.getAverageTemperature(),</span>
+<span class="fc" id="L247">                        MeasurementUnits.Kelvin, CurrentWeatherInformation.getMeasurementUnits()));</span>
+
+<span class="fc" id="L249">        this.recordMaxTempLabel.setText(recordMaxTemperature + this.temperatureSuffix);</span>
+<span class="fc" id="L250">        this.recordMinTempLabel.setText(recordMinTemperature + this.temperatureSuffix);</span>
+<span class="fc" id="L251">        this.averageMaxTempLabel.setText(averageMaxTemperature + this.temperatureSuffix);</span>
+<span class="fc" id="L252">        this.averageMinTempLabel.setText(averageMinTemperature + this.temperatureSuffix);</span>
+<span class="fc" id="L253">        this.averageTempLabel.setText(averageTemperature + this.temperatureSuffix);</span>
+<span class="fc" id="L254">    }</span>
+
+    private void setPressureLabels() {
+<span class="fc" id="L257">        String recordMaxPressure = String</span>
+<span class="fc" id="L258">                .valueOf(MeasurementUnitConverter.convertPressure(this.viewModel.getRecordMaxPressure(),</span>
+<span class="fc" id="L259">                        MeasurementUnits.Kelvin, CurrentWeatherInformation.getMeasurementUnits()));</span>
+<span class="fc" id="L260">        String recordMinPressure = String</span>
+<span class="fc" id="L261">                .valueOf(MeasurementUnitConverter.convertPressure(this.viewModel.getRecordMinPressure(),</span>
+<span class="fc" id="L262">                        MeasurementUnits.Kelvin, CurrentWeatherInformation.getMeasurementUnits()));</span>
+<span class="fc" id="L263">        String medianPressure = String</span>
+<span class="fc" id="L264">                .valueOf(MeasurementUnitConverter.convertPressure(this.viewModel.getMedianPressure(),</span>
+<span class="fc" id="L265">                        MeasurementUnits.Kelvin, CurrentWeatherInformation.getMeasurementUnits()));</span>
+<span class="fc" id="L266">        String averagePressure = String</span>
+<span class="fc" id="L267">                .valueOf(MeasurementUnitConverter.convertPressure(this.viewModel.getAveragePressure(),</span>
+<span class="fc" id="L268">                        MeasurementUnits.Kelvin, CurrentWeatherInformation.getMeasurementUnits()));</span>
+
+<span class="fc" id="L270">        this.recordMaxPressureLabel.setText(recordMaxPressure + this.pressureSuffix);</span>
+<span class="fc" id="L271">        this.recordMinPressureLabel.setText(recordMinPressure + this.pressureSuffix);</span>
+<span class="fc" id="L272">        this.medianPressureLabel.setText(medianPressure + this.pressureSuffix);</span>
+<span class="fc" id="L273">        this.averagePressureLabel.setText(averagePressure + this.pressureSuffix);</span>
+<span class="fc" id="L274">    }</span>
+
+    private void setHumidityLabels() {
+<span class="fc" id="L277">        String recordMaxHumidity = String.valueOf(this.viewModel.getRecordMaxHumidity());</span>
+<span class="fc" id="L278">        String recordMinHumidity = String.valueOf(this.viewModel.getRecordMinHumidity());</span>
+<span class="fc" id="L279">        String medianHumidity = String.valueOf(this.viewModel.getMedianHumidity());</span>
+<span class="fc" id="L280">        String averageHumidity = String.valueOf(this.viewModel.getAverageHumidity());</span>
+
+<span class="fc" id="L282">        this.recordMaxHumidityLabel.setText(recordMaxHumidity + GuiConstants.PERCENTAGE_SYMBOL);</span>
+<span class="fc" id="L283">        this.recordMinHumidityLabel.setText(recordMinHumidity + GuiConstants.PERCENTAGE_SYMBOL);</span>
+<span class="fc" id="L284">        this.medianHumidityLabel.setText(medianHumidity + GuiConstants.PERCENTAGE_SYMBOL);</span>
+<span class="fc" id="L285">        this.averageHumidityLabel.setText(averageHumidity + GuiConstants.PERCENTAGE_SYMBOL);</span>
+<span class="fc" id="L286">    }</span>
+
+    private void setWindLabels() {
+<span class="fc" id="L289">        String recordMaxWind = String</span>
+<span class="fc" id="L290">                .valueOf(MeasurementUnitConverter.convertWind(this.viewModel.getRecordMaxWind(),</span>
+<span class="fc" id="L291">                        MeasurementUnits.Kelvin, CurrentWeatherInformation.getMeasurementUnits()));</span>
+<span class="fc" id="L292">        String recordMinWind = String</span>
+<span class="fc" id="L293">                .valueOf(MeasurementUnitConverter.convertWind(this.viewModel.getRecordMinWind(),</span>
+<span class="fc" id="L294">                        MeasurementUnits.Kelvin, CurrentWeatherInformation.getMeasurementUnits()));</span>
+<span class="fc" id="L295">        String medianWind = String</span>
+<span class="fc" id="L296">                .valueOf(MeasurementUnitConverter.convertWind(this.viewModel.getMedianWind(),</span>
+<span class="fc" id="L297">                        MeasurementUnits.Kelvin, CurrentWeatherInformation.getMeasurementUnits()));</span>
+<span class="fc" id="L298">        String averageWind = String</span>
+<span class="fc" id="L299">                .valueOf(MeasurementUnitConverter.convertWind(this.viewModel.getAverageWind(),</span>
+<span class="fc" id="L300">                        MeasurementUnits.Kelvin, CurrentWeatherInformation.getMeasurementUnits()));</span>
+
+<span class="fc" id="L302">        this.recordMaxWindLabel.setText(recordMaxWind + this.windSuffix);</span>
+<span class="fc" id="L303">        this.recordMinWindLabel.setText(recordMinWind + this.windSuffix);</span>
+<span class="fc" id="L304">        this.medianWindLabel.setText(medianWind + this.windSuffix);</span>
+<span class="fc" id="L305">        this.averageWindLabel.setText(averageWind + this.windSuffix);</span>
+<span class="fc" id="L306">    }</span>
+
+    private void setPrecipitationLabels() {
+<span class="fc" id="L309">        String recordMaxPrecipitation = String</span>
+<span class="fc" id="L310">                .valueOf(MeasurementUnitConverter.convertPrecipitation(this.viewModel.getRecordMaxPrecipitation(),</span>
+<span class="fc" id="L311">                        MeasurementUnits.Kelvin, CurrentWeatherInformation.getMeasurementUnits()));</span>
+<span class="fc" id="L312">        String recordMinPrecipitation = String</span>
+<span class="fc" id="L313">                .valueOf(MeasurementUnitConverter.convertPrecipitation(this.viewModel.getRecordMinPrecipitation(),</span>
+<span class="fc" id="L314">                        MeasurementUnits.Kelvin, CurrentWeatherInformation.getMeasurementUnits()));</span>
+<span class="fc" id="L315">        String medianPrecipitation = String</span>
+<span class="fc" id="L316">                .valueOf(MeasurementUnitConverter.convertPrecipitation(this.viewModel.getMedianPrecipitation(),</span>
+<span class="fc" id="L317">                        MeasurementUnits.Kelvin, CurrentWeatherInformation.getMeasurementUnits()));</span>
+<span class="fc" id="L318">        String averagePrecipitation = String</span>
+<span class="fc" id="L319">                .valueOf(MeasurementUnitConverter.convertPrecipitation(this.viewModel.getAveragePrecipitation(),</span>
+<span class="fc" id="L320">                        MeasurementUnits.Kelvin, CurrentWeatherInformation.getMeasurementUnits()));</span>
+
+<span class="fc" id="L322">        this.recordMaxPrecipitationLabel.setText(recordMaxPrecipitation + this.precipitationSuffix);</span>
+<span class="fc" id="L323">        this.recordMinPrecipitationLabel.setText(recordMinPrecipitation + this.precipitationSuffix);</span>
+<span class="fc" id="L324">        this.medianPrecipitationLabel.setText(medianPrecipitation + this.precipitationSuffix);</span>
+<span class="fc" id="L325">        this.averagePrecipitationLabel.setText(averagePrecipitation + this.precipitationSuffix);</span>
+<span class="fc" id="L326">    }</span>
+
+    private void setCloudLabels() {
+<span class="fc" id="L329">        String recordMaxCloudCoverage = String.valueOf(this.viewModel.getRecordMaxClouds());</span>
+<span class="fc" id="L330">        String recordMinCloudCoverage = String.valueOf(this.viewModel.getRecordMinClouds());</span>
+<span class="fc" id="L331">        String medianCloudCoverage = String.valueOf(this.viewModel.getMedianClouds());</span>
+<span class="fc" id="L332">        String averageCloudCoverage = String.valueOf(this.viewModel.getAverageClouds());</span>
+
+<span class="fc" id="L334">        this.recordMaxCloudLabel.setText(recordMaxCloudCoverage + GuiConstants.PERCENTAGE_SYMBOL);</span>
+<span class="fc" id="L335">        this.recordMinCloudLabel.setText(recordMinCloudCoverage + GuiConstants.PERCENTAGE_SYMBOL);</span>
+<span class="fc" id="L336">        this.medianCloudLabel.setText(medianCloudCoverage + GuiConstants.PERCENTAGE_SYMBOL);</span>
+<span class="fc" id="L337">        this.averageCloudLabel.setText(averageCloudCoverage + GuiConstants.PERCENTAGE_SYMBOL);</span>
+<span class="fc" id="L338">    }</span>
+
+    @FXML
+    void onBackArrowClicked(MouseEvent event) {
+        try {
+<span class="fc" id="L343">            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();</span>
+<span class="fc" id="L344">            WindowGenerator.changeScene(currentStage, App.MONTH_SELECTION_PAGE_VIEW, App.MONTH_SELECTION_PAGE_TITLE);</span>
+<span class="nc" id="L345">        } catch (IOException exception) {</span>
+<span class="nc" id="L346">            System.err.println(&quot;IO Exception: Error switching scenes&quot;);</span>
+<span class="fc" id="L347">        }</span>
+<span class="fc" id="L348">    }</span>
+
+    @FXML
+    void onCelsiusSelected(ActionEvent event) {
+<span class="fc" id="L352">        this.setSuffixUnitsToMetric();</span>
+<span class="fc" id="L353">        this.setAllCheckMenuItemsFalse();</span>
+<span class="fc" id="L354">        this.celsiusCheckMenuItem.setSelected(true);</span>
+<span class="fc" id="L355">        CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Metric);</span>
+<span class="fc" id="L356">        this.setWeatherInformationLabels();</span>
+<span class="fc" id="L357">    }</span>
+
+    @FXML
+    void onFahrenheitSelected(ActionEvent event) {
+<span class="fc" id="L361">        this.setSuffixUnitsToImperial();</span>
+<span class="fc" id="L362">        this.setAllCheckMenuItemsFalse();</span>
+<span class="fc" id="L363">        this.fahrenheitCheckMenuItem.setSelected(true);</span>
+<span class="fc" id="L364">        CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Imperial);</span>
+<span class="fc" id="L365">        this.setWeatherInformationLabels();</span>
+<span class="fc" id="L366">    }</span>
+
+    @FXML
+    void onKelvinSelected(ActionEvent event) {
+<span class="fc" id="L370">        this.setSuffixUnitsToKelvin();</span>
+<span class="fc" id="L371">        this.setAllCheckMenuItemsFalse();</span>
+<span class="fc" id="L372">        this.kelvinCheckMenuItem.setSelected(true);</span>
+<span class="fc" id="L373">        CurrentWeatherInformation.setMeasurementUnits(MeasurementUnits.Kelvin);</span>
+<span class="fc" id="L374">        this.setWeatherInformationLabels();</span>
+<span class="fc" id="L375">    }</span>
+
+    /**
+     * Sets the check menu item to the saved measurement units setting
+     */
+    private void setMeasurementSettings() {
+<span class="fc" id="L381">        this.setAllCheckMenuItemsFalse();</span>
+<span class="fc bfc" id="L382" title="All 2 branches covered.">        if (CurrentWeatherInformation.getMeasurementUnits() == MeasurementUnits.Imperial) {</span>
+<span class="fc" id="L383">            this.setSuffixUnitsToImperial();</span>
+<span class="fc" id="L384">            this.fahrenheitCheckMenuItem.setSelected(true);</span>
+<span class="fc bfc" id="L385" title="All 2 branches covered.">        } else if (CurrentWeatherInformation.getMeasurementUnits() == MeasurementUnits.Metric) {</span>
+<span class="fc" id="L386">            this.setSuffixUnitsToMetric();</span>
+<span class="fc" id="L387">            this.celsiusCheckMenuItem.setSelected(true);</span>
+        } else {
+<span class="fc" id="L389">            this.setSuffixUnitsToKelvin();</span>
+<span class="fc" id="L390">            this.kelvinCheckMenuItem.setSelected(true);</span>
+        }
+<span class="fc" id="L392">    }</span>
+
+    private void setSuffixUnitsToKelvin() {
+<span class="fc" id="L395">        this.temperatureSuffix = GuiConstants.KELVIN_SUFFIX;</span>
+<span class="fc" id="L396">        this.pressureSuffix = GuiConstants.HECTOPASCAL_SUFFIX;</span>
+<span class="fc" id="L397">        this.windSuffix = GuiConstants.METERS_PER_SECOND_SUFFIX;</span>
+<span class="fc" id="L398">        this.precipitationSuffix = GuiConstants.MILLIMETERS_SUFFIX;</span>
+<span class="fc" id="L399">    }</span>
+
+    private void setSuffixUnitsToMetric() {
+<span class="fc" id="L402">        this.temperatureSuffix = GuiConstants.CELSIUS_SUFFIX;</span>
+<span class="fc" id="L403">        this.pressureSuffix = GuiConstants.PASCAL_SUFFIX;</span>
+<span class="fc" id="L404">        this.windSuffix = GuiConstants.METERS_PER_SECOND_SUFFIX;</span>
+<span class="fc" id="L405">        this.precipitationSuffix = GuiConstants.MILLIMETERS_SUFFIX;</span>
+<span class="fc" id="L406">    }</span>
+
+    private void setSuffixUnitsToImperial() {
+<span class="fc" id="L409">        this.temperatureSuffix = GuiConstants.FAHRENHEIT_SUFFIX;</span>
+<span class="fc" id="L410">        this.pressureSuffix = GuiConstants.POUNDS_PER_SQUARE_INCH_SUFFIX;</span>
+<span class="fc" id="L411">        this.windSuffix = GuiConstants.FEET_PER_SECOND_SUFFIX;</span>
+<span class="fc" id="L412">        this.precipitationSuffix = GuiConstants.INCHES_SUFFIX;</span>
+<span class="fc" id="L413">    }</span>
+
+    /**
+     * Sets all of the check menu items to be false.
+     */
+    private void setAllCheckMenuItemsFalse() {
+<span class="fc" id="L419">        this.fahrenheitCheckMenuItem.setSelected(false);</span>
+<span class="fc" id="L420">        this.celsiusCheckMenuItem.setSelected(false);</span>
+<span class="fc" id="L421">        this.kelvinCheckMenuItem.setSelected(false);</span>
+<span class="fc" id="L422">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
