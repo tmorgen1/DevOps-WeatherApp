@@ -62,10 +62,12 @@ public class PageResizeHelper {
         double initWidth = pagePane.getPrefWidth();
         double initHeight = pagePane.getPrefHeight();
         MenuBar settingMenuBar = this.findSettingMenuBar(this.pagePane);
+        this.pagePane.minHeightProperty().bindBidirectional(this.pagePane.minWidthProperty());
+        this.pagePane.prefHeightProperty().bindBidirectional(this.pagePane.prefWidthProperty());
+        this.pagePane.maxHeightProperty().bindBidirectional(this.pagePane.maxWidthProperty());
         this.bindMenuBarWidthIfNotNull(settingMenuBar, currStage);
         this.determineMenuBarCoordinateTranslations();
         this.setChangeListeners(initWidth, initHeight, settingMenuBar, currStage);
-
         this.preserveMaximizedState(currStage, settingMenuBar);
     }
 
